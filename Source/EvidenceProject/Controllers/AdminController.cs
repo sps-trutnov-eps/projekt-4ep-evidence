@@ -1,6 +1,4 @@
-using EvidenceProject.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace EvidenceProject.Controllers
 {
@@ -28,8 +26,11 @@ namespace EvidenceProject.Controllers
         // Login pro admina (post)
         // </summary>
         [HttpPost("admin/login")]
-        public IActionResult LoginPost([FromForm] object data) 
+        public IActionResult LoginPost([FromForm] LoginForm data) 
         {
+            if (data.password == "heslo") {
+                 HttpContext.Session.SetString("loggedin", "true");
+            }
             return Redirect("/admin");
         }
     }
