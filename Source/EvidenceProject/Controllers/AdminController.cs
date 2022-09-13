@@ -10,6 +10,8 @@ namespace EvidenceProject.Controllers
         [HttpGet("admin")]
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString("loggedin") != "true") 
+                return Redirect("/admin/login");
             return View();
         }
 
