@@ -1,14 +1,10 @@
-## PROJEKT CONTROLLER - VESELY	
+## PROJEKT CONTROLLER - VESELY, SAMEK
 	- create (post, get)
 	- change
 	- delete
 	
-
 ## ADMIN CONTROLLER - SAMEK
 	- Login
-	- Nahravani/update(?) zaku, oboru(?)
-
-
 
 ## BASE CONTROLLER - PETRAS	
 	- Index
