@@ -1,13 +1,16 @@
 ﻿using EvidenceProject.Controllers.RequestClasses;
+using EvidenceProject.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvidenceProject.Controllers
 {
     public class ProjectController : Controller
     {
+
         [HttpGet("project")]
         public ActionResult Index()
         {
+            UniversalHelper.IsLogged(HttpContext);
             return Redirect("project/create");
         }
 
@@ -15,8 +18,10 @@ namespace EvidenceProject.Controllers
         /// Vytvoření/přidání projektu
         /// </summary>        
         [HttpPost("project/create")]
-        public ActionResult Create([FromForm] ProjectCreateRequest data)
+        public ActionResult Create([FromForm] ProjectCreateRequest request)
         {
+            
+
             return Json("ok");
         }
 
