@@ -9,6 +9,15 @@ namespace EvidenceProject
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Session
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.Name = "zajimavasusenka";
+                options.IdleTimeout = TimeSpan.FromDays(15);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -25,6 +34,8 @@ namespace EvidenceProject
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",
