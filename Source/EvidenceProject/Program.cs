@@ -28,7 +28,7 @@ public class Program
             options.IdleTimeout = TimeSpan.FromDays(15);
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
-            options.Cookie.Expiration = TimeSpan.FromDays(15);
+            options.Cookie.MaxAge = TimeSpan.FromDays(8);
         });
 
         var app = builder.Build();
