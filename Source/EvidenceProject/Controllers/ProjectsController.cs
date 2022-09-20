@@ -1,6 +1,5 @@
 ﻿using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Helpers;
-using Microsoft.AspNetCore.Mvc;
 
 namespace EvidenceProject.Controllers
 {

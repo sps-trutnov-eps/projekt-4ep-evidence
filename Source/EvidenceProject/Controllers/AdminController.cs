@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace EvidenceProject.Controllers
 {
     public class AdminController : Controller
