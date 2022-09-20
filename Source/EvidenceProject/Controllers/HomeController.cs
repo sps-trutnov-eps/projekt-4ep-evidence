@@ -1,5 +1,4 @@
 ﻿using EvidenceProject.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace EvidenceProject.Controllers
