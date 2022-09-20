@@ -1,13 +1,17 @@
-﻿namespace EvidenceProject.Helpers
+﻿namespace EvidenceProject.Helpers;
+public class UniversalHelper
 {
-    public class UniversalHelper
+    /// <summary>
+    /// Zjistíme, zda je přihlášen uživatel
+    /// </summary>
+    public static bool getLoggedUser(HttpContext context, out string? userID)
     {
-        private static string sessionKeyValue = "true";
-        public static bool IsLogged(HttpContext context)
-        {
-            string? loggedInString = context.Session.GetString("loggedin");
-            bool isLogged = sessionKeyValue.Equals(loggedInString);
-            return isLogged;
-        }
+        userID = context.Session.GetString(LoggedInKey);
+        return userID != null;
     }
+
+    /// <summary>
+    /// Jméno cookie
+    /// </summary>
+    public static string LoggedInKey => "loggedin";
 }
