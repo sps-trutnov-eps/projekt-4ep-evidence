@@ -15,7 +15,7 @@ public class User
 public class AuthUser : User
 {
     [Required] [Key] public string? username { init; get; }
-    public string? password { set; get; }
-    public bool? globalAdmin { get; init; }
+    [Required] public string? password { set; get; }
+    public bool? globalAdmin { get; set; }
 }
 
