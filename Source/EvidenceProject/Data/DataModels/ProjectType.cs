@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-using Microsoft.EntityFrameworkCore;
 
 namespace EvidenceProject.Data.DataModels;
 
-public class ProjectState
+public class ProjectType
 {
-    [Key] public string? name { get; set; }
+    [Key] private string? name { get; set; }
     public Color color { get; set; }
 }
