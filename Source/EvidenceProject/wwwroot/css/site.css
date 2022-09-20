@@ -1,5 +1,7 @@
 html {
   font-size: 14px;
+  position: relative;
+  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,11 +10,10 @@ html {
   }
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+h1{
+  font-weight: bold;
 }
 
 body {
-  margin-bottom: 60px;
+  margin-bottom: 55px;
 }
