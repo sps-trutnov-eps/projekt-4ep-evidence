@@ -6,7 +6,10 @@ public class Project
 {
     [Key] public Guid id { init; get; }
     [Required] public string? name { get; set; }
-    [Required] public ProjectState? projectState { get; set; }
+    [Required] public DialCode? projectState { get; set; }
+    [Required] public DialCode? projectType { get; set; }
+    [Required] public DialCode? projectTechnology { get; set; }
+    [Required] public List<DialCode>? projectAchievements { get; set; }
 
     [Required] public List<User>? assignees { get; set; }
     public AuthUser? projectManager;
