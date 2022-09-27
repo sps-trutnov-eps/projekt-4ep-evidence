@@ -75,6 +75,7 @@ public class AdminController : Controller
         int? userCount = _context.globalUsers?.Count(); // count users => if 0 then user will be declered a globalAdmin
         AuthUser newUser = new AuthUser { password = PasswordHelper.CreateHash(data.password ?? "defaultniheslo"), username = data.username, globalAdmin = userCount == 0 };
         _context.globalUsers?.Add(newUser);
+        _context.SaveChanges();
         return Redirect("/user/login");
     }
 }
