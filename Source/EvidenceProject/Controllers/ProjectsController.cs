@@ -1,6 +1,8 @@
 ﻿using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Data;
+using EvidenceProject.Data.DataModels;
 using EvidenceProject.Helpers;
+
 
 namespace EvidenceProject.Controllers;
 public class ProjectController : Controller
@@ -23,16 +25,23 @@ public class ProjectController : Controller
     /// Vytvoření/přidání projektu
     /// </summary>        
     [HttpPost("project/create")]
-    public ActionResult Create([FromForm] ProjectCreateData request)
+    public ActionResult Create([FromForm] ProjectCreateData projectData)
     {
-        
-        return Json("ok");
+        // Počkám na dokumentaci z db sekce
+        Project project = new()
+        {
+            name = projectData.ProjectName
+        };
+        _context.projects.Add(project);
+        _context.SaveChanges();
+        return Redirect("Index");
     }
 
     [HttpGet("project/create")]
     public ActionResult Create()
     {
-        return View();
+        var dialCodes = _context.dialCodes.ToList();
+        return View(dialCodes);
     }
 
     [HttpPost("project/{id}")]

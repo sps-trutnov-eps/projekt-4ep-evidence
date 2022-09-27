@@ -15,9 +15,14 @@ public class HomeController : Controller
         return View();
     }
 
-    [HttpPost("/search/{searchData}")]
-    public ActionResult Search(string searchData)
+    /// <summary>
+    /// Vyhledávání
+    /// </summary>
+    [HttpGet("search")]
+    public ActionResult Search(string searchQuery)
     {
-        return Json(searchData);
+        if (searchQuery == string.Empty) return View();
+        var projects = _context?.projects?.ToList().Where(project => project.name.Contains(searchQuery));
+        return View(projects);
     }
 }

@@ -4,25 +4,22 @@
 
 <form action="/project/create" method="post">
     <label for="name">Název projektu: </label>
-    <input name="name" type="text" placeholder="..." id="name"/>
+    <input name="ProjectName" type="text" placeholder="..." id="name"/>
     <label for="state">Stav: </label>
-    <input name="state" list="stavy" id="state"/>
+    <input name="ProjectState" list="stavy" id="state"/>
     <label for="type">Typ: </label>
-    <input name="type" type="text" placeholder="..." id="type"/>
+    <input name="ProjectType" type="text" placeholder="..." id="type"/>
     <label for="technology">Technologie: </label>
-    <input name="technology" type="text" placeholder="..." id="technology"/>
+    <input name="Technology" type="text" placeholder="..." id="technology"/>
     <label for="photo">Fotografie: </label>
-    <input name="photo" type="file" multiple="multiple" id="photo"/>
+    <input name="Photos" type="file" multiple="multiple" id="photo"/>
     <label for="achievments">Úspěchy: </label>
-    <input name="achievments" type="text" id="achievments" />
-
-
-
+    <input name="Achievements" type="text" id="achievments" />
     <input type="submit"/> 
 
     <datalist id="stavy">
         <option>Nápad</option>
-        <option>Aktivní</option>
+        <option>Aktivní</option>    
         <option>Opuštěný</option>
         <option>Dokončený</option>
     </datalist>

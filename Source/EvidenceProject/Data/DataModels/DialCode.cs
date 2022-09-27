@@ -7,6 +7,7 @@ namespace EvidenceProject.Data.DataModels
 {
     public class DialCode
     {
+
         [Key]
         public int id { get; set; }
 
