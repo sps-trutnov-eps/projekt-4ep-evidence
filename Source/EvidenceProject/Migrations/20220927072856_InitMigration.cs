@@ -31,7 +31,7 @@ namespace EvidenceProject.Migrations
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     dialInfoid = table.Column<int>(type: "int", nullable: false),
-                    ProjectAchivements = table.Column<int>(type: "int", nullable: true)
+                    Achivements = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,9 +51,9 @@ namespace EvidenceProject.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProjectState = table.Column<int>(type: "int", nullable: false),
-                    ProjectType = table.Column<int>(type: "int", nullable: false),
-                    ProjectTechnology = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Technology = table.Column<int>(type: "int", nullable: false),
                     github = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     slack = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -61,20 +61,23 @@ namespace EvidenceProject.Migrations
                 {
                     table.PrimaryKey("PK_projects", x => x.id);
                     table.ForeignKey(
-                        name: "FK_projects_dialCodes_ProjectState",
-                        column: x => x.ProjectState,
+                        name: "FK_projects_dialCodes_State",
+                        column: x => x.State,
                         principalTable: "dialCodes",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_projects_dialCodes_ProjectTechnology",
-                        column: x => x.ProjectTechnology,
+                        name: "FK_projects_dialCodes_Technology",
+                        column: x => x.Technology,
                         principalTable: "dialCodes",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_projects_dialCodes_ProjectType",
-                        column: x => x.ProjectType,
+                        name: "FK_projects_dialCodes_Type",
+                        column: x => x.Type,
                         principalTable: "dialCodes",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,29 +106,29 @@ namespace EvidenceProject.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_dialCodes_Achivements",
+                table: "dialCodes",
+                column: "Achivements");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_dialCodes_dialInfoid",
                 table: "dialCodes",
                 column: "dialInfoid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_dialCodes_ProjectAchivements",
-                table: "dialCodes",
-                column: "ProjectAchivements");
+                name: "IX_projects_State",
+                table: "projects",
+                column: "State");
 
             migrationBuilder.CreateIndex(
-                name: "IX_projects_ProjectState",
+                name: "IX_projects_Technology",
                 table: "projects",
-                column: "ProjectState");
+                column: "Technology");
 
             migrationBuilder.CreateIndex(
-                name: "IX_projects_ProjectTechnology",
+                name: "IX_projects_Type",
                 table: "projects",
-                column: "ProjectTechnology");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_projects_ProjectType",
-                table: "projects",
-                column: "ProjectType");
+                column: "Type");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Projectid",
@@ -140,9 +143,9 @@ namespace EvidenceProject.Migrations
                 filter: "[username] IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_dialCodes_projects_ProjectAchivements",
+                name: "FK_dialCodes_projects_Achivements",
                 table: "dialCodes",
-                column: "ProjectAchivements",
+                column: "Achivements",
                 principalTable: "projects",
                 principalColumn: "id");
         }
@@ -154,7 +157,7 @@ namespace EvidenceProject.Migrations
                 table: "dialCodes");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_dialCodes_projects_ProjectAchivements",
+                name: "FK_dialCodes_projects_Achivements",
                 table: "dialCodes");
 
             migrationBuilder.DropTable(
