@@ -1,3 +1,8 @@
+using EvidenceProject.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography.X509Certificates;
+
 namespace EvidenceProject
 {
     public class Program
@@ -5,6 +10,10 @@ namespace EvidenceProject
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDbContext<ProjectContext>(opt =>
+                opt.UseSqlServer(
+                    builder.Configuration["DatabaseConnection"]));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
