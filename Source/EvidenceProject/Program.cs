@@ -1,7 +1,10 @@
+using EvidenceProject.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 
-namespace EvidenceProject;
-public class Program
+namespace EvidenceProject
 {
     public static void Main(string[] args)
     {
@@ -31,7 +34,12 @@ public class Program
             options.Cookie.MaxAge = TimeSpan.FromDays(8);
         });
 
-        var app = builder.Build();
+            builder.Services.AddDbContext<ProjectContext>(opt =>
+                opt.UseSqlServer(
+                    builder.Configuration["DatabaseConnection"]));
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
