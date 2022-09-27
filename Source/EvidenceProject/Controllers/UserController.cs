@@ -1,9 +1,16 @@
 using EvidenceProject.Controllers.RequestClasses;
+using EvidenceProject.Data;
 using EvidenceProject.Helpers;
 
 namespace EvidenceProject.Controllers;
 public class AdminController : Controller
 {
+    private readonly ProjectContext _context;
+
+    public AdminController(ProjectContext context)
+    {
+        _context = context;
+    }
     // <summary>
     // Stranka admina  
     // </summary>
@@ -55,6 +62,7 @@ public class AdminController : Controller
     public IActionResult RegisterPost([FromForm] LoginData data)
     {
         // TODO
+
         return Redirect("/user/login");
     }
 }

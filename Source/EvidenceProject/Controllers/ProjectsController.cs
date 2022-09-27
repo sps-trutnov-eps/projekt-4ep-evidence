@@ -1,9 +1,17 @@
 ﻿using EvidenceProject.Controllers.RequestClasses;
+using EvidenceProject.Data;
 using EvidenceProject.Helpers;
 
 namespace EvidenceProject.Controllers;
 public class ProjectController : Controller
 {
+    private readonly ProjectContext _context;
+
+    public ProjectController(ProjectContext context)
+    {
+        _context = context;
+    }
+
     [HttpGet("project")]
     public ActionResult Index()
     {
