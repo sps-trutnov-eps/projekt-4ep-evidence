@@ -42,7 +42,7 @@ public class AdminController : Controller
     // <summary>
     // Register view (get)
     // </summary>
-    [HttpPost("users/register")]
+    [HttpGet("users/register")]
     public IActionResult RegisterGet()
     {
         return View();
