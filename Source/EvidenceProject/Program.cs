@@ -4,7 +4,8 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 
-namespace EvidenceProject
+namespace EvidenceProject;
+public class Program
 {
     public static void Main(string[] args)
     {
@@ -19,10 +20,10 @@ namespace EvidenceProject
 
         // konfigurace z appsettings.json
         IConfiguration configurationBUilder = new ConfigurationBuilder()
-                                .AddJsonFile("appsettings.json",false).Build();
+                                .AddJsonFile("appsettings.json", false).Build();
         configurationBUilder.GetValue<string>("Admin:username");
         configurationBUilder.GetValue<string>("Admin:password");
-        
+
 
         // Session
         builder.Services.AddSession(options =>
@@ -34,13 +35,13 @@ namespace EvidenceProject
             options.Cookie.MaxAge = TimeSpan.FromDays(8);
         });
 
-            builder.Services.AddDbContext<ProjectContext>(opt =>
-                opt.UseSqlServer(
-                    builder.Configuration["DatabaseConnection"]));
+        builder.Services.AddDbContext<ProjectContext>(opt =>
+            opt.UseSqlServer(
+                builder.Configuration["DatabaseConnection"]));
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
+        // Add services to the container.
+        builder.Services.AddControllersWithViews();
+        var app = builder.Build();
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
@@ -65,3 +66,4 @@ namespace EvidenceProject
         app.Run();
     }
 }
+    
