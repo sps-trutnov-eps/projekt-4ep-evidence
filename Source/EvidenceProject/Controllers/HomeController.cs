@@ -1,9 +1,14 @@
 ﻿namespace EvidenceProject.Controllers;
 public class HomeController : Controller
 {
-    [HttpGet]
     public IActionResult Index()
     {
         return View();
+    }
+
+    [HttpPost("/search/{searchData}")]
+    public ActionResult Search(string searchData)
+    {
+        return Json(searchData);
     }
 }
