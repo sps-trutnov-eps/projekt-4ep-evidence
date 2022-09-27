@@ -8,17 +8,17 @@ namespace EvidenceProject.Data.DataModels
     public class DialCode
     {
         [Key]
-        public int ID { get; set; }
+        public int id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string? name { get; set; }
 
         [NotMapped]
-        public Color? Color { get; set; }
+        public Color? color { get; set; }
 
-        public string? Description { get; set; }
+        public string? description { get; set; }
 
         [Required]
-        public virtual DialInfo DialInfo { get; set; }
+        public virtual DialInfo? dialInfo { get; set; }
     }
 }

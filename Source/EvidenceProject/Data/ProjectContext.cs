@@ -1,5 +1,6 @@
 using EvidenceProject.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace EvidenceProject.Data;
 
@@ -15,8 +16,16 @@ public class ProjectContext: DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        // M:N DB enitity connections
+
         builder.Entity<Project>().HasMany(p => p.assignees);
 
-        builder.Entity<DialCode>().HasOne(d => d.DialInfo).WithMany(d => d.DialCodes);
+        builder.Entity<Project>().HasMany(p => p.projectAchievements);
+
+        builder.Entity<DialCode>().HasOne(d => d.dialInfo).WithMany(d => d.dialCodes);
+
+        // Duplicates
+
+        builder.Entity<AuthUser>().HasIndex(u => u.username).IsUnique();
     }
 }

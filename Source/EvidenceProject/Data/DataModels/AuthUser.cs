@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EvidenceProject.Data.DataModels;
 
-[Keyless]
 public class User
 {
+    [Required] [Key] public int id { get; set; }
     [Required] public string? fullName { get; set; }
     public string? studyField { get; set; }
     public string? contactDetails { get; set; }
@@ -14,7 +14,7 @@ public class User
 
 public class AuthUser : User
 {
-    [Required] [Key] public string? username { init; get; }
+    [Required] public string? username { init; get; }
     public string? password { set; get; }
     public bool? globalAdmin { get; init; }
 }
