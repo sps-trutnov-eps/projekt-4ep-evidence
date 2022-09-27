@@ -1,5 +1,6 @@
 using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Data;
+using EvidenceProject.Data.DataModels;
 using EvidenceProject.Helpers;
 
 namespace EvidenceProject.Controllers;
@@ -37,12 +38,19 @@ public class AdminController : Controller
     [HttpPost("users/login")]
     public IActionResult LoginPost([FromForm] LoginData data) 
     {
-        // TODO
-        if (data.password == "heslo") {
-            HttpContext.Session.SetString(UniversalHelper.LoggedInKey, "true");
-            return Redirect("/");
-        }
-        return Redirect("/users/login");
+        AuthUser? user = _context.globalUsers?.Where(u => u.username == data.username).First();
+
+        if (user == null)
+            return Redirect("/user/login");
+
+        if (data.password == null || user.password == null)
+            return Redirect("/user/login");
+
+        if (!PasswordHelper.VerifyHash(data.password, user.password))
+            return Redirect("/users/login");
+
+        HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
+        return Redirect("/");
     }
 
 
@@ -61,8 +69,12 @@ public class AdminController : Controller
     [HttpPost("users/register")]
     public IActionResult RegisterPost([FromForm] LoginData data)
     {
-        // TODO
+        if (_context.globalUsers?.Where(u => u.username == data.username).Count() > 0)
+            return Redirect("/user/register"); // Don't allow 2 users with the same name
 
+        int? userCount = _context.globalUsers?.Count(); // count users => if 0 then user will be declered a globalAdmin
+        AuthUser newUser = new AuthUser { password = PasswordHelper.CreateHash(data.password ?? "defaultniheslo"), username = data.username, globalAdmin = userCount == 0 };
+        _context.globalUsers?.Add(newUser);
         return Redirect("/user/login");
     }
 }
