@@ -2,6 +2,11 @@
     ViewData["Title"] = "Create Project";
 }
 
+@section Scripts
+{
+    <script src="~/js/create.js"></script>
+}
+
 <form action="/project/create" method="post">
     <label for="name">Název projektu: </label>
     <input name="name" type="text" placeholder="..." id="name"/>
