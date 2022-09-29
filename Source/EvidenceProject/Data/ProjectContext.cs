@@ -19,9 +19,9 @@ public class ProjectContext: DbContext
     {
         // M:N DB enitity connections
 
-        builder.Entity<Project>().HasMany(p => p.assignees);
+        builder.Entity<Project>().HasMany(p => p.assignees).WithMany(a => a.Projects);
 
-        builder.Entity<Project>().HasMany(p => p.projectAchievements);
+        //builder.Entity<Project>().HasMany(p => p.projectAchievements);
 
         builder.Entity<DialCode>().HasOne(d => d.dialInfo).WithMany(d => d.dialCodes);
 

@@ -10,7 +10,7 @@ public class Project
     [Required] [ForeignKey("State")] public virtual DialCode? projectState { get; set; }
     [Required] [ForeignKey("Type")] public virtual DialCode? projectType { get; set; }
     [Required] [ForeignKey("Technology")] public virtual DialCode? projectTechnology { get; set; }
-    [Required] [ForeignKey("Achivements")] public virtual List<DialCode>? projectAchievements { get; set; }
+    //[Required] [ForeignKey("Achivements")] public virtual List<DialCode>? projectAchievements { get; set; }
 
     [Required] public virtual List<User>? assignees { get; set; }
     [ForeignKey("AuthUser")] public AuthUser? projectManager;

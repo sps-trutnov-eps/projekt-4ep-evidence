@@ -9,6 +9,7 @@ public class User
     [Required] public string? fullName { get; set; }
     public string? studyField { get; set; }
     public string? contactDetails { get; set; }
+    public virtual List<Project>? Projects { get; set; }
     
 }
 
