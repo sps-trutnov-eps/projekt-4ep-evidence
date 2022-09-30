@@ -20,8 +20,14 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <!-- <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>-->
-                            <!-- Přidat search-->
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Login">Admin login</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
+                            <form action="/search" method="get">
+                                <label for="search">Vyhledat:</label> 
+                                <input id="search" name="searchQuery" type="search" placeholder="..."/>
+                                <input type="submit"/>
+                            </form>
                         </li>
                     </ul>
                 </div>

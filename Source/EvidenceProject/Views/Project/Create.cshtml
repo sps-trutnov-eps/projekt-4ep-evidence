@@ -1,4 +1,26 @@
-﻿<form action="/project/create" method="post">
-    <input name="text" type="text" />
+﻿@{
+    ViewData["Title"] = "Create Project";
+}
+
+<form action="/project/create" method="post">
+    <label for="name">Název projektu: </label>
+    <input name="ProjectName" type="text" placeholder="..." id="name"/>
+    <label for="state">Stav: </label>
+    <input name="ProjectState" list="stavy" id="state"/>
+    <label for="type">Typ: </label>
+    <input name="ProjectType" type="text" placeholder="..." id="type"/>
+    <label for="technology">Technologie: </label>
+    <input name="Technology" type="text" placeholder="..." id="technology"/>
+    <label for="photo">Fotografie: </label>
+    <input name="Photos" type="file" multiple="multiple" id="photo"/>
+    <label for="achievments">Úspěchy: </label>
+    <input name="Achievements" type="text" id="achievments" />
     <input type="submit"/> 
+
+    <datalist id="stavy">
+        <option>Nápad</option>
+        <option>Aktivní</option>    
+        <option>Opuštěný</option>
+        <option>Dokončený</option>
+    </datalist>
 </form>

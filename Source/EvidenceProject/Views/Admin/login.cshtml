@@ -1,4 +1,11 @@
+@{
+
+    ViewData["Title"] = "Admin login";
+
+}
+
 <form action="/admin/login" method="post">
-    <input type="password" name="password">
+    <label for="password">Heslo:</label>
+    <input type="password" name="password" id="password" placeholder="...">
     <input type="submit" value="login"> 
 </form>
