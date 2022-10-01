@@ -11,6 +11,10 @@ h1{
   color: black;
 }
 
+footer{
+  padding: 1rem;
+}
+
 body {
   margin-bottom: 55px;
 }
