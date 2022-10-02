@@ -21,13 +21,17 @@ public class ProjectContext: DbContext
 
         builder.Entity<Project>().HasMany(p => p.assignees).WithMany(a => a.Projects);
 
-        //builder.Entity<Project>().HasMany(p => p.projectAchievements);
+        builder.Entity<Project>().HasMany(p => p.projectAchievements).WithOne(a => a.project);
 
         builder.Entity<DialCode>().HasOne(d => d.dialInfo).WithMany(d => d.dialCodes);
 
         // Duplicates
 
         builder.Entity<AuthUser>().HasIndex(u => u.username).IsUnique();
+
+        builder.Entity<DialInfo>().HasIndex(d => d.name).IsUnique();
+
+        builder.Entity<DialCode>().HasIndex(d => d.name).IsUnique();
 
         // Cascades
 

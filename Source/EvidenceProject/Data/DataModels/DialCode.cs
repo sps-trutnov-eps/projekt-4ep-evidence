@@ -14,7 +14,10 @@ namespace EvidenceProject.Data.DataModels
         public string? name { get; set; }
 
         [NotMapped]
-        public Color? color { get; set; }
+        public Color? color { get => Color.FromArgb(_color); set => _color = value?.ToArgb() ?? 0; }
+
+        [Required]
+        public int _color { get; set; }
 
         public string? description { get; set; }
 
