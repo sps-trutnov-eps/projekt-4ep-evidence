@@ -1,9 +1,7 @@
 using Konscious.Security.Cryptography;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace EvidenceProject.Helpers;
-
 public class PasswordHelper {
     // hesla nejsou posolena
     static public string CreateHash(string input)

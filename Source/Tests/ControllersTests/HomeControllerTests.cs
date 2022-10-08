@@ -8,7 +8,7 @@ namespace Tests.ControllersTests
 {
     public class HomeControllerTests
     {
-        private HomeController Controller = new HomeController(new ProjectContext(new DbContextOptions<ProjectContext>()));
+        private ProjectController Controller = new ProjectController(new ProjectContext(new DbContextOptions<ProjectContext>()));
 
         [Test]
         [TestCase("test", "test")]
@@ -17,8 +17,8 @@ namespace Tests.ControllersTests
         public void SearchProject(string projectQuery, string expectedProject)
         {
             var response = Controller.Search(projectQuery) as ViewResult;
-            var data = response.Model as Project;
-            Assert.Equals(data.name, expectedProject);
+            var data = response?.Model as List<Project>;
+            Assert.AreEqual(expectedProject, data?.First().name);
         }
     }
 }
