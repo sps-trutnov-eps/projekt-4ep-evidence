@@ -1,6 +1,4 @@
-﻿using EvidenceProject.Data;
-
-namespace EvidenceProject.Controllers;
+﻿namespace EvidenceProject.Controllers;
 public class HomeController : Controller
 {
     private readonly ProjectContext _context;
@@ -10,8 +8,6 @@ public class HomeController : Controller
         _context = context;
     }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+    public IActionResult Index() => View();
+    
 }

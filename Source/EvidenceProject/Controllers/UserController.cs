@@ -1,6 +1,4 @@
 using EvidenceProject.Controllers.RequestClasses;
-using EvidenceProject.Data;
-using EvidenceProject.Data.DataModels;
 using EvidenceProject.Helpers;
 
 namespace EvidenceProject.Controllers;
@@ -33,7 +31,7 @@ public class UserController : Controller
     [HttpPost("users/login")]
     public IActionResult LoginPost([FromForm] LoginData data) 
     {
-        AuthUser? user = _context.globalUsers?.FirstOrDefault(u => u.username == data.username);
+        AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.username);
         if (user == null) return Json(UniversalHelper.SomethingWentWrongMessage);
 
         if (data.password == null || data.username == null) return Json(UniversalHelper.SomethingWentWrongMessage);
@@ -58,19 +56,20 @@ public class UserController : Controller
     public IActionResult RegisterPost([FromForm] LoginData data)
     {
         if (data.username == null || data.password == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+        var contextList = _context?.globalUsers?.ToList();
 
-        var isUserExisting = _context?.globalUsers?.Any(u => u.username == data.username);
+        var isUserExisting = contextList.Any(u => u.username == data.username);
         if ((bool)isUserExisting) return Json("Uživatel již existuje"); // Don't allow 2 users with the same name
 
-        var isFirstUser = _context?.globalUsers?.Any(); // if there is no user 
+        var isFirstUser = contextList.Any(); // if there is no user 
+        string passwordHash = PasswordHelper.CreateHash(data.password);
         var newUser = new AuthUser()
         {
-            // TODO add input in view for full name and studyField 
             fullName = data.username,
-            studyField = null,
-
-            password = PasswordHelper.CreateHash(data.password),
             username = data.username,
+            password = passwordHash,
+            studyField = null,
+            contactDetails = null,
             globalAdmin = !isFirstUser
         };
 
