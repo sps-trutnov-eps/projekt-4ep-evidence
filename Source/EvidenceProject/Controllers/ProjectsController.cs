@@ -1,8 +1,5 @@
 ﻿using EvidenceProject.Controllers.RequestClasses;
-using EvidenceProject.Data;
-using EvidenceProject.Data.DataModels;
 using EvidenceProject.Helpers;
-
 
 namespace EvidenceProject.Controllers;
 public class ProjectController : Controller
@@ -17,7 +14,7 @@ public class ProjectController : Controller
     [HttpGet("project")]
     public ActionResult Index()
     {
-        if(!UniversalHelper.getLoggedUser(HttpContext, out var userID)) return Redirect("/");
+        if(!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
         return Redirect("project/create");
     }
 
@@ -71,7 +68,7 @@ public class ProjectController : Controller
     public ActionResult Search(string searchQuery)
     {
         if (searchQuery == string.Empty) return Ok();
-        var projects = _context?.projects?.Where(project => project.name.Contains(searchQuery));
+        var projects = _context?.projects?.ToList().Where(project => project.name.Contains(searchQuery));
         if (projects == null) return Json("Nic nenalezeno");
         // JSON OR VIEW ?
         return View(projects);

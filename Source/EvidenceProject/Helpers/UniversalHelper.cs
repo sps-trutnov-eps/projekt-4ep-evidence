@@ -1,7 +1,4 @@
-﻿using EvidenceProject.Data;
-using EvidenceProject.Data.DataModels;
-
-namespace EvidenceProject.Helpers;
+﻿namespace EvidenceProject.Helpers;
 public class UniversalHelper
 {
 
@@ -30,7 +27,7 @@ public class UniversalHelper
     /// </summary>
     public static bool getProject(ProjectContext context, int id, out Project project)
     {
-        project = context?.projects?.FirstOrDefault(project => project.id == id);
+        project = context?.projects?.ToList().FirstOrDefault(project => project.id == id);
         return project != null;
     }
 }

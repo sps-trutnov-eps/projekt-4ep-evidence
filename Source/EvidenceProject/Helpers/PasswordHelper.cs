@@ -2,8 +2,8 @@ using Konscious.Security.Cryptography;
 using System.Text;
 
 namespace EvidenceProject.Helpers;
-public class PasswordHelper {
-    // hesla nejsou posolena
+public class PasswordHelper 
+{
     static public string CreateHash(string input)
     {
         var argon = new Argon2id(Encoding.UTF8.GetBytes(input));
@@ -20,5 +20,4 @@ public class PasswordHelper {
         var novejHash = CreateHash(input);
         return novejHash == hash;
     }
-
 }
