@@ -5,6 +5,11 @@ html {
   background-color: white;
 }
 
+:root{
+  --primary: #007bff;
+  --sps-cyan: #17a2b8;
+}
+
 nav{
   display: flex; 
   background-color: yellow;
@@ -13,18 +18,24 @@ nav{
 .container-fluid{
   flex-shrink: 1;
   flex-direction: column;
+  background-color: var(--primary);
+  padding: 1rem;
 }
 
+form{
+  margin-left: 0.55rem;
+}
 .navbar-toggler{
   position: absolute;
-  top: 20px;
+  top: 40px;
   right: 10px;
 }
 
-.navbar-brand{
+.navbar-light .navbar-brand{
   text-align: center;
   margin-right: 0;
   font-weight: bold;
+  color: white;
 }
 .navbar-collapse {
   border-top: 2px solid rgb(32, 117, 173);
@@ -73,7 +84,7 @@ body {
     .navbar-collapse {
       border-top: none;
       margin-left: 1rem;
-      border-left: 2px solid rgb(32, 117, 173);
+      border-left: 2px solid var(--sps-cyan);
       padding-left: 1rem;
     }
 }
