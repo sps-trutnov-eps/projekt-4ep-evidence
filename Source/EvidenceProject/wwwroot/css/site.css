@@ -46,7 +46,7 @@ form{
   padding: 0.5rem 5rem;
 }
 .nav-link:hover{
-  background-color: rgb(155, 151, 151);
+  background-color: var(--sps-cyan);
 
 }
 
