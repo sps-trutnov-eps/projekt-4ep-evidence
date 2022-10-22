@@ -13,7 +13,7 @@ public class UserController : Controller
 
     
     [HttpGet("admin")]
-    public IActionResult Index()
+    public ActionResult Index()
     {
         if (HttpContext.Session.GetString(UniversalHelper.LoggedInKey) != "1")  return Redirect("/");
         return View();
@@ -23,13 +23,13 @@ public class UserController : Controller
     // Login view (get)
     // </summary>
     [HttpGet("users/login")]
-    public IActionResult Login() => View();
+    public ActionResult Login() => View();
     
     // <summary>
     // Login (post)
     // </summary>
     [HttpPost("users/login")]
-    public IActionResult LoginPost([FromForm] LoginData data) 
+    public ActionResult LoginPost([FromForm] LoginData data, bool testing = false) 
     {
         AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.username);
         if (user == null) return Json(UniversalHelper.SomethingWentWrongMessage);
@@ -37,7 +37,7 @@ public class UserController : Controller
         if (data.password == null || data.username == null) return Json(UniversalHelper.SomethingWentWrongMessage);
 
         if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
-
+        if(testing) return Redirect("/");
         HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
         return Redirect("/");
     }
@@ -47,13 +47,13 @@ public class UserController : Controller
     // Register view (get)
     // </summary>
     [HttpGet("users/register")]
-    public IActionResult Register() => View();
+    public ActionResult Register() => View();
 
     // <summary>
     // Register (post)
     // </summary>
     [HttpPost("users/register")]
-    public IActionResult RegisterPost([FromForm] LoginData data)
+    public ActionResult RegisterPost([FromForm] LoginData data)
     {
         if (data.username == null || data.password == null) return Json(UniversalHelper.SomethingWentWrongMessage);
         var contextList = _context?.globalUsers?.ToList();

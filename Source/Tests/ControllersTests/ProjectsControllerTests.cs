@@ -5,6 +5,7 @@ using EvidenceProject.Data.DataModels;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework.Internal;
 
+#nullable disable
 namespace Tests.ControllersTests;
 public class ProjectControllerTests : ControllerTestsBase
 {
@@ -25,7 +26,7 @@ public class ProjectControllerTests : ControllerTestsBase
     public void SearchProject(string projectQuery, string expectedProject)
     {
         var response = (ViewResult)Controller.Search(projectQuery);
-        var data = (List<Project>)response?.Model;
+        var data = (List<Project>)response.Model;
         Assert.That(data?.First().name, Is.EqualTo(expectedProject));
     }
 
@@ -61,3 +62,4 @@ public class ProjectControllerTests : ControllerTestsBase
     }
 
 }
+#nullable enable
