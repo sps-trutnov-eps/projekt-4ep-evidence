@@ -44,7 +44,7 @@ public class ProjectController : Controller
     /// Odstranění projektu
     /// </summary>
     [HttpPost("project/{id}")]
-    public ActionResult Delete(int id)
+    public JsonResult Delete(int id)
     {
         if (!UniversalHelper.getProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
         _context?.projects?.Remove(project);
