@@ -16,10 +16,8 @@ public class Project
     [ForeignKey("AuthUser")] public AuthUser? projectManager;
 
     //TODO Artefacts(Files, text)
-    //TODO Technology(List<string>???)
     //TODO Showcase??(Files?, Photos?)
-    //TODO Accomplishments(Text tied with Photos??)
-    
+
     public string? github { get; set; }
     public string? slack { get; set; }
 }
