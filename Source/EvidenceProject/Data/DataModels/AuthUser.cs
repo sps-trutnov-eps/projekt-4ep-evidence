@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using bcrypt = BCrypt.Net.BCrypt;
 
@@ -21,10 +22,12 @@ public class AuthUser : User
     public bool? globalAdmin { get; init; }
     [Required] public string? id_key { get; private set; }
 
-    private bool notHashedPass = true;
+    [NotMapped]
+    private bool notHashedPass = false;
 
     public AuthUser(ProjectContext? context = null)
     {
+        notHashedPass = true;
         GenerateIdKey(context);
     }
 
