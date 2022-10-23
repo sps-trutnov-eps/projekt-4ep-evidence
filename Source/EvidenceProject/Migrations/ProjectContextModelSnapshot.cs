@@ -25,7 +25,8 @@ namespace EvidenceProject.Migrations
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Achievement", b =>
                 {
                     b.Property<string>("name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("projectid")
                         .HasColumnType("int");
