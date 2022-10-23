@@ -71,6 +71,7 @@ public class ProjectController : Controller
         var projects = _context?.projects?.ToList().Where(project => project.name.Contains(searchQuery));
         if (projects == null) return Json("Nic nenalezeno");
         // JSON OR VIEW ?
-        return View(projects);
+        
+        return Json("Searched: " , projects);
     }
 }
