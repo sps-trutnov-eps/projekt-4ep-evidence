@@ -12,3 +12,17 @@ const fileSelector = document.getElementById('photo');
 //    }
 //});
 
+console.log("xd");
+$(document).ready(function () {
+    loginText();
+    console.log('ready');
+});
+
+function loginText(e) {
+
+    $('.myLogin').on('click', () => {
+        $('.myLogin').after('<p>logging in...</p>');
+    });
+    console.log('logging text');
+    e.preventDefault();
+};
