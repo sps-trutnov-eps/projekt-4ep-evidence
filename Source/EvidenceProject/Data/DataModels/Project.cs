@@ -15,7 +15,7 @@ public class Project
     [Required] public virtual List<User>? assignees { get; set; }
     [ForeignKey("AuthUser")] public AuthUser? projectManager;
 
-    //TODO Artefacts(Files, text)
+    //TODO Artefacts(Files, text) 
     //TODO Showcase??(Files?, Photos?)
 
     public string? github { get; set; }

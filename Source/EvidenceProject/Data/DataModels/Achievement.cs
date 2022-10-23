@@ -8,5 +8,7 @@ namespace EvidenceProject.Data.DataModels
         public string? name { get; set; }
         [Required]
         public Project? project { get; set; }
+        
+        //TODO Files/Photos
     }
 }

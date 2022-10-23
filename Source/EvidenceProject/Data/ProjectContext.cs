@@ -14,6 +14,8 @@ public class ProjectContext: DbContext
     
     public DbSet<DialInfo>? dialInfos { get; set; }
     public DbSet<DialCode>? dialCodes { get; set; }
+    
+    public DbSet<DbFile>? files { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
