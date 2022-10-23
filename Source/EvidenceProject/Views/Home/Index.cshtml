@@ -1,5 +1,25 @@
-﻿@{
+﻿@model List<EvidenceProject.Data.DataModels.Project>
+
+@{
     ViewData["Title"] = "Home Page";
 }
+
+@if(Model != null)
+{
+    @foreach (EvidenceProject.Data.DataModels.Project project in Model)
+    {
+        <p><b>@project.name</b></p>
+        <l>fotka</l>
+        <p>Autor: @project.assignees</p>
+        <p>Stav: @project.projectState</p>
+        <p>Použitá technologie: @project.projectTechnology</p>      
+        <p>Úspěchy: @project.projectAchievements</p>       
+        <p>Github: @project.github</p>
+        <p>Slack: @project.slack</p>
+    }
+
+}
+
+
 
 
