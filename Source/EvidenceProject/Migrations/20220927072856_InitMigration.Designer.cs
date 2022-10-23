@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EvidenceProject.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20220927064134_InitMigration")]
+    [Migration("20220927072856_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,7 +32,7 @@ namespace EvidenceProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
-                    b.Property<int?>("ProjectAchivements")
+                    b.Property<int?>("Achivements")
                         .HasColumnType("int");
 
                     b.Property<string>("description")
@@ -47,7 +47,7 @@ namespace EvidenceProject.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("ProjectAchivements");
+                    b.HasIndex("Achivements");
 
                     b.HasIndex("dialInfoid");
 
@@ -82,13 +82,13 @@ namespace EvidenceProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
-                    b.Property<int>("ProjectState")
+                    b.Property<int>("State")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProjectTechnology")
+                    b.Property<int>("Technology")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProjectType")
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<string>("github")
@@ -103,11 +103,11 @@ namespace EvidenceProject.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("ProjectState");
+                    b.HasIndex("State");
 
-                    b.HasIndex("ProjectTechnology");
+                    b.HasIndex("Technology");
 
-                    b.HasIndex("ProjectType");
+                    b.HasIndex("Type");
 
                     b.ToTable("projects");
                 });
@@ -171,7 +171,7 @@ namespace EvidenceProject.Migrations
                 {
                     b.HasOne("EvidenceProject.Data.DataModels.Project", null)
                         .WithMany("projectAchievements")
-                        .HasForeignKey("ProjectAchivements");
+                        .HasForeignKey("Achivements");
 
                     b.HasOne("EvidenceProject.Data.DataModels.DialInfo", "dialInfo")
                         .WithMany("dialCodes")
@@ -186,20 +186,20 @@ namespace EvidenceProject.Migrations
                 {
                     b.HasOne("EvidenceProject.Data.DataModels.DialCode", "projectState")
                         .WithMany()
-                        .HasForeignKey("ProjectState")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("State")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EvidenceProject.Data.DataModels.DialCode", "projectTechnology")
                         .WithMany()
-                        .HasForeignKey("ProjectTechnology")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Technology")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EvidenceProject.Data.DataModels.DialCode", "projectType")
                         .WithMany()
-                        .HasForeignKey("ProjectType")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Type")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("projectState");

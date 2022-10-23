@@ -1,6 +1,8 @@
-﻿using EvidenceProject.Models;
+﻿using EvidenceProject.Data.DataModels;
+using EvidenceProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace EvidenceProject.Controllers
 {

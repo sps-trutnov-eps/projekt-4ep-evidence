@@ -4,6 +4,7 @@ using EvidenceProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EvidenceProject.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    partial class ProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20220929173119_AssigneessConTable")]
+    partial class AssigneessConTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +23,6 @@ namespace EvidenceProject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("EvidenceProject.Data.DataModels.Achievement", b =>
-                {
-                    b.Property<string>("name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("projectid")
-                        .HasColumnType("int");
-
-                    b.HasKey("name");
-
-                    b.HasIndex("projectid");
-
-                    b.ToTable("Achievement");
-                });
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.DialCode", b =>
                 {
@@ -45,9 +32,6 @@ namespace EvidenceProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
-                    b.Property<int>("_color")
-                        .HasColumnType("int");
-
                     b.Property<string>("description")
                         .HasColumnType("nvarchar(max)");
 
@@ -56,14 +40,11 @@ namespace EvidenceProject.Migrations
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
                     b.HasIndex("dialInfoid");
-
-                    b.HasIndex("name")
-                        .IsUnique();
 
                     b.ToTable("dialCodes");
                 });
@@ -81,12 +62,9 @@ namespace EvidenceProject.Migrations
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
-
-                    b.HasIndex("name")
-                        .IsUnique();
 
                     b.ToTable("dialInfos");
                 });
@@ -194,17 +172,6 @@ namespace EvidenceProject.Migrations
                     b.HasDiscriminator().HasValue("AuthUser");
                 });
 
-            modelBuilder.Entity("EvidenceProject.Data.DataModels.Achievement", b =>
-                {
-                    b.HasOne("EvidenceProject.Data.DataModels.Project", "project")
-                        .WithMany("projectAchievements")
-                        .HasForeignKey("projectid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("project");
-                });
-
             modelBuilder.Entity("EvidenceProject.Data.DataModels.DialCode", b =>
                 {
                     b.HasOne("EvidenceProject.Data.DataModels.DialInfo", "dialInfo")
@@ -261,11 +228,6 @@ namespace EvidenceProject.Migrations
             modelBuilder.Entity("EvidenceProject.Data.DataModels.DialInfo", b =>
                 {
                     b.Navigation("dialCodes");
-                });
-
-            modelBuilder.Entity("EvidenceProject.Data.DataModels.Project", b =>
-                {
-                    b.Navigation("projectAchievements");
                 });
 #pragma warning restore 612, 618
         }
