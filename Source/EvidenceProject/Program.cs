@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvidenceProject;
 public class Program
@@ -10,17 +10,6 @@ public class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
-
-        // TODO zkusit najit admina
-        // TODO pokud nebude ulozit do DB
-
-        // konfigurace z appsettings.json
-        IConfiguration configurationBUilder = new ConfigurationBuilder()
-                                .AddJsonFile("appsettings.json",false).Build();
-        configurationBUilder.GetValue<string>("Admin:username");
-        configurationBUilder.GetValue<string>("Admin:password");
-        
-
         // Session
         builder.Services.AddSession(options =>
         {
@@ -31,13 +20,15 @@ public class Program
             options.Cookie.MaxAge = TimeSpan.FromDays(8);
         });
 
-        var app = builder.Build();
+        builder.Services.AddDbContext<ProjectContext>(opt =>
+            opt.UseSqlServer(
+                builder.Configuration["DatabaseConnection"]));
 
-        // Configure the HTTP request pipeline.
+        builder.Services.AddControllersWithViews();
+        var app = builder.Build();
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
@@ -57,3 +48,4 @@ public class Program
         app.Run();
     }
 }
+    

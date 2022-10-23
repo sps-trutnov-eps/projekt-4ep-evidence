@@ -1,8 +1,13 @@
 ﻿namespace EvidenceProject.Controllers;
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly ProjectContext _context;
+
+    public HomeController(ProjectContext context)
     {
-        return View();
+        _context = context;
     }
+
+    public IActionResult Index() => View();
+    
 }
