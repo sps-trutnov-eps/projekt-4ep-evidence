@@ -15,7 +15,7 @@ public class UserController : Controller
     [HttpGet("admin")]
     public ActionResult Index()
     {
-        if (HttpContext.Session.GetString(UniversalHelper.LoggedInKey) != "1")  return Redirect("/");
+        if (HttpContext.Session.GetString(UniversalHelper.LoggedInKey) != "1")  return Redirect("/users/login");
         return View();
     }
 
@@ -37,7 +37,7 @@ public class UserController : Controller
         if (data.password == null || data.username == null) return Json(UniversalHelper.SomethingWentWrongMessage);
 
         if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
-        if(testing) return Redirect("/");
+        if(testing) return Redirect("/"); 
         HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
         return Redirect("/");
     }
@@ -58,8 +58,8 @@ public class UserController : Controller
         if (data.username == null || data.password == null) return Json(UniversalHelper.SomethingWentWrongMessage);
         var contextList = _context?.globalUsers?.ToList();
 
-        var isUserExisting = contextList.Any(u => u.username == data.username);
-        if ((bool)isUserExisting) return Json("Uûivatel jiû existuje"); // Don't allow 2 users with the same name
+        var doesUserExist = contextList.Any(u => u.username == data.username);
+        if ((bool)doesUserExist) return Json("U≈æivatel ji≈æ existuje"); // Don't allow 2 users with the same name
 
         var isFirstUser = contextList.Any(); // if there is no user 
         string passwordHash = PasswordHelper.CreateHash(data.password);
