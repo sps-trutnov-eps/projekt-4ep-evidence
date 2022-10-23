@@ -29,6 +29,8 @@ public class ProjectContext: DbContext
 
         // Duplicates
 
+        builder.Entity<AuthUser>().HasIndex(u => u.id_key).IsUnique();
+
         builder.Entity<AuthUser>().HasIndex(u => u.username).IsUnique();
 
         builder.Entity<DialInfo>().HasIndex(d => d.name).IsUnique();
