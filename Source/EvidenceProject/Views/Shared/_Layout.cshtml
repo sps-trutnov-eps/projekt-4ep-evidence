@@ -21,7 +21,7 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Login">Admin login</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Admin login</a>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
                             <form action="/search" method="get">
                                 <label for="search">Vyhledat:</label> 
@@ -42,7 +42,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - EvidenceProject
+            &copy; @DateTime.Now.Year - EvidenceProject
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

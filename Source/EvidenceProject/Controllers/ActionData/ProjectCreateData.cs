@@ -1,16 +1,16 @@
 ﻿namespace EvidenceProject.Controllers.RequestClasses;
 public class ProjectCreateData
 {
-    public string ProjectName { get; set; }
+    public string? projectName { get; set; }
 
-    public string ProjectState { get; set; }
+    public string? projectState { get; set; }
 
-    public string ProjectType { get; set; }
+    public string? projectType { get; set; }
 
-    public string Technology { get; set; }
+    public string? technology { get; set; }
 
-    public IFormFileCollection Photos { get; set; }
+    public IFormFileCollection? photos { get; set; }
 
-    public string Achievements { get; set; }
+    public string? achievements { get; set; }
 
 }

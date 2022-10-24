@@ -1,8 +1,4 @@
-using EvidenceProject.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 
 namespace EvidenceProject;
 public class Program
@@ -13,17 +9,6 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
-
-
-        // TODO zkusit najit admina
-        // TODO pokud nebude ulozit do DB
-
-        // konfigurace z appsettings.json
-        IConfiguration configurationBUilder = new ConfigurationBuilder()
-                                .AddJsonFile("appsettings.json", false).Build();
-        configurationBUilder.GetValue<string>("Admin:username");
-        configurationBUilder.GetValue<string>("Admin:password");
-
 
         // Session
         builder.Services.AddSession(options =>

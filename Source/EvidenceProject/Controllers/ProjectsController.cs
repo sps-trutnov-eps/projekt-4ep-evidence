@@ -1,8 +1,5 @@
 ﻿using EvidenceProject.Controllers.RequestClasses;
-using EvidenceProject.Data;
-using EvidenceProject.Data.DataModels;
 using EvidenceProject.Helpers;
-
 
 namespace EvidenceProject.Controllers;
 public class ProjectController : Controller
@@ -17,7 +14,7 @@ public class ProjectController : Controller
     [HttpGet("project")]
     public ActionResult Index()
     {
-        if(!UniversalHelper.getLoggedUser(HttpContext, out var userID)) return Redirect("/");
+        if(!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
         return Redirect("project/create");
     }
 
@@ -27,33 +24,54 @@ public class ProjectController : Controller
     [HttpPost("project/create")]
     public ActionResult Create([FromForm] ProjectCreateData projectData)
     {
-        // Počkám na dokumentaci z db sekce
         Project project = new()
         {
-            name = projectData.ProjectName
+            name = projectData.projectName
         };
-        _context.projects.Add(project);
-        _context.SaveChanges();
+        _context?.projects?.Add(project);
+        _context?.SaveChanges();
         return Redirect("Index");
     }
 
     [HttpGet("project/create")]
     public ActionResult Create()
     {
-        var dialCodes = _context.dialCodes.ToList();
+        var dialCodes = _context?.dialCodes?.ToList();
         return View(dialCodes);
     }
 
+    /// <summary>
+    /// Odstranění projektu
+    /// </summary>
     [HttpPost("project/{id}")]
-    public ActionResult Delete(int id)
+    public JsonResult Delete(int id)
     {
+        if (!UniversalHelper.getProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
+        _context?.projects?.Remove(project);
         return Json("ok");
     }
-
-    /// <param name="id">Id projektu</param>
+    
+    /// <summary>
+    /// Stránka s projektem 
+    /// </summary>
     [HttpGet("projectinfo/{id}")]
     public ActionResult ProjectInfo(int id)
     {
-        return View();
+        if (!UniversalHelper.getProject(_context, id, out var project)) return View();
+        return View(project);
+    }
+
+    /// <summary>
+    /// Vyhledávání
+    /// </summary>
+    [HttpPost("search")]
+    public ActionResult Search(string searchQuery)
+    {
+        if (searchQuery == string.Empty) return Ok();
+        var projects = _context?.projects?.ToList().Where(project => project.name.Contains(searchQuery));
+        if (projects == null) return Json("Nic nenalezeno");
+        // JSON OR VIEW ?
+        // idk je to trash
+        return View(projects);
     }
 }

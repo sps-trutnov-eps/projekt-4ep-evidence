@@ -32,4 +32,14 @@ public class ProjectContext: DbContext
         builder.Entity<Project>().HasOne(p => p.projectTechnology).WithMany().OnDelete(DeleteBehavior.Restrict);
         builder.Entity<Project>().HasOne(p => p.projectType).WithMany().OnDelete(DeleteBehavior.Restrict);
     }
+
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer(
+            "Server=(localdb)\\mssqllocaldb;Database=EvidenceContext;Trusted_Connection=True;MultipleActiveResultSets=True");
+        }
+    }
 }
