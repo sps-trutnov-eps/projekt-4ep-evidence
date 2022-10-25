@@ -9,7 +9,7 @@ function plynulyPrechodMeziStrankami(){
         let link = $(this).attr('href');
 
         $("main").empty();
-        $("main").html("<div>načítání dat...</div>");
+        $("main").html("<div>načítám data...</div>");
     
         $.ajax({
             type : "GET",
