@@ -40,11 +40,13 @@ window.onpopstate = function(e){
 
 function spustitScript(){
     let lokace = $(location).attr("pathname");
-    if(lokace == "/project/create") {
+    if (lokace == "/project/create") {
         nazvySouboru();
-    } else if (lokace == "/users/login"){
+    } else if (lokace == "/users/login") {
         loginText();
-    }
+    /*} else if (lokace == "/") {
+
+    }*/
 }
 
 function nazvySouboru(){
