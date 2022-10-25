@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EvidenceProject</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EvidenceProject.styles.css" asp-append-version="true" />
@@ -12,7 +12,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EvidenceProject</a>
+                <a class="navbar-brand odkaz" asp-area="" asp-controller="Home" asp-action="Index">EvidenceProject</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,25 +20,36 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
+                            <a class="nav-link text-dark" asp-area="" id= "mode1">mode1</a>
+                            <a class="nav-link text-dark" asp-area="" id= "mode2">mode2</a>
+                            <a class="nav-link text-dark" asp-area="" id= "mode3">mode3</a>
+                            <a class="nav-link text-dark" asp-area="" id= "mode4">mode4</a>
+                            <a class="nav-link text-dark" asp-area="" id= "mode5">mode5</a>
+
+                            <form action="/search" method="get">
+                                <label for="search">Vyhledat:</label> 
+                                <input id="search" name="searchQuery" type="search" placeholder="..."/>
+                                <input type="submit"/>
+                            </form>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    <main>
+        <div id="@ViewData["Page"]">
             @RenderBody()
-        </main>
-    </div>
+        </div>
+    </main>
+
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - EvidenceProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - EvidenceProject
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

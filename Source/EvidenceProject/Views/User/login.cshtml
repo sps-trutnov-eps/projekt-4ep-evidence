@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Login";
+    ViewData["Page"] = "login";
+}
+
+<form action="/users/login" method="post">
+    <input type="text" name="username">
+    <input type="password" name="password">
+    <input class="myLogin" type="submit" value="login">
+</form>
