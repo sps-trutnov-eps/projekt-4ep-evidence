@@ -70,3 +70,7 @@ function loginText(e) {
     console.log('logging text');
     //e.preventDefault();
 }
+
+function menitHeslo() {
+    alert("zatím nejde");
+}
