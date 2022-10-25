@@ -2,16 +2,20 @@ using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Helpers;
 
 namespace EvidenceProject.Controllers;
-public class AdminController : Controller
+public class UserController : Controller
 {
-    // <summary>
-    // Stranka admina  
-    // </summary>
+    private readonly ProjectContext _context;
+
+    public UserController(ProjectContext context)
+    {
+        _context = context;
+    }
+
+    
     [HttpGet("admin")]
     public IActionResult Index()
     {
-        if (HttpContext.Session.GetString("loggedin") != "true") 
-            return Redirect("/users/login");
+        if (HttpContext.Session.GetString(UniversalHelper.LoggedInKey) != "1")  return Redirect("/");
         return View();
     }
 
@@ -19,34 +23,31 @@ public class AdminController : Controller
     // Login view (get)
     // </summary>
     [HttpGet("users/login")]
-    public IActionResult Login() 
-    {
-        return View();
-    }
-
+    public IActionResult Login() => View();
+    
     // <summary>
     // Login (post)
     // </summary>
     [HttpPost("users/login")]
     public IActionResult LoginPost([FromForm] LoginData data) 
     {
-        // TODO
-        if (data.password == "heslo") {
-            HttpContext.Session.SetString(UniversalHelper.LoggedInKey, "true");
-            return Redirect("/");
-        }
-        return Redirect("/users/login");
+        AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.username);
+        if (user == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+
+        if (data.password == null || data.username == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+
+        if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
+
+        HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
+        return Redirect("/");
     }
 
 
     // <summary>
     // Register view (get)
     // </summary>
-    [HttpPost("users/register")]
-    public IActionResult RegisterGet()
-    {
-        return View();
-    }
+    [HttpGet("users/register")]
+    public IActionResult Register() => View();
 
     // <summary>
     // Register (post)
@@ -54,7 +55,26 @@ public class AdminController : Controller
     [HttpPost("users/register")]
     public IActionResult RegisterPost([FromForm] LoginData data)
     {
-        // TODO
-        return Redirect("/user/login");
+        if (data.username == null || data.password == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+        var contextList = _context?.globalUsers?.ToList();
+
+        var isUserExisting = contextList.Any(u => u.username == data.username);
+        if ((bool)isUserExisting) return Json("Uživatel již existuje"); // Don't allow 2 users with the same name
+
+        var isFirstUser = contextList.Any(); // if there is no user 
+        string passwordHash = PasswordHelper.CreateHash(data.password);
+        var newUser = new AuthUser()
+        {
+            fullName = data.username,
+            username = data.username,
+            password = passwordHash,
+            studyField = null,
+            contactDetails = null,
+            globalAdmin = !isFirstUser
+        };
+
+        _context?.globalUsers?.Add(newUser);
+        _context?.SaveChanges();
+        return Redirect("/users/login");
     }
 }
