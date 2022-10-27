@@ -1,17 +1,31 @@
 html {
-  font-size: 16px;
+  font-size: 30px;
+  position: relative;
+  min-height: 100%;
+  background-color: rgb(255, 255, 255);
+}
+
+:root{
+  --primary: #0a80fd;
+  --sps-cyan: #1291a5;
+}
+
+nav{
+  display: flex; 
+  background-color: rgb(157, 255, 0);
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
-h1{
-  font-weight: bold;
+html {
+  position: relative;
+  min-height: 100%;
 }
 
 body {
-  margin-bottom: 55px;
+  margin-bottom: 60px;
 }
