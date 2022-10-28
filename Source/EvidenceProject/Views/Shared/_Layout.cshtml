@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="cs">
+<html lang="cs" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,13 +9,14 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js"></script>
 </head>
-<body>
-    <header>
-        <h1>Evidence</h1>
-        <a asp-area="" asp-controller="Admin" asp-action="Login" class="odkaz">Login</a>
+<body style="display:grid;grid-template-columns: 250px 1fr;
+    grid-template-rows: min-content;margin: 0;height: 100%;">
+    <header style="display: flex;align-items:baseline;grid-column: 1 / 4;padding:1em;">
+        <h1 style="width:fit-content">Evidence</h1>
+        <a style="margin-left: auto;" asp-area="" asp-controller="Admin" asp-action="Login" class="odkaz">Login</a>
     </header>
-    <div>
-        <div>
+    <div style="display: flex;flex-direction: column;padding:1em;">
+        <div style="margin-bottom:1em;">
             <label for="search">Vyhledat:</label>
             <input id="search" type="search" placeholder="..." />
         </div>
@@ -27,11 +28,11 @@
                 <a asp-area="" asp-controller="Project" asp-action="Create" class="odkaz">Vytvořit projekt</a>
             </div>
         </nav>
-        <div>
+        <div style="margin-top: auto;">
             <footer>&copy; 2022 4.EP</footer>
         </div>
     </div>
-    <main>
+    <main style="overflow:auto;padding:1em;">
         <div id="@ViewData["Page"]">
             @RenderBody()
         </div>
