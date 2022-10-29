@@ -1,16 +1,9 @@
-using EvidenceProject.Controllers.RequestClasses;
-using EvidenceProject.Helpers;
-
 namespace EvidenceProject.Controllers;
 public class UserController : Controller
 {
     private readonly ProjectContext _context;
 
-    public UserController(ProjectContext context)
-    {
-        _context = context;
-    }
-
+    public UserController(ProjectContext context) => _context = context; 
     
     [HttpGet("admin")]
     public ActionResult Index()

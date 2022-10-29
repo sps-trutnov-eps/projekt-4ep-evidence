@@ -1,15 +1,10 @@
-﻿using EvidenceProject.Controllers.RequestClasses;
-using EvidenceProject.Helpers;
-
-namespace EvidenceProject.Controllers;
+﻿namespace EvidenceProject.Controllers;
 public class ProjectController : Controller
 {
+    // Má být readonly?
     private readonly ProjectContext _context;
 
-    public ProjectController(ProjectContext context)
-    {
-        _context = context;
-    }
+    public ProjectController(ProjectContext context) => _context = context;
 
     [HttpGet("project")]
     public ActionResult Index()
@@ -68,10 +63,9 @@ public class ProjectController : Controller
     public ActionResult Search(string searchQuery)
     {
         if (searchQuery == string.Empty) return Ok();
-        var projects = _context?.projects?.ToList().Where(project => project.name.Contains(searchQuery));
+        List<Project> projects  = _context?.projects?.ToList().Where(project => project.name.Contains(searchQuery)).ToList();
         if (projects == null) return Json("Nic nenalezeno");
-        // JSON OR VIEW ?
-        // idk je to trash
-        return View(projects);
+        // Budeme posílat JSON, ať si to JS užijí :D
+        return Json(projects);
     }
 }
