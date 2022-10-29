@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Create Project";
+    ViewData["Page"] = "create";
 }
 
 <form action="/project/create" method="post">
@@ -12,7 +13,8 @@
     <label for="technology">Technologie: </label>
     <input name="technology" type="text" placeholder="..." id="technology"/>
     <label for="photo">Fotografie: </label>
-    <input name="photos" type="file" multiple="multiple" id="photo"/>
+    <input name="photo" type="file" multiple="multiple" id="photo"/>
+    <a id="nazvy"></a>
     <label for="achievments">Úspěchy: </label>
     <input name="achievements" type="text" id="achievements" />
     <input type="submit"/> 
