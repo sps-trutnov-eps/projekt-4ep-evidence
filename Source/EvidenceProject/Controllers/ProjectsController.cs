@@ -1,7 +1,6 @@
 ﻿namespace EvidenceProject.Controllers;
 public class ProjectController : Controller
 {
-    // Má být readonly?
     private readonly ProjectContext _context;
 
     public ProjectController(ProjectContext context) => _context = context;
