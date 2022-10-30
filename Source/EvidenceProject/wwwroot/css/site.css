@@ -15,6 +15,22 @@ nav{
   background-color: rgb(157, 255, 0);
 }
 
+.container-fluid{
+  flex-shrink: 1;
+  flex-direction: column;
+  background-color: var(--primary);
+  padding: 1rem;
+}
+
+form{
+  margin-left: 0.5rem;
+}
+.navbar-toggler{
+  position: absolute;
+  top: 45px;
+  right: 20px;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
