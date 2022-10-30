@@ -92,3 +92,7 @@ function nastaveniStylu() {
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
     }
 }
+
+function search(query) {
+    console.log(query)
+}
