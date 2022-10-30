@@ -27,6 +27,9 @@ public class ProjectController : Controller
         return Redirect("Index");
     }
 
+    /// <summary>
+    /// Create (get)
+    /// </summary>
     [HttpGet("project/create")]
     public ActionResult Create()
     {

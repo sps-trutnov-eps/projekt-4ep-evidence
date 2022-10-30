@@ -6,7 +6,7 @@ public class UserController : Controller
     public UserController(ProjectContext context) => _context = context; 
     
     // <summary>
-    // Admin get
+    // Admin (get)
     // </summary>
     [HttpGet("admin")]
     public ActionResult Index()
@@ -37,7 +37,6 @@ public class UserController : Controller
         HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
         return Redirect("/");
     }
-
 
     // <summary>
     // Register view (get)
