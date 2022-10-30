@@ -65,4 +65,10 @@ function nazvySouboru(){
     });
 }
 
-function loginText(e) {}
+function loginText(e) {
+    $('.myLogin').on('click', () => {
+        $('.myLogin').after('<p>logging in...</p>');
+    });
+    console.log('logging text');
+    /*e.preventDefault();*/
+}
