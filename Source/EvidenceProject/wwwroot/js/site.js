@@ -18,6 +18,7 @@ function plynulyPrechodMeziStrankami(){
             dataType: "html",
             success : function(html){
                 let stranka = $($.parseHTML(html));
+                $("header").replaceWith(stranka.filter("header"));
                 $("main").replaceWith(stranka.filter("main"));
                 $("title").replaceWith(stranka.filter("title"));
                 history.pushState({"html":html}, "", link);
@@ -70,6 +71,7 @@ function loginText() {
     $("#login form").submit(function(event) {
         event.preventDefault();
         let formular = $(this);
+        $('#hlaska').remove();
         $('.myLogin').after('<p id="hlaska">logging in...</p>');
         $.ajax({
             type: formular.attr("method"),
@@ -80,6 +82,13 @@ function loginText() {
                 if(!data.includes("<!DOCTYPE html>")){
                     $('#hlaska').remove();
                     $('.myLogin').after(`<p id="hlaska">${data}</p>`);
+                } else {
+                    let stranka = $($.parseHTML(data));
+                    $("header").replaceWith(stranka.filter("header"));
+                    $("main").replaceWith(stranka.filter("main"));
+                    $("title").replaceWith(stranka.filter("title"));
+                    history.pushState({"html":data}, "", "/");
+                    spustitScript();
                 }
             }
         });
