@@ -18,4 +18,8 @@ public class DbFile
     /// </summary>
     [Required]
     public byte[] fileData { get; set; }
+    
+    [Required]
+    public string fileType { get; set; }
 }
+
