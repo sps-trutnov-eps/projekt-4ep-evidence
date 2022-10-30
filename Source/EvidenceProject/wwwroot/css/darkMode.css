@@ -1,0 +1,41 @@
+/* Dark mode */
+
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+  background-color: white;
+}
+
+
+h1{
+  font-weight: bold;
+  color: black;
+}
+
+footer{
+  padding: 1rem;
+}
+
+body {
+  margin-bottom: 55px;
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 30px;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 1024px) {
+    html {
+        font-size: 25px;
+    }
+}
+
+@media (min-width: 1024px) {
+    html {
+        font-size: 16px;
+    }
+}
+

@@ -1,6 +1,7 @@
 $(document).ready(function () {
     plynulyPrechodMeziStrankami();
     spustitScript();
+    nastaveniStylu();
 });
 function plynulyPrechodMeziStrankami(){
     history.replaceState({"html":$("html").prop("outerHTML")}, "", $(location).attr("pathname"));
@@ -26,9 +27,10 @@ function plynulyPrechodMeziStrankami(){
                 $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
             }
         });
-    
+
         return false;
     });
+   
 }
 window.onpopstate = function(e){
     if (e.state == null) return;
@@ -69,4 +71,24 @@ function loginText(e) {
     });
     console.log('logging text');
     //e.preventDefault();
+}
+
+function menitHeslo() {
+    alert("zatím nejde");
+}
+
+$(document).on("click", ".mode", function(event){
+    let style = event.target.id
+    localStorage.setItem("mode", style);
+    nastaveniStylu();
+})
+
+function nastaveniStylu() {
+    let style = localStorage.getItem("mode")
+    if (style == null) {
+        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
+    }
+    else {
+        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
+    }
 }
