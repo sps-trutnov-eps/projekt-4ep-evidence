@@ -19,6 +19,9 @@ public class DbFile
     [Required]
     public byte[] fileData { get; set; }
     
+    /// <summary>
+    /// Typ souboru
+    /// </summary>
     [Required]
     public string fileType { get; set; }
 }
