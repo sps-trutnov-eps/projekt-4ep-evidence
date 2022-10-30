@@ -5,6 +5,9 @@ public class UserController : Controller
 
     public UserController(ProjectContext context) => _context = context; 
     
+    // <summary>
+    // Admin get
+    // </summary>
     [HttpGet("admin")]
     public ActionResult Index()
     {
