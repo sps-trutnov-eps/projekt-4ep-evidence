@@ -10,6 +10,9 @@ namespace EvidenceProject.Data.DataModels
         public string? name { get; set; }
         /// <summary> Přiřazený projekt
         /// </summary>
+
+        /// <summary> Projekt
+        /// </summary>
         [Required]
         public Project? project { get; set; }
         
