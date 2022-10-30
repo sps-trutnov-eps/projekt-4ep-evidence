@@ -93,6 +93,16 @@ function nastaveniStylu() {
     }
 }
 
-function search(query) {
-    console.log(query)
+async function search(query) {
+    let res = await fetch("/search", {
+        body: JSON.stringify({
+            text: query,
+        }),
+        headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json',
+        },
+        method: "POST",
+    })
+    let data = await res.json();
 }
