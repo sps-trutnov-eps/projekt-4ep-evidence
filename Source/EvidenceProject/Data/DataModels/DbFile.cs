@@ -8,8 +8,14 @@ public class DbFile
     //Image - http://www.binaryintellect.net/articles/2f55345c-1fcb-4262-89f4-c4319f95c5bd.aspx
     [Key]
     public Guid id { get; set; }
+    
+    /// <summary> Název souboru
+    /// </summary>
     [Required]
     public string fileName { get; set; }
+    
+    /// <summary> Data souboru
+    /// </summary>
     [Required]
     public byte[] fileData { get; set; }
 }
