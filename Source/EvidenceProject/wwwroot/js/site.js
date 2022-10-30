@@ -65,12 +65,25 @@ function nazvySouboru(){
     });
 }
 
-function loginText(e) {
-    $('.myLogin').on('click', () => {
-        $('.myLogin').after('<p>logging in...</p>');
-    });
+function loginText() {
     console.log('logging text');
-    //e.preventDefault();
+    $("#login form").submit(function(event) {
+        event.preventDefault();
+        let formular = $(this);
+        $('.myLogin').after('<p id="hlaska">logging in...</p>');
+        $.ajax({
+            type: formular.attr("method"),
+            url: formular.attr("action"),
+            data: formular.serialize(),
+            success: function(data)
+            {
+                if(!data.includes("<!DOCTYPE html>")){
+                    $('#hlaska').remove();
+                    $('.myLogin').after(`<p id="hlaska">${data}</p>`);
+                }
+            }
+        });
+    });
 }
 
 function menitHeslo() {
