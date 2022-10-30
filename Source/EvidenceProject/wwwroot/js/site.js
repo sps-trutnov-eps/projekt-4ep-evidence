@@ -1,7 +1,7 @@
 $(document).ready(function () {
     plynulyPrechodMeziStrankami();
-    spustitScript();
     nastaveniStylu();
+    spustitScript();
 });
 function plynulyPrechodMeziStrankami(){
     history.replaceState({"html":$("html").prop("outerHTML")}, "", $(location).attr("pathname"));
