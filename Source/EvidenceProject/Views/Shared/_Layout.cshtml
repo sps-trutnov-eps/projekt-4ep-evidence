@@ -28,12 +28,8 @@
                             <a class="nav-link text-dark mode" asp-area="" id= "mode3">mode3</a>
                             <a class="nav-link text-dark mode" asp-area="" id= "mode4">mode4</a>
                             <a class="nav-link text-dark mode" asp-area="" id= "mode5">mode5</a>
-
-                            <form action="/search" method="get">
-                                <label for="search">Vyhledat:</label> 
-                                <input id="search" name="searchQuery" type="search" placeholder="..."/>
-                                <input type="submit"/>
-                            </form>
+                            <label for="search">Vyhledat:</label>
+                            <input onchange="search(this.value)" id="search" name="searchQuery" type="search" placeholder="..." />
                         </li>
                     </ul>
                 </div>
