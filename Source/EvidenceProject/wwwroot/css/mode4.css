@@ -1,3 +1,93 @@
-body {
-    background-color: rgb(37, 192, 192);
-}
+html {
+    font-size: 30px;
+    position: relative;
+    min-height: 100%;
+    background-color: white;
+  }
+  
+  :root{
+    --primary: #007bff;
+    --sps-cyan: #17a2b8;
+    --secondary: #7b9ea3;
+  }
+  
+  nav{
+    display: flex; 
+    background-color: yellow;
+  }
+  
+  .container-fluid{
+    flex-shrink: 1;
+    flex-direction: column;
+    background-color: var(--primary);
+    padding: 1rem;
+  }
+  
+  form{
+    margin-left: 0.55rem;
+  }
+  .navbar-toggler{
+    position: absolute;
+    top: 40px;
+    right: 10px;
+  }
+  
+  .navbar-light .navbar-brand{
+    text-align: center;
+    margin-right: 0;
+    font-weight: bold;
+    color: white;
+  }
+  .navbar-collapse {
+    border-top: 2px solid rgb(32, 117, 173);
+    padding-left: 1rem;
+  }
+  
+  .nav-link{
+    padding: 0.5rem 5rem;
+  }
+  .nav-link:hover{
+    background-color: var(--sps-cyan);
+  
+  }
+  
+  
+  h1{
+    font-weight: bold;
+    color: black;
+  }
+  
+  footer{
+    padding: 1rem;
+  }
+  
+  body {
+    margin-bottom: 55px;
+  }
+  
+  @media (min-width: 480px) {
+      html {
+          font-size: 25px;
+      }
+  
+      .container-fluid{
+        flex-direction: column;
+      }
+  }
+  
+  @media (min-width: 1024px) {
+      html {
+          font-size: 16px;
+      }
+      .container-fluid{
+        flex-direction: row;
+      }
+      .navbar-collapse {
+        border-top: none;
+        margin-left: 1rem;
+        border-left: 2px solid var(--sps-cyan);
+        padding-left: 1rem;
+      }
+  }
+  
+  
