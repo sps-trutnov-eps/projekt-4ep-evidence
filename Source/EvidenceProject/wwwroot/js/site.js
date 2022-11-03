@@ -46,6 +46,7 @@ function spustitScript(){
         nazvySouboru();
     } else if (lokace == "/users/login") {
         loginText();
+    }
     /*} else if (lokace == "/") {
 
     }*/
