@@ -10,7 +10,7 @@ function plynulyPrechodMeziStrankami(){
         let link = $(this).attr('href');
 
         $("main").empty();
-        $("main").html("<div>načítání dat...</div>");
+        $("main").html("<div>načítám data...</div>");
     
         $.ajax({
             type : "GET",
@@ -42,11 +42,13 @@ window.onpopstate = function(e){
 
 function spustitScript(){
     let lokace = $(location).attr("pathname");
-    if(lokace == "/project/create") {
+    if (lokace == "/project/create") {
         nazvySouboru();
-    } else if (lokace == "/users/login"){
+    } else if (lokace == "/users/login") {
         loginText();
-    }
+    /*} else if (lokace == "/") {
+
+    }*/
 }
 
 function nazvySouboru(){
@@ -70,7 +72,7 @@ function loginText(e) {
         $('.myLogin').after('<p>logging in...</p>');
     });
     console.log('logging text');
-    //e.preventDefault();
+    /*e.preventDefault();*/
 }
 
 function menitHeslo() {
