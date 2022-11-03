@@ -6,7 +6,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
@@ -31,20 +32,29 @@ public class Program
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
         }
+        app.Logger.LogInformation("Logging enabled!");
 
+        app.Logger.LogInformation("Enabling https redirection.");
         app.UseHttpsRedirection();
+
+        app.Logger.LogInformation("Enabling static file use.");
         app.UseStaticFiles();
 
+        app.Logger.LogInformation("Enabling routing.");
         app.UseRouting();
-
+        
+        app.Logger.LogInformation("Enabling authorization.");
         app.UseAuthorization();
-
+        
+        app.Logger.LogInformation("Enabling sessions.");
         app.UseSession();
-
+        
+        app.Logger.LogInformation("Mapping routes.");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
+        app.Logger.LogInformation("Starting app.");
         app.Run();
     }
 }
