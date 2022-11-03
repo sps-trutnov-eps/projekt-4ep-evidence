@@ -1,7 +1,7 @@
 $(document).ready(function () {
     plynulyPrechodMeziStrankami();
-    spustitScript();
     nastaveniStylu();
+    spustitScript();
 });
 function plynulyPrechodMeziStrankami(){
     history.replaceState({"html":$("html").prop("outerHTML")}, "", $(location).attr("pathname"));
@@ -18,6 +18,7 @@ function plynulyPrechodMeziStrankami(){
             dataType: "html",
             success : function(html){
                 let stranka = $($.parseHTML(html));
+                $("header").replaceWith(stranka.filter("header"));
                 $("main").replaceWith(stranka.filter("main"));
                 $("title").replaceWith(stranka.filter("title"));
                 history.pushState({"html":html}, "", link);
@@ -68,12 +69,35 @@ function nazvySouboru(){
     });
 }
 
-function loginText(e) {
-    $('.myLogin').on('click', () => {
-        $('.myLogin').after('<p>logging in...</p>');
+function loginText() {
+    console.log('logging text');
+    $("#login form").submit(function(event) {
+        event.preventDefault();
+        let formular = $(this);
+        $('#hlaska').remove();
+        $('.myLogin').after('<p id="hlaska">logging in...</p>');
+        $.ajax({
+            type: formular.attr("method"),
+            url: formular.attr("action"),
+            data: formular.serialize(),
+            success: function(data)
+            {
+                if(!data.includes("<!DOCTYPE html>")){
+                    $('#hlaska').remove();
+                    $('.myLogin').after(`<p id="hlaska">${data}</p>`);
+                } else {
+                    let stranka = $($.parseHTML(data));
+                    $("header").replaceWith(stranka.filter("header"));
+                    $("main").replaceWith(stranka.filter("main"));
+                    $("title").replaceWith(stranka.filter("title"));
+                    history.pushState({"html":data}, "", "/");
+                    spustitScript();
+                }
+            }
+        });
     });
     console.log('logging text');
-    /*e.preventDefault();*/
+    //e.preventDefault();
 }
 
 function menitHeslo() {
