@@ -2,13 +2,23 @@ namespace EvidenceProject.Controllers;
 public class UserController : Controller
 {
     private readonly ProjectContext _context;
+    private readonly ILogger _logger;
 
-    public UserController(ProjectContext context) => _context = context; 
+    public UserController(ProjectContext context, ILogger<UserController> logger)
+    {
+        _logger = logger;
+        _context = context;
+    }
     
     [HttpGet("admin")]
     public ActionResult Index()
     {
-        if (HttpContext.Session.GetString(UniversalHelper.LoggedInKey) != "1")  return Redirect("/users/login");
+        bool isLoggedIn = HttpContext.Session.GetString(UniversalHelper.LoggedInKey) == "1";
+        if (!isLoggedIn)
+        {
+            _logger.LogInformation("An unauthorized user tried accessing the admin panel.");
+            return Redirect("/users/login");
+        }
         return View();
     }
 
@@ -30,7 +40,9 @@ public class UserController : Controller
         if (data.password == null || data.username == null) return Json(UniversalHelper.SomethingWentWrongMessage);
 
         if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
-        if(testing) return Redirect("/"); 
+
+        _logger.LogInformation("{0} logged in.", data.username);
+        if (testing) return Redirect("/"); 
         HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
         return Redirect("/");
     }
@@ -52,8 +64,11 @@ public class UserController : Controller
         var contextList = _context?.globalUsers?.ToList();
 
         var doesUserExist = contextList.Any(u => u.username == data.username);
-        if ((bool)doesUserExist) return Json("Uživatel již existuje"); // Don't allow 2 users with the same name
-
+        if (doesUserExist)
+        {
+            _logger.LogInformation("Someone tried registering with an exisiting username.");
+            return Json("Uživatel již existuje"); // Don't allow 2 users with the same name
+        }
         var isFirstUser = contextList.Any(); // if there is no user 
         string passwordHash = PasswordHelper.CreateHash(data.password);
         var newUser = new AuthUser()
@@ -65,6 +80,7 @@ public class UserController : Controller
             contactDetails = null,
             globalAdmin = !isFirstUser
         };
+        _logger.LogInformation("A new user created - username: {0}, fullName: {1}, globalAdmin: {2}", newUser.username, newUser.fullName, newUser.globalAdmin);
 
         _context?.globalUsers?.Add(newUser);
         _context?.SaveChanges();
