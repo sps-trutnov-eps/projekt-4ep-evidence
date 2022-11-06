@@ -113,19 +113,21 @@ function nastaveniStylu() {
 }
 
 async function search(query) {
-    $.ajax({
-        type : "POST",
-        url : "search",
-        data: JSON.stringify(query),
-        headers: {
-            "Content-Type": "application/json"
-        },
-        dataType: "json",
-        success : function(data){
-            console.log(data)
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
-        }
-    });
+    if (query != ""){
+        $.ajax({
+            type : "POST",
+            url : "search",
+            data: JSON.stringify(query),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            dataType: "json",
+            success : function(data){
+                $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${query}"</h2><div id="vysledky">${data}</div></div>`);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
+            }
+        });
+    }
 }

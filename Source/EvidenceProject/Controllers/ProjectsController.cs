@@ -63,7 +63,7 @@ public class ProjectController : Controller
     {
         if (searchQuery == string.Empty) return Ok();
         List<Project> projects  = _context?.projects?.ToList().Where(project => project.name.Contains(searchQuery)).ToList();
-        if (projects == null) return Json("Nic nenalezeno");
+        if (projects.Count == 0) return Json("Nic nenalezeno");
         // Budeme posílat JSON, ať si to JS užijí :D
         return Json(projects);
     }
