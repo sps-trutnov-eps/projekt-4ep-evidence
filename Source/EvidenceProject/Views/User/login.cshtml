@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Login";
+    ViewData["Page"] = "login";
+}
+
+<form action="/users/login" method="post">
+    <input type="text" name="username" placeholder="Jm�no...">
+    <input type="password" name="password" placeholder="Heslo...">
+    <input class="myLogin" type="submit" value="login">
+    <button onclick="menitHeslo()">Zm�na hesla</button>
+</form>

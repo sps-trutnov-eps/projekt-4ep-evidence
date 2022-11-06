@@ -10,9 +10,9 @@ namespace EvidenceProject.Data.DataModels
         /// <summary> Unikátní identifikátor záznamu.
         /// </summary>
         [Key]  
-        public int id { get; set; }
+        public int id { get; private set; }
 
-        /// <summary> Název/obsah číselníkového záznamu - max 50 znaků.
+        /// <summary> Název/obsah číselníkového záznamu - max 50 znaků
         /// </summary>
         [Required]
         [StringLength(50)]
@@ -37,5 +37,23 @@ namespace EvidenceProject.Data.DataModels
         /// </summary>
         [Required]
         public virtual DialInfo? dialInfo { get; set; }
+
+        /// <summary> Konstruktor vytvoří záznam v číselníku
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dialInfo"></param>
+        /// <param name="color"></param>
+        /// <param name="description"></param>
+        public DialCode(string name, DialInfo? dialInfo, Color? color = null, string? description = "")
+        {
+            this.name = name;
+            this.color = color ?? Color.White;
+            this.description = description;
+            this.dialInfo = dialInfo;
+        }
+
+        /// <summary> Prázdný konstruktor záznamu
+        /// </summary>
+        public DialCode() { color = Color.White; }
     }
 }

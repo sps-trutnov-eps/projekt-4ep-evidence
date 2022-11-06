@@ -1,45 +1,61 @@
-using EvidenceProject.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Security.Cryptography.X509Certificates;
 
-namespace EvidenceProject
+namespace EvidenceProject;
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
+        // Add services to the container.
+        builder.Services.AddControllersWithViews();
+
+        // Session
+        builder.Services.AddSession(options =>
         {
-            var builder = WebApplication.CreateBuilder(args);
+            options.Cookie.Name = "zajimavasusenka";
+            options.IdleTimeout = TimeSpan.FromDays(15);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+            options.Cookie.MaxAge = TimeSpan.FromDays(8);
+        });
 
-            builder.Services.AddDbContext<ProjectContext>(opt =>
-                opt.UseSqlServer(
-                    builder.Configuration["DatabaseConnection"]));
+        builder.Services.AddDbContext<ProjectContext>(opt =>
+            opt.UseSqlServer(
+                builder.Configuration["DatabaseConnection"]));
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.Run();
+        builder.Services.AddControllersWithViews();
+        var app = builder.Build();
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
         }
+        app.Logger.LogInformation("Logging enabled!");
+
+        app.Logger.LogInformation("Enabling https redirection.");
+        app.UseHttpsRedirection();
+
+        app.Logger.LogInformation("Enabling static file use.");
+        app.UseStaticFiles();
+
+        app.Logger.LogInformation("Enabling routing.");
+        app.UseRouting();
+        
+        app.Logger.LogInformation("Enabling authorization.");
+        app.UseAuthorization();
+        
+        app.Logger.LogInformation("Enabling sessions.");
+        app.UseSession();
+        
+        app.Logger.LogInformation("Mapping routes.");
+        app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
+
+        app.Logger.LogInformation("Starting app.");
+        app.Run();
     }
 }
+    

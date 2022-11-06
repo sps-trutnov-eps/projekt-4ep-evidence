@@ -9,7 +9,7 @@ public class User
 {
     /// <summary> Id uživatele
     /// </summary>
-    [Required] [Key] public int id { get; set; }
+    [Required] [Key] public int id { get; private set; }
     /// <summary> Celé jméno uživatele
     /// </summary>
     [Required] [StringLength(35)] public string? fullName { get; set; }

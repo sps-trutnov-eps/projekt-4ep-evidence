@@ -1,34 +1,25 @@
-﻿using EvidenceProject.Data.DataModels;
-using EvidenceProject.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Drawing;
+﻿
+using Microsoft.Extensions.Caching.Memory;
 
-namespace EvidenceProject.Controllers
+namespace EvidenceProject.Controllers;
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly ProjectContext _context;
+    private readonly IMemoryCache _cache;
+    public HomeController(ProjectContext context, IMemoryCache cache)
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-    }
+        _context = context;
+        _cache = cache;
+    } 
+    public IActionResult Index()
+    {
+        var projects = _cache.Get("AllProjects");
+        if (projects != null)
+            return View(projects);
+        
+        projects = _context?.projects?.ToList();
+        _cache.Set("AllProjects", projects);
+        return View(projects);
+    } 
+    
 }

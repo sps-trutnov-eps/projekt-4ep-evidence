@@ -17,6 +17,8 @@ public class ProjectContext: DbContext
     
     public DbSet<DbFile>? files { get; set; }
 
+    // co je dialinfo a dialcode??
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         // M:N DB enitity connections
@@ -38,9 +40,18 @@ public class ProjectContext: DbContext
         builder.Entity<DialCode>().HasIndex(d => d.name).IsUnique();
 
         // Cascades
-
         builder.Entity<Project>().HasOne(p => p.projectState).WithMany().OnDelete(DeleteBehavior.Restrict);
         builder.Entity<Project>().HasOne(p => p.projectTechnology).WithMany().OnDelete(DeleteBehavior.Restrict);
         builder.Entity<Project>().HasOne(p => p.projectType).WithMany().OnDelete(DeleteBehavior.Restrict);
+    }
+
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer(
+            "Server=(localdb)\\mssqllocaldb;Database=EvidenceContext;Trusted_Connection=True;MultipleActiveResultSets=True");
+        }
     }
 }
