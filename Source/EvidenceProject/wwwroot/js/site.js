@@ -73,5 +73,6 @@ function loginText(e) {
 
 function menitHeslo() {
     alert("zatím nejde");
-    console.log("zmena");
 }
+
+
