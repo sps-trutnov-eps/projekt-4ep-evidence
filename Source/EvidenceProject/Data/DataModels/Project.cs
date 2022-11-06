@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EvidenceProject.Data.DataModels;
 
-public class Project
+public sealed class Project
 {
     /// <summary> Unikátní identifikátor záznamu.
     /// </summary>
@@ -13,20 +13,20 @@ public class Project
     [Required] [StringLength(50)] public string? _name { get; set; }
     /// <summary> Stav projektu - položka z číselníku (předdefinovaného výběru).
     /// </summary>
-    [Required] [ForeignKey("State")] public virtual DialCode? _projectState { get; set; }
+    [Required] [ForeignKey("State")] public DialCode? _projectState { get; set; }
     /// <summary> Typ projektu - položka z předdefinovaného výběru.
     /// </summary>
-    [Required] [ForeignKey("Type")] public virtual DialCode? _projectType { get; set; }
+    [Required] [ForeignKey("Type")] public DialCode? _projectType { get; set; }
     /// <summary> Technologie projektu - položka z předdefinovaného výběru.
     /// </summary>
-    [Required] [ForeignKey("Technology")] public virtual DialCode? _projectTechnology { get; set; }
+    [Required] [ForeignKey("Technology")] public DialCode? _projectTechnology { get; set; }
     /// <summary> Úspechy projektu.
     /// </summary>
-    [Required] public virtual List<Achievement>? _projectAchievements { get; set; }
+    [Required] public List<Achievement>? _projectAchievements { get; set; }
 
     /// <summary> Žáci přiřazení k projektu.
     /// </summary>
-    [Required] public virtual List<User>? assignees { get; set; }
+    [Required] public List<User>? _assignees { get; set; }
     /// <summary> Ověřený uživatel spravující projekt.
     /// </summary>
     [ForeignKey("AuthUser")] public AuthUser? _projectManager;
@@ -42,4 +42,15 @@ public class Project
     /// </summary>
     [StringLength(100)]
     public string? _slack { get; set; }
+
+    public Project(string name, DialCode projectState, DialCode projectTechnology, List<Achievement> projectAchievements, List<User> assignees, AuthUser projectManager, string github, string slack) {
+        _name = name;
+        _projectState = projectState;
+        _projectTechnology = projectTechnology;
+        _projectAchievements = projectAchievements;
+        _assignees = assignees;
+        _projectManager = projectManager;
+        _github = github;
+        _slack = slack;
+    }
 }
