@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace EvidenceProject.Data.DataModels;
 
@@ -19,10 +21,19 @@ public class DbFile
     [Required]
     public byte[] fileData { get; set; }
     
-    /// <summary>
-    /// Typ souboru
-    /// </summary>
-    [Required]
-    public string fileType { get; set; }
+}
+
+public static class FileExtension
+{
+    public static MemoryStream ReadFile(this DbFile file) {
+        MemoryStream memoryStream = new MemoryStream();
+        memoryStream.Write(file.fileData, 0, file.fileData.Length);
+        return memoryStream;
+    }
+    
+    public static void WriteFile(this DbFile file, MemoryStream stream) {
+        file.fileData = new byte[stream.Length];
+        stream.Read(file.fileData, 0, (int)stream.Length);
+    }
 }
 
