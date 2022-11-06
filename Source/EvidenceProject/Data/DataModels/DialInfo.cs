@@ -7,7 +7,7 @@ namespace EvidenceProject.Data.DataModels
         /// <summary> Unikátní identifikátor kategorie číselníkových záznamů.
         /// </summary>
         [Key]
-        public int id { get; set; }
+        public int id { get; private set; }
 
         /// <summary> Název/obsah kategrie. Max 50 znaků.
         /// </summary>
