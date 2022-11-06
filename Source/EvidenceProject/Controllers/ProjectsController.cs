@@ -5,6 +5,9 @@ public class ProjectController : Controller
 
     public ProjectController(ProjectContext context) => _context = context;
 
+    /// <summary>
+    /// projekt (get)
+    /// </summary>
     [HttpGet("project")]
     public ActionResult Index()
     {
