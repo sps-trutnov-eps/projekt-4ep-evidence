@@ -113,15 +113,19 @@ function nastaveniStylu() {
 }
 
 async function search(query) {
-    let res = await fetch("/search", {
-        body: JSON.stringify({
-            text: query,
-        }),
+    $.ajax({
+        type : "POST",
+        url : "search",
+        data: JSON.stringify(query),
         headers: {
-            'Accept': 'application/json',
-            'Content-type': 'application/json',
+            "Content-Type": "application/json"
         },
-        method: "POST",
-    })
-    let data = await res.json();
+        dataType: "json",
+        success : function(data){
+            console.log(data)
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
+        }
+    });
 }
