@@ -10,7 +10,7 @@ function plynulyPrechodMeziStrankami(){
         let link = $(this).attr('href');
 
         $("main").empty();
-        $("main").html("<div>načítání dat...</div>");
+        $("main").html("<div>načítám data...</div>");
     
         $.ajax({
             type : "GET",
@@ -43,22 +43,19 @@ window.onpopstate = function(e){
 
 function spustitScript(){
     let lokace = $(location).attr("pathname");
-    if(lokace == "/project/create") {
+    if (lokace == "/project/create") {
         nazvySouboru();
-    } else if (lokace == "/users/login"){
+    } else if (lokace == "/users/login") {
         loginText();
     }
 }
 
 function nazvySouboru(){
-    console.log("workin");
     const fileSelector = document.getElementById('photo');
     fileSelector.addEventListener('change', (event) => {
         const fileList = event.target.files;
-        console.log(fileList);
         document.getElementById("nazvy").innerHTML = "";
         for (let i = 0; i < fileList.length; i++) {
-            /*console.log(fileList[i].name);*/
             ted = document.getElementById("nazvy").innerText;
             document.getElementById("nazvy").innerHTML = ted + ", " + fileList[i].name;
 
@@ -67,7 +64,6 @@ function nazvySouboru(){
 }
 
 function loginText() {
-    console.log('logging text');
     $("#login form").submit(function(event) {
         event.preventDefault();
         let formular = $(this);
@@ -111,6 +107,21 @@ function nastaveniStylu() {
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
     }
     else {
+        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
     }
+}
+
+async function search(query) {
+    let res = await fetch("/search", {
+        body: JSON.stringify({
+            text: query,
+        }),
+        headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json',
+        },
+        method: "POST",
+    })
+    let data = await res.json();
 }

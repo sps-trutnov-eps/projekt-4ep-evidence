@@ -4,6 +4,8 @@ using System.Text;
 namespace EvidenceProject.Helpers;
 public class PasswordHelper 
 {
+    //  Zmìna argonu na bcrypt?
+    //  Je to pøipraveno v modelech
     static public string CreateHash(string input)
     {
         var argon = new Argon2id(Encoding.UTF8.GetBytes(input));
