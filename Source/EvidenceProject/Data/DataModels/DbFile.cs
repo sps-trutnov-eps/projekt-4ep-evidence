@@ -25,12 +25,23 @@ public class DbFile
 
 public static class FileExtension
 {
+    /// <summary>
+    /// Read file from database
+    /// </summary>
+    /// <returns>
+    /// <see cref="MemoryStream"/> from <see cref="DbFile"/>
+    /// </returns>
     public static MemoryStream ReadFile(this DbFile file) {
         MemoryStream memoryStream = new MemoryStream();
         memoryStream.Write(file.fileData, 0, file.fileData.Length);
         return memoryStream;
     }
-    
+
+    /// <summary>
+    /// Write file to database
+    /// </summary>
+    /// <param name="file"></param>
+    /// <param name="stream"><see cref="MemoryStream"/> to write</param>
     public static void WriteFile(this DbFile file, MemoryStream stream) {
         file.fileData = new byte[stream.Length];
         stream.Read(file.fileData, 0, (int)stream.Length);
