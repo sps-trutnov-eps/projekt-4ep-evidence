@@ -118,7 +118,7 @@ public class AuthUser : User
     }
 
     /// <summary>
-    ///     Metoda nastaví obj. vygenerovaný a ověřený <see cref="id_key"/>
+    ///     Metoda nastaví obj. vygenerovaný a ověřený <see cref="id_key" />
     /// </summary>
     /// <param name="context">DB pro zkontrolování unikátnosti vygenerovaného ID_key.</param>
     /// <param name="keyLength">Délka Id_key ve znacích.</param>
@@ -128,7 +128,7 @@ public class AuthUser : User
     }
 
     /// <summary>
-    ///     Metoda vrátí vygenerovaný <see cref="id_key"/>
+    ///     Metoda vrátí vygenerovaný <see cref="id_key" />
     /// </summary>
     /// <param name="keyLength">Délka řetězce v char.</param>
     /// <param name="context">DB pro zkontrolování unikátnosti vygenerovaného ID_key.</param>
