@@ -3,6 +3,7 @@ using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Data;
 using EvidenceProject.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 #nullable disable
 
 namespace Tests.ControllersTests;
@@ -11,10 +12,12 @@ public class UserControllerTests : ControllerTestsBase
     ProjectContext DBContext { get; set; }
 
     UserController Controller { get; set; }
+
+    ILogger<UserController> Logger { get; set; }
     public UserControllerTests()
     {
         DBContext = GetContext();
-        Controller = new UserController(DBContext);
+        Controller = new UserController(DBContext, Logger);
     }
 
     [TestCase("guid","12345", true)]

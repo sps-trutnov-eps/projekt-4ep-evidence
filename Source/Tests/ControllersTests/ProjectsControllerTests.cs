@@ -1,4 +1,5 @@
 using EvidenceProject.Controllers;
+using EvidenceProject.Controllers.ActionData;
 using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Data;
 using EvidenceProject.Data.DataModels;
@@ -25,8 +26,12 @@ public class ProjectControllerTests : ControllerTestsBase
     [TestCase("st", "test")]
     public void SearchProject(string projectQuery, string expectedProject)
     {
-        var response = (ViewResult)Controller.Search(projectQuery);
-        var data = (List<Project>)response.Model;
+        SearchData searchData = new()
+        {
+            text = projectQuery,
+        };
+        var response = (JsonResult)Controller.Search(searchData);
+        var data = (List<Project>)response.Value;
         Assert.That(data?.First().name, Is.EqualTo(expectedProject));
     }
 

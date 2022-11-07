@@ -1,4 +1,6 @@
-﻿namespace EvidenceProject.Controllers;
+﻿using EvidenceProject.Controllers.ActionData;
+
+namespace EvidenceProject.Controllers;
 public class ProjectController : Controller
 {
     private readonly ProjectContext _context;
@@ -59,12 +61,11 @@ public class ProjectController : Controller
     /// Vyhledávání
     /// </summary>
     [HttpPost("search")]
-    public ActionResult Search(string searchQuery)
+    public ActionResult Search([FromBody] SearchData data)
     {
-        if (searchQuery == string.Empty) return Ok();
-        List<Project> projects  = _context?.projects?.ToList().Where(project => project.name.Contains(searchQuery)).ToList();
+        if (data.text == string.Empty) return Ok();
+        List<Project> projects  = _context?.projects?.ToList().Where(project => project.name.Contains(data.text)).ToList();
         if (projects == null) return Json("Nic nenalezeno");
-        // Budeme posílat JSON, ať si to JS užijí :D
         return Json(projects);
     }
 }
