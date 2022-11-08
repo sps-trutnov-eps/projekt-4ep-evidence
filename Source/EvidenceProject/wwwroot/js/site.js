@@ -107,6 +107,9 @@ function nastaveniStylu() {
     if (style == null) {
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
     }
+    /*else if (style == ) {
+        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/darkMode.css" asp-append-version="true" />';
+    }*/
     else {
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
