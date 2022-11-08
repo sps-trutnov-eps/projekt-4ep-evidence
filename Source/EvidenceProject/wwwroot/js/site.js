@@ -91,8 +91,9 @@ function loginText() {
     });
 }
 
-function menitHeslo() {
+function zmenitHeslo() {
     alert("zatím nejde");
+    console.log("zatím nejde");
 }
 
 $(document).on("click", ".mode", function(event){
