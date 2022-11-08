@@ -8,7 +8,7 @@ html {
   :root{
     --primary: #007bff;
     --sps-cyan: #17a2b8;
-    --secondary: #7b9ea3;
+    --secondary: #3ea0ad;
   }
   
   nav{
@@ -32,18 +32,7 @@ html {
     right: 10px;
   }
   
-  #search{
-    position: absolute;
-    top: 50px;
-    right: 20px;
-    width: 300px;
-    background-color: var(--secondary);
-  }
-  label{
-    position: absolute;
-    top: 50px;
-    right: 330px;
-  }
+
   .navbar-light .navbar-brand{
     text-align: center;
     margin-right: 0;
@@ -51,9 +40,11 @@ html {
     color: white;
   }
   .navbar-collapse {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     display:grid;
     grid-template-rows: auto auto auto;
-    border-top: 2px solid rgb(32, 117, 173);
+    border-top: 4px solid var(--secondary);
     padding-left: 1rem;
   }
   
@@ -70,7 +61,13 @@ html {
     font-weight: bold;
     color: black;
   }
-  
+
+.text-dark {
+    color: white !important;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
   footer{
     padding: 1rem;
   }
@@ -99,9 +96,28 @@ html {
       .navbar-collapse {
         border-top: none;
         margin-left: 1rem;
-        border-left: 2px solid var(--sps-cyan);
+        border-left: 5px solid var(--secondary);
         padding-left: 1rem;
       }
+        #search {
+            position: absolute;
+            top: 10%;
+            right: 30%;
+            width: 50%;
+            max-width: 500px;
+        }
+
+        label {
+            position: absolute;
+            top: 10.5%;
+            right: 28.5%;
+            height: 25px;
+            width: 25px;
+            color:transparent;
+            background-image: url('../icons/lupaIcon.png');
+            background-size:cover;
+            background-repeat: none;
+        }
   }
   
   

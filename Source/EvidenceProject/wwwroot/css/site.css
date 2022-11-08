@@ -32,6 +32,10 @@ form{
   right: 10px;
 }
 
+.nav-link .text-dark{
+    color: white !important;
+}
+
 .navbar-light .navbar-brand{
   text-align: center;
   margin-right: 0;
