@@ -104,13 +104,13 @@ html {
             top: 10%;
             right: 30%;
             width: 50%;
-            max-width: 500px;
+            max-width: 250px;
         }
 
         label {
             position: absolute;
             top: 10.5%;
-            right: 28.5%;
+            right: 25%;
             height: 25px;
             width: 25px;
             color:transparent;
