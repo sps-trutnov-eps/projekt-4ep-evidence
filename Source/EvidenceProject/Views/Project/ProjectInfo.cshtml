@@ -4,6 +4,7 @@
 @model EvidenceProject.Data.DataModels.Project
 @using EvidenceProject.Helpers
 
+@*
 <l>
     if(Model.projectManager.id == "logged user")
     {
@@ -11,6 +12,8 @@
         <a asp-controller="Projects" asp-action="Delete"></a>
     }
 </l>
+*@
+
 
 @if(Model != null)
 {
