@@ -14,8 +14,7 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         var projects = _cache.Get("AllProjects");
-        if (projects != null)
-            return View(projects);
+        if (projects != null) return View(projects);
         
         projects = _context?.projects?.ToList();
         _cache.Set("AllProjects", projects);

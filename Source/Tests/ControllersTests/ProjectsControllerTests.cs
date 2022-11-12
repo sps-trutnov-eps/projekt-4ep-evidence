@@ -4,6 +4,7 @@ using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Data;
 using EvidenceProject.Data.DataModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using NUnit.Framework.Internal;
 
 #nullable disable
@@ -14,10 +15,13 @@ public class ProjectControllerTests : ControllerTestsBase
 
     ProjectController Controller { get; set;}
 
+    MemoryCacheOptions Opt = new();
+   
     public ProjectControllerTests()
     {
+        MemoryCache memoryCache = new(Opt);
         DBContext = GetContext();
-        Controller = new ProjectController(DBContext);
+        Controller = new ProjectController(DBContext, memoryCache);
     }
 
     [Test]

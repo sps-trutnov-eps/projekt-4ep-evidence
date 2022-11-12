@@ -1,11 +1,16 @@
 ﻿using EvidenceProject.Controllers.ActionData;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EvidenceProject.Controllers;
 public class ProjectController : Controller
 {
     private readonly ProjectContext _context;
-
-    public ProjectController(ProjectContext context) => _context = context;
+    private readonly IMemoryCache _cache;
+    public ProjectController(ProjectContext context, IMemoryCache cache)
+    {
+        _context = context;
+        _cache = cache;
+    }
 
     [HttpGet("project")]
     public ActionResult Index()
@@ -23,9 +28,11 @@ public class ProjectController : Controller
         Project project = new()
         {
             name = projectData.projectName
+
         };
         _context?.projects?.Add(project);
         _context?.SaveChanges();
+        UpdateProjectsInCache();
         return Redirect("Index");
     }
 
@@ -44,6 +51,7 @@ public class ProjectController : Controller
     {
         if (!UniversalHelper.getProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
         _context?.projects?.Remove(project);
+        UpdateProjectsInCache();
         return Json("ok");
     }
     
@@ -67,5 +75,12 @@ public class ProjectController : Controller
         List<Project> projects  = _context?.projects?.ToList().Where(project => project.name.Contains(data.text)).ToList();
         if (projects == null) return Json("Nic nenalezeno");
         return Json(projects);
+    }
+
+
+    public void UpdateProjectsInCache()
+    {
+        var projects = _context?.projects?.ToList();
+        _cache.Set("AllProjects", projects);
     }
 }
