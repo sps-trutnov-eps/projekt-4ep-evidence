@@ -125,3 +125,20 @@ async function search(query) {
     })
     let data = await res.json();
 }
+
+async function login() {
+    let username = Document.getElementById("username")
+    let password = Document.getElementById("password")
+    let res = await fetch("/login", {
+        body: JSON.stringify({
+            username: username,
+            password: password,
+        }),
+        headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json',
+        },
+        method: "POST",
+    })
+    let data = await res.json();
+}
