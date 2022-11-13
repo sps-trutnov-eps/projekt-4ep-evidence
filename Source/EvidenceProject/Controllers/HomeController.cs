@@ -6,11 +6,13 @@ public class HomeController : Controller
 {
     private readonly ProjectContext _context;
     private readonly IMemoryCache _cache;
+
     public HomeController(ProjectContext context, IMemoryCache cache)
     {
         _context = context;
         _cache = cache;
     } 
+
     public IActionResult Index()
     {
         var projects = _cache.Get("AllProjects");
@@ -21,5 +23,4 @@ public class HomeController : Controller
         _cache.Set("AllProjects", projects);
         return View(projects);
     } 
-    
 }

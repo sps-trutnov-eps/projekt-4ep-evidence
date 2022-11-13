@@ -2,7 +2,6 @@
 public class ProjectController : Controller
 {
     private readonly ProjectContext _context;
-
     public ProjectController(ProjectContext context) => _context = context;
 
     /// <summary>
