@@ -149,3 +149,9 @@ async function login() {
     })
     let data = await res.json();
 }
+
+function menitHeslo() {
+    alert("zatím nejde");
+}
+
+
