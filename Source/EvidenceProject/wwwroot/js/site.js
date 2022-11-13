@@ -91,8 +91,9 @@ function loginText() {
     });
 }
 
-function menitHeslo() {
+function zmenitHeslo() {
     alert("zatím nejde");
+    console.log("zatím nejde");
 }
 
 $(document).on("click", ".mode", function(event){
@@ -105,6 +106,9 @@ function nastaveniStylu() {
     let style = localStorage.getItem("mode")
     if (style == null) {
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
+    }
+    else if (style == /*darkMode*/) {
+        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/darkMode.css" asp-append-version="true" />';
     }
     else {
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
