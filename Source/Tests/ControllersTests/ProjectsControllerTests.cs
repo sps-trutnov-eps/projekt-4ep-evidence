@@ -5,6 +5,7 @@ using EvidenceProject.Data;
 using EvidenceProject.Data.DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework.Internal;
 
 #nullable disable
@@ -16,12 +17,15 @@ public class ProjectControllerTests : ControllerTestsBase
     ProjectController Controller { get; set;}
 
     MemoryCacheOptions Opt = new();
-   
+
+    ILogger<ProjectController> Logger { get; set; }
+
+
     public ProjectControllerTests()
     {
         MemoryCache memoryCache = new(Opt);
         DBContext = GetContext();
-        Controller = new ProjectController(DBContext, memoryCache);
+        Controller = new ProjectController(DBContext, memoryCache, Logger);
     }
 
     [Test]

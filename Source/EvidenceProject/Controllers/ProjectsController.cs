@@ -1,4 +1,4 @@
-using EvidenceProject.Controllers.ActionData;
+﻿using EvidenceProject.Controllers.ActionData;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace EvidenceProject.Controllers;
@@ -6,10 +6,12 @@ public class ProjectController : Controller
 {
     private readonly ProjectContext _context;
     private readonly IMemoryCache _cache;
-    public ProjectController(ProjectContext context, IMemoryCache cache)
+    private readonly ILogger<ProjectController> _logger;
+    public ProjectController(ProjectContext context, IMemoryCache cache, ILogger<ProjectController> logger)
     {
         _context = context;
         _cache = cache;
+        _logger = logger;
     }
 
     /// <summary>
@@ -34,6 +36,7 @@ public class ProjectController : Controller
             name = projectData.projectName
 
         };
+        _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);
         _context?.SaveChanges();
         UpdateProjectsInCache();
@@ -58,6 +61,8 @@ public class ProjectController : Controller
     {
         if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Json("please login");
         if (!UniversalHelper.getProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
+        _logger.LogInformation("User with the id <{}> deleted a project", userID);
+
         _context?.projects?.Remove(project);
         UpdateProjectsInCache();
         return Json("ok");
