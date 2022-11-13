@@ -91,8 +91,9 @@ function loginText() {
     });
 }
 
-function menitHeslo() {
+function zmenitHeslo() {
     alert("zatím nejde");
+    console.log("zatím nejde");
 }
 
 $(document).on("click", ".mode", function(event){
@@ -131,3 +132,26 @@ async function search(query) {
         });
     }
 }
+
+async function login() {
+    let username = Document.getElementById("username")
+    let password = Document.getElementById("password")
+    let res = await fetch("/login", {
+        body: JSON.stringify({
+            username: username,
+            password: password,
+        }),
+        headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json',
+        },
+        method: "POST",
+    })
+    let data = await res.json();
+}
+
+function menitHeslo() {
+    alert("zatím nejde");
+}
+
+
