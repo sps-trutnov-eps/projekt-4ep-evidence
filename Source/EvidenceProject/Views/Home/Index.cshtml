@@ -1,6 +1,17 @@
-﻿@{
+﻿@model List<EvidenceProject.Data.DataModels.Project>
+@{
     ViewData["Title"] = "Home Page";
     ViewData["Page"] = "home";
 }
 
+@if(Model != null)
+{
+    @foreach (EvidenceProject.Data.DataModels.Project project in Model)
+    {
+        <p><b>@project.name</b></p>
+        <l>fotka</l>
+        <p>Stav: @project.projectState</p>  
+        <a asp-area="" asp-controller="Projects" asp-action="ProjectInfo">Více</a>
+    }
+}
 

@@ -8,10 +8,8 @@ function plynulyPrechodMeziStrankami(){
 
     $(document).on("click", ".odkaz", function () {
         let link = $(this).attr('href');
-
         $("main").empty();
         $("main").html("<div>načítám data...</div>");
-    
         $.ajax({
             type : "GET",
             url : link,
@@ -107,9 +105,6 @@ function nastaveniStylu() {
     if (style == null) {
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
     }
-    else if (style == /*darkMode*/) {
-        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/darkMode.css" asp-append-version="true" />';
-    }
     else {
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
@@ -134,4 +129,29 @@ async function search(query) {
             }
         });
     }
+}
+
+async function login() {
+    let username = Document.getElementById("username")
+    let password = Document.getElementById("password")
+    let res = await fetch("/login", {
+        body: JSON.stringify({
+            username: username,
+            password: password,
+        }),
+        headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json',
+        },
+        method: "POST",
+    })
+    let data = await res.json();
+}
+
+function menitHeslo() {
+    alert("zatím nejde");
+}
+
+function ctverec() {
+    
 }
