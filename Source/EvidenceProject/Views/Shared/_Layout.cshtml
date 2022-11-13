@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
@@ -28,15 +28,11 @@
                             <a class="nav-link text-dark mode" asp-area="" id= "mode3">mode3</a>
                             <a class="nav-link text-dark mode" asp-area="" id= "mode4">mode4</a>
                             <a class="nav-link text-dark mode" asp-area="" id= "mode5">mode5</a>
-
-                            <form action="/search" method="get">
-                                <label for="search">Vyhledat:</label> 
-                                <input id="search" name="searchQuery" type="search" placeholder="..."/>
-                                <input type="submit"/>
-                            </form>
+                            <label for="search">Vyhledat:</label>
+                            <input onchange="search(this.value)" id="search" name="searchQuery" type="search" placeholder="..." />
                         </li>
                     </ul>
-                </div>
+                </div>  
             </div>
         </nav>
     </header>
