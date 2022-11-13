@@ -153,5 +153,5 @@ function menitHeslo() {
 }
 
 function ctverec() {
-    
+    console.log("Ahoj světe");
 }
