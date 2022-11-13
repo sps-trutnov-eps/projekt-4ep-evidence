@@ -10,6 +10,9 @@ public class UserController : Controller
         _context = context;
     }
     
+    // <summary>
+    // Admin
+    // </summary>
     [HttpGet("admin")]
     public ActionResult Index()
     {
@@ -46,7 +49,6 @@ public class UserController : Controller
         HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
         return Redirect("/");
     }
-
 
     // <summary>
     // Register view (get)

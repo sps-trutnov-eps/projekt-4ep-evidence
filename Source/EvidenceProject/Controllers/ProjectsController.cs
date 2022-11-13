@@ -12,6 +12,9 @@ public class ProjectController : Controller
         _cache = cache;
     }
 
+    /// <summary>
+    /// projekt (get)
+    /// </summary>
     [HttpGet("project")]
     public ActionResult Index()
     {
@@ -36,6 +39,9 @@ public class ProjectController : Controller
         return Redirect("Index");
     }
 
+    /// <summary>
+    /// Create (get)
+    /// </summary>
     [HttpGet("project/create")]
     public ActionResult Create()
     {
