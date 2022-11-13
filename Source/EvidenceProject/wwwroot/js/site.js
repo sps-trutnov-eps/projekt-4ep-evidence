@@ -8,10 +8,8 @@ function plynulyPrechodMeziStrankami(){
 
     $(document).on("click", ".odkaz", function () {
         let link = $(this).attr('href');
-
         $("main").empty();
         $("main").html("<div>načítám data...</div>");
-    
         $.ajax({
             type : "GET",
             url : link,
@@ -154,4 +152,6 @@ function menitHeslo() {
     alert("zatím nejde");
 }
 
-
+function ctverec() {
+    
+}
