@@ -113,17 +113,23 @@ function nastaveniStylu() {
 }
 
 async function search(query) {
-    let res = await fetch("/search", {
-        body: JSON.stringify({
-            text: query,
-        }),
-        headers: {
-            'Accept': 'application/json',
-            'Content-type': 'application/json',
-        },
-        method: "POST",
-    })
-    let data = await res.json();
+    if (query != ""){
+        $.ajax({
+            type : "POST",
+            url : "search",
+            data: JSON.stringify(query),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            dataType: "json",
+            success : function(data){
+                $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${query}"</h2><div id="vysledky">${data}</div></div>`);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
+            }
+        });
+    }
 }
 
 async function login() {
