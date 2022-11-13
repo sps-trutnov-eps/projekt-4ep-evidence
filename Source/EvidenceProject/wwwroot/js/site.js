@@ -46,9 +46,9 @@ function spustitScript(){
     if (lokace == "/project/create") {
         nazvySouboru();
     } else if (lokace == "/users/login") {
-        loginText("#login form","/");
+        prihlaseniRegistraceText("#login form","/",'Přihlašování ...');
     } else if (lokace == "/users/register") {
-        loginText("#register form", "/users/login");
+        prihlaseniRegistraceText("#register form", "/users/login", 'Registrování ...');
     }
 }
 
@@ -65,19 +65,18 @@ function nazvySouboru(){
     });
 }
 
-function loginText(selektor, presmerovani) {
+function prihlaseniRegistraceText(selektor, presmerovani, text) {
     $(selektor).submit(function(event) {
         event.preventDefault();
         let formular = $(this);
         $('#hlaska').remove();
-        $(selektor).after('<p id="hlaska">logging in...</p>');
+        $(selektor).after(`<p id="hlaska">${text}</p>`);
         $.ajax({
             type: formular.attr("method"),
             url: formular.attr("action"),
             data: formular.serialize(),
             success: function(data)
             {
-                console.log('@Url.Action("Download", "DonationController", new { csv = data }))')
                 if(!data.includes("<!DOCTYPE html>")){
                     $('#hlaska').remove();
                     $(selektor).after(`<p id="hlaska">${data}</p>`);
@@ -95,8 +94,8 @@ function loginText(selektor, presmerovani) {
 }
 
 function zmenitHeslo() {
-    alert("zatím nejde");
-    console.log("zatím nejde");
+    window.open('https://youtu.be/dQw4w9WgXcQ', '_blank');
+    alert('Byl jsi napálen.');
 }
 
 $(document).on("click", ".mode", function(event){
@@ -152,9 +151,3 @@ async function login() {
     })
     let data = await res.json();
 }
-
-function menitHeslo() {
-    alert("zatím nejde");
-}
-
-
