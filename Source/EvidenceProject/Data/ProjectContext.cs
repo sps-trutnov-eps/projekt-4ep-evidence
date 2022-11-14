@@ -1,20 +1,19 @@
-using EvidenceProject.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
-using System.Reflection.Emit;
 
 namespace EvidenceProject.Data;
 
-public class ProjectContext: DbContext
+public class ProjectContext : DbContext
 {
-    public ProjectContext(DbContextOptions<ProjectContext> options) : base(options) { }
+    public ProjectContext(DbContextOptions<ProjectContext> options) : base(options)
+    {
+    }
 
     public DbSet<Project>? projects { get; set; }
     public DbSet<AuthUser>? globalUsers { get; set; }
-    
+
     public DbSet<DialInfo>? dialInfos { get; set; }
     public DbSet<DialCode>? dialCodes { get; set; }
-    
+
     public DbSet<DbFile>? files { get; set; }
 
     // co je dialinfo a dialcode??
@@ -49,9 +48,7 @@ public class ProjectContext: DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
-        {
             optionsBuilder.UseSqlServer(
-            "Server=(localdb)\\mssqllocaldb;Database=EvidenceContext;Trusted_Connection=True;MultipleActiveResultSets=True");
-        }
+                "Server=(localdb)\\mssqllocaldb;Database=EvidenceContext;Trusted_Connection=True;MultipleActiveResultSets=True");
     }
 }
