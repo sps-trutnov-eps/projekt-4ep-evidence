@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Create Project";
+    ViewData["Page"] = "create";
+}
+@model List<EvidenceProject.Data.DataModels.DialCode>
+<form action="/project/create" method="post">
+    <label for="name">Název projektu: </label>
+    <input name="projectName" type="text" placeholder="..." id="name"/>
+    <label for="state">Stav: </label>
+    <input name="projectState" list="stavy" id="state"/>
+    <label for="type">Typ: </label>
+    <input name="projectType" type="text" placeholder="..." id="type"/>
+    <label for="technology">Technologie: </label>
+    <input name="technology" type="text" placeholder="..." id="technology"/>
+    <label for="photo">Fotografie: </label>
+    <input name="photo" type="file" multiple="multiple" id="photo"/>
+    <a id="nazvy"></a>
+    <label for="achievments">Úspěchy: </label>
+    <input name="achievements" type="text" id="achievements"/>
+    <input type="submit"/> 
+
+    <datalist id="stavy">
+        @{
+            foreach(var dialInfo in Model){
+                        <option>@dialInfo.name</option>
+            }
+        }
+    </datalist>
+  
+</form>
+
+@await Html.PartialAsync("../Shared/DialInfosPV", Model)
+
+

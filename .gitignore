@@ -349,5 +349,10 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
+
 # Visual Studio Code cache/options directory
 .vscode/
+
+# JetBrains specific folder
+.idea/
+
