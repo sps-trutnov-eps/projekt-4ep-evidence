@@ -1,12 +1,13 @@
-using Konscious.Security.Cryptography;
 using System.Text;
+using Konscious.Security.Cryptography;
 
 namespace EvidenceProject.Helpers;
-public class PasswordHelper 
+
+public class PasswordHelper
 {
-    //  Zmìna argonu na bcrypt?
-    //  Je to pøipraveno v modelech
-    static public string CreateHash(string input)
+    //  Zmï¿½na argonu na bcrypt?
+    //  Je to pï¿½ipraveno v modelech
+    public static string CreateHash(string input)
     {
         var argon = new Argon2id(Encoding.UTF8.GetBytes(input));
         argon.Salt = Encoding.UTF8.GetBytes("00000000");
@@ -17,7 +18,7 @@ public class PasswordHelper
         return Convert.ToHexString(argon.GetBytes(16));
     }
 
-    static public bool VerifyHash(string input, string hash)
+    public static bool VerifyHash(string input, string hash)
     {
         var novejHash = CreateHash(input);
         return novejHash == hash;

@@ -1,4 +1,5 @@
 ﻿namespace EvidenceProject.Controllers.RequestClasses;
+
 public class ProjectCreateData
 {
     public string? projectName { get; set; }
@@ -12,5 +13,4 @@ public class ProjectCreateData
     public IFormFileCollection? photos { get; set; }
 
     public string? achievements { get; set; }
-
 }

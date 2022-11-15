@@ -2,7 +2,7 @@
     ViewData["Title"] = "Create Project";
     ViewData["Page"] = "create";
 }
-@model List<EvidenceProject.Data.DataModels.DialCode>
+@model List<DialCode>
 <form action="/project/create" method="post">
     <label for="name">Název projektu: </label>
     <input name="projectName" type="text" placeholder="..." id="name"/>
@@ -17,18 +17,17 @@
     <a id="nazvy"></a>
     <label for="achievments">Úspěchy: </label>
     <input name="achievements" type="text" id="achievements"/>
-    <input type="submit"/> 
+    <input type="submit"/>
 
     <datalist id="stavy">
         @{
-            foreach(var dialInfo in Model){
-                        <option>@dialInfo.name</option>
+            foreach (var dialInfo in Model)
+            {
+                <option>@dialInfo.name</option>
             }
         }
     </datalist>
-  
+
 </form>
 
 @await Html.PartialAsync("../Shared/DialInfosPV", Model)
-
-

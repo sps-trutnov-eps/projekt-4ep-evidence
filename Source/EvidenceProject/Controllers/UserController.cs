@@ -1,4 +1,5 @@
 namespace EvidenceProject.Controllers;
+
 public class UserController : Controller
 {
     private readonly ProjectContext _context;
@@ -9,19 +10,20 @@ public class UserController : Controller
         _logger = logger;
         _context = context;
     }
-    
+
     // <summary>
     // Admin
     // </summary>
     [HttpGet("admin")]
     public ActionResult Index()
     {
-        bool isLoggedIn = HttpContext.Session.GetString(UniversalHelper.LoggedInKey) == "1";
+        var isLoggedIn = HttpContext.Session.GetString(UniversalHelper.LoggedInKey) == "1";
         if (!isLoggedIn)
         {
             _logger.LogInformation("An unauthorized user tried accessing the admin panel.");
             return Redirect("/users/login");
         }
+
         return View();
     }
 
@@ -29,23 +31,27 @@ public class UserController : Controller
     // Login view (get)
     // </summary>
     [HttpGet("users/login")]
-    public ActionResult Login() => View();
-    
+    public ActionResult Login()
+    {
+        return View();
+    }
+
     // <summary>
     // Login (post)
     // </summary>
     [HttpPost("users/login")]
-    public ActionResult LoginPost([FromForm] LoginData data, bool testing = false) 
+    public ActionResult LoginPost([FromForm] LoginData data, bool testing = false)
     {
-        AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.username);
+        var user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.username);
         if (user == null) return Json(UniversalHelper.SomethingWentWrongMessage);
 
         if (data.password == null || data.username == null) return Json(UniversalHelper.SomethingWentWrongMessage);
 
-        if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
+        if (!PasswordHelper.VerifyHash(dx    ata.password, user.password))
+            return Json(UniversalHelper.SomethingWentWrongMessage);
 
         _logger.LogInformation("{0} logged in.", data.username);
-        if (testing) return Redirect("/"); 
+        if (testing) return Redirect("/");
         HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
         return Redirect("/");
     }
@@ -54,7 +60,10 @@ public class UserController : Controller
     // Register view (get)
     // </summary>
     [HttpGet("users/register")]
-    public ActionResult Register() => View();
+    public ActionResult Register()
+    {
+        return View();
+    }
 
     // <summary>
     // Register (post)
@@ -71,9 +80,10 @@ public class UserController : Controller
             _logger.LogInformation("Someone tried registering with an exisiting username.");
             return Json(UniversalHelper.SomethingWentWrongMessage); // Don't allow 2 users with the same name
         }
+
         var isFirstUser = contextList.Any(); // if there is no user 
-        string passwordHash = PasswordHelper.CreateHash(data.password);
-        var newUser = new AuthUser()
+        var passwordHash = PasswordHelper.CreateHash(data.password);
+        var newUser = new AuthUser
         {
             fullName = data.username,
             username = data.username,
@@ -82,7 +92,8 @@ public class UserController : Controller
             contactDetails = null,
             globalAdmin = !isFirstUser
         };
-        _logger.LogInformation("A new user created - username: {0}, fullName: {1}, globalAdmin: {2}", newUser.username, newUser.fullName, newUser.globalAdmin);
+        _logger.LogInformation("A new user created - username: {0}, fullName: {1}, globalAdmin: {2}", newUser.username,
+            newUser.fullName, newUser.globalAdmin);
 
         _context?.globalUsers?.Add(newUser);
         _context?.SaveChanges();

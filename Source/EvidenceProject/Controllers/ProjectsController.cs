@@ -2,11 +2,13 @@
 using Microsoft.Extensions.Caching.Memory;
 
 namespace EvidenceProject.Controllers;
+
 public class ProjectController : Controller
 {
-    private readonly ProjectContext _context;
     private readonly IMemoryCache _cache;
+    private readonly ProjectContext _context;
     private readonly ILogger<ProjectController> _logger;
+
     public ProjectController(ProjectContext context, IMemoryCache cache, ILogger<ProjectController> logger)
     {
         _context = context;
@@ -15,31 +17,34 @@ public class ProjectController : Controller
     }
 
     /// <summary>
-    /// projekt (get)
+    ///     projekt (get)
     /// </summary>
     [HttpGet("project")]
     public ActionResult Index()
     {
-        if(!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
+        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
         return Redirect("project/create");
     }
 
     /// <summary>
-    /// Vytvoření/přidání projektu
-    /// </summary>        
+    ///     Vytvoření/přidání projektu
+    /// </summary>
     [HttpPost("project/create")]
     public ActionResult Create([FromForm] ProjectCreateData projectData, bool test = false)
     {
-        string? userID = String.Empty;
-        if (!test) if (!UniversalHelper.getLoggedUser(HttpContext, out userID) && userID != "1") return Redirect("/");
+        var userID = string.Empty;
+        if (!test)
+            if (!UniversalHelper.getLoggedUser(HttpContext, out userID) && userID != "1")
+                return Redirect("/");
 
         Project project = new()
         {
             name = projectData.projectName,
             projectTechnology = new DialCode(),
-            projectType = new DialCode(),
+            projectType = new DialCode()
         };
-        _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
+        _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID,
+            projectData.projectName);
         _context?.projects?.Add(project);
         _context?.SaveChanges();
         UpdateProjectsInCache();
@@ -47,7 +52,7 @@ public class ProjectController : Controller
     }
 
     /// <summary>
-    /// Create (get)
+    ///     Create (get)
     /// </summary>
     [HttpGet("project/create")]
     public ActionResult Create()
@@ -57,7 +62,7 @@ public class ProjectController : Controller
     }
 
     /// <summary>
-    /// Odstranění projektu
+    ///     Odstranění projektu
     /// </summary>
     [HttpPost("project/{id}")]
     public JsonResult Delete(int id)
@@ -70,9 +75,9 @@ public class ProjectController : Controller
         UpdateProjectsInCache();
         return Json("ok");
     }
-    
+
     /// <summary>
-    /// Stránka s projektem 
+    ///     Stránka s projektem
     /// </summary>
     [HttpGet("projectinfo/{id}")]
     public ActionResult ProjectInfo(int id)
@@ -82,13 +87,13 @@ public class ProjectController : Controller
     }
 
     /// <summary>
-    /// Vyhledávání
+    ///     Vyhledávání
     /// </summary>
     [HttpPost("search")]
     public ActionResult Search([FromBody] SearchData data)
     {
         if (data.text == string.Empty) return Ok();
-        List<Project> projects  = _context?.projects?.ToList().Where(project => project.name.Contains(data.text)).ToList();
+        var projects = _context?.projects?.ToList().Where(project => project.name.Contains(data.text)).ToList();
         if (projects == null) return Json("Nic nenalezeno");
         return Json(projects);
     }
