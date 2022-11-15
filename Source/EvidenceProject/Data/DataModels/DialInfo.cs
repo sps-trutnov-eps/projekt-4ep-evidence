@@ -26,5 +26,5 @@ public class DialInfo
     /// <summary>
     ///     Obsah kategorie -> stavy v options.
     /// </summary>
-    public virtual List<DialCode>? dialCodes { get; set; }
+    public virtual List<DialCode>? dialCodes { get; set; } = new();
 }

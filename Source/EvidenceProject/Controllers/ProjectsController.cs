@@ -28,13 +28,16 @@ public class ProjectController : Controller
     /// Vytvoření/přidání projektu
     /// </summary>        
     [HttpPost("project/create")]
-    public ActionResult Create([FromForm] ProjectCreateData projectData)
+    public ActionResult Create([FromForm] ProjectCreateData projectData, bool test = false)
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/"); 
+        string? userID = String.Empty;
+        if (!test) if (!UniversalHelper.getLoggedUser(HttpContext, out userID) && userID != "1") return Redirect("/");
+
         Project project = new()
         {
-            name = projectData.projectName
-
+            name = projectData.projectName,
+            projectTechnology = new DialCode(),
+            projectType = new DialCode(),
         };
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);

@@ -22,9 +22,13 @@
     <datalist id="stavy">
         @{
             foreach(var dialInfo in Model){
-                <option>@dialInfo.name</option>
+                        <option>@dialInfo.name</option>
             }
         }
     </datalist>
   
 </form>
+
+@await Html.PartialAsync("../Shared/DialInfosPV", Model)
+
+
