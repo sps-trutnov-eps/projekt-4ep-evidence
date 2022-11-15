@@ -13,15 +13,16 @@ public class UserControllerTests : ControllerTestsBase
 
     UserController Controller { get; set; }
 
-    ILogger<UserController> Logger { get; set; }
+    Logger<UserController> Logger = new(ControllerTestsBase.LoggerFactory);
     public UserControllerTests()
     {
         DBContext = GetContext();
         Controller = new UserController(DBContext, Logger);
     }
 
-    [TestCase("guid","12345", true)]
     [TestCase("test","12345", false)]
+    [TestCase("test","12345", false)]
+    [TestCase("dsadsad","a56", true)]
     [TestCase(null,null, false)]
     public void Register(string username, string password, bool successful)
     {
@@ -49,7 +50,7 @@ public class UserControllerTests : ControllerTestsBase
     }
 
 
-    [TestCase("test", "12345", true)]
+    [TestCase("test", "12345", false)]
     [TestCase("test", "123456", false)]
     [TestCase(null, null, false)]
     public void Login(string username, string password, bool successful)
