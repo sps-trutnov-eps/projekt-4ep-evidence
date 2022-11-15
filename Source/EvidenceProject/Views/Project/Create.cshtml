@@ -2,7 +2,7 @@
     ViewData["Title"] = "Create Project";
     ViewData["Page"] = "create";
 }
-
+@model List<EvidenceProject.Data.DataModels.DialCode>
 <form action="/project/create" method="post">
     <label for="name">Název projektu: </label>
     <input name="projectName" type="text" placeholder="..." id="name"/>
@@ -16,14 +16,15 @@
     <input name="photo" type="file" multiple="multiple" id="photo"/>
     <a id="nazvy"></a>
     <label for="achievments">Úspěchy: </label>
-    <input name="achievements" type="text" id="achievements" />
+    <input name="achievements" type="text" id="achievements"/>
     <input type="submit"/> 
 
-
     <datalist id="stavy">
-        <option>Nápad</option>
-        <option>Aktivní</option>    
-        <option>Opuštěný</option>
-        <option>Dokončený</option>
+        @{
+            foreach(var dialInfo in Model){
+                <option>@dialInfo.name</option>
+            }
+        }
     </datalist>
+  
 </form>

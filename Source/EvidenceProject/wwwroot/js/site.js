@@ -8,10 +8,8 @@ function plynulyPrechodMeziStrankami(){
 
     $(document).on("click", ".odkaz", function () {
         let link = $(this).attr('href');
-
         $("main").empty();
-        $("main").html("<div>načítání dat...</div>");
-    
+        $("main").html("<div>načítám data...</div>");
         $.ajax({
             type : "GET",
             url : link,
@@ -43,22 +41,21 @@ window.onpopstate = function(e){
 
 function spustitScript(){
     let lokace = $(location).attr("pathname");
-    if(lokace == "/project/create") {
+    if (lokace == "/project/create") {
         nazvySouboru();
-    } else if (lokace == "/users/login"){
-        loginText();
+    } else if (lokace == "/users/login") {
+        prihlaseniRegistraceText("#login form","/",'Přihlašování ...');
+    } else if (lokace == "/users/register") {
+        prihlaseniRegistraceText("#register form", "/users/login", 'Registrování ...');
     }
 }
 
 function nazvySouboru(){
-    console.log("workin");
     const fileSelector = document.getElementById('photo');
     fileSelector.addEventListener('change', (event) => {
         const fileList = event.target.files;
-        console.log(fileList);
         document.getElementById("nazvy").innerHTML = "";
         for (let i = 0; i < fileList.length; i++) {
-            /*console.log(fileList[i].name);*/
             ted = document.getElementById("nazvy").innerText;
             document.getElementById("nazvy").innerHTML = ted + ", " + fileList[i].name;
 
@@ -66,13 +63,12 @@ function nazvySouboru(){
     });
 }
 
-function loginText() {
-    console.log('logging text');
-    $("#login form").submit(function(event) {
+function prihlaseniRegistraceText(selektor, presmerovani, text) {
+    $(selektor).submit(function(event) {
         event.preventDefault();
         let formular = $(this);
         $('#hlaska').remove();
-        $('.myLogin').after('<p id="hlaska">logging in...</p>');
+        $(selektor).after(`<p id="hlaska">${text}</p>`);
         $.ajax({
             type: formular.attr("method"),
             url: formular.attr("action"),
@@ -81,13 +77,13 @@ function loginText() {
             {
                 if(!data.includes("<!DOCTYPE html>")){
                     $('#hlaska').remove();
-                    $('.myLogin').after(`<p id="hlaska">${data}</p>`);
+                    $(selektor).after(`<p id="hlaska">${data}</p>`);
                 } else {
                     let stranka = $($.parseHTML(data));
                     $("header").replaceWith(stranka.filter("header"));
                     $("main").replaceWith(stranka.filter("main"));
                     $("title").replaceWith(stranka.filter("title"));
-                    history.pushState({"html":data}, "", "/");
+                    history.pushState({"html":data}, "", presmerovani);
                     spustitScript();
                 }
             }
@@ -95,8 +91,9 @@ function loginText() {
     });
 }
 
-function menitHeslo() {
-    alert("zatím nejde");
+function zmenitHeslo() {
+    window.open('https://youtu.be/dQw4w9WgXcQ', '_blank');
+    alert('Byl jsi napálen.');
 }
 
 $(document).on("click", ".mode", function(event){
@@ -111,14 +108,38 @@ function nastaveniStylu() {
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
     }
     else {
+        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
         document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
     }
 }
 
 async function search(query) {
-    let res = await fetch("/search", {
+    if (query != ""){
+        $.ajax({
+            type : "POST",
+            url : "search",
+            data: JSON.stringify(query),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            dataType: "json",
+            success : function(data){
+                $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${query}"</h2><div id="vysledky">${data}</div></div>`);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
+            }
+        });
+    }
+}
+
+async function login() {
+    let username = Document.getElementById("username")
+    let password = Document.getElementById("password")
+    let res = await fetch("/login", {
         body: JSON.stringify({
-            text: query,
+            username: username,
+            password: password,
         }),
         headers: {
             'Accept': 'application/json',
@@ -128,3 +149,9 @@ async function search(query) {
     })
     let data = await res.json();
 }
+
+function menitHeslo() {
+    alert("zatím nejde");
+}
+
+

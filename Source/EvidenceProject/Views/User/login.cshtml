@@ -4,8 +4,12 @@
 }
 
 <form action="/users/login" method="post">
-    <input type="text" name="username" placeholder="Jm�no...">
-    <input type="password" name="password" placeholder="Heslo...">
-    <input class="myLogin" type="submit" value="login">
-    <button onclick="menitHeslo()">Zm�na hesla</button>
+    <label for="username">Username:</label>
+    <input type="text" name="username">
+    <label for="password">Heslo:</label>
+    <input type="password" name="password">
+    <input type="submit" value="Login"> 
 </form>
+
+<a asp-controller="User" asp-action="Register" class="odkaz">Registrovat se</a>
+<button onclick="zmenitHeslo()">Změna hesla</button>
