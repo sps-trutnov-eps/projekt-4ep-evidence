@@ -8,6 +8,7 @@ html {
 :root{
   --primary: #007bff;
   --sps-cyan: #17a2b8;
+  --secondary: #7b9ea3;
 }
 
 nav{
@@ -29,6 +30,10 @@ form{
   position: absolute;
   top: 40px;
   right: 10px;
+}
+
+.nav-link .text-dark{
+    color: white !important;
 }
 
 .navbar-light .navbar-brand{
