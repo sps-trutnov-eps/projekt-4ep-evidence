@@ -69,7 +69,7 @@ public class UserController : Controller
         if (doesUserExist)
         {
             _logger.LogInformation("Someone tried registering with an exisiting username.");
-            return Json("Uživatel již existuje"); // Don't allow 2 users with the same name
+            return Json(UniversalHelper.SomethingWentWrongMessage); // Don't allow 2 users with the same name
         }
         var isFirstUser = contextList.Any(); // if there is no user 
         string passwordHash = PasswordHelper.CreateHash(data.password);
@@ -77,7 +77,7 @@ public class UserController : Controller
         {
             fullName = data.username,
             username = data.username,
-            password = passwordHash,
+            password = data.password,
             studyField = null,
             contactDetails = null,
             globalAdmin = !isFirstUser

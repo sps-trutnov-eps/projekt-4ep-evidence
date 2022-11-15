@@ -12,6 +12,15 @@ public class UniversalHelper
     /// </summary>
     public static string SomethingWentWrongMessage => "Něco se pokazilo";
 
+    /// <summary>
+    /// Klíč k listu zacachovaných dialInfos
+    /// </summary>
+    public static string DialInfoCacheKey => "dialInfos";
+
+    /// <summary>
+    /// Klíč k listu zacachovaných dialCodes
+    /// </summary>
+    public static string DialCodeCacheKey => "dialCodes";
 
     /// <summary>
     /// Zjistíme, zda je přihlášen uživatel
