@@ -1,10 +1,22 @@
-﻿namespace EvidenceProject.Controllers;
+﻿using EvidenceProject.Controllers.ActionData;
+using Microsoft.Extensions.Caching.Memory;
+
+namespace EvidenceProject.Controllers;
 public class ProjectController : Controller
 {
     private readonly ProjectContext _context;
+    private readonly IMemoryCache _cache;
+    private readonly ILogger<ProjectController> _logger;
+    public ProjectController(ProjectContext context, IMemoryCache cache, ILogger<ProjectController> logger)
+    {
+        _context = context;
+        _cache = cache;
+        _logger = logger;
+    }
 
-    public ProjectController(ProjectContext context) => _context = context;
-
+    /// <summary>
+    /// projekt (get)
+    /// </summary>
     [HttpGet("project")]
     public ActionResult Index()
     {
@@ -18,15 +30,22 @@ public class ProjectController : Controller
     [HttpPost("project/create")]
     public ActionResult Create([FromForm] ProjectCreateData projectData)
     {
+        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/"); 
         Project project = new()
         {
             name = projectData.projectName
+
         };
+        _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);
         _context?.SaveChanges();
+        UpdateProjectsInCache();
         return Redirect("Index");
     }
 
+    /// <summary>
+    /// Create (get)
+    /// </summary>
     [HttpGet("project/create")]
     public ActionResult Create()
     {
@@ -40,8 +59,12 @@ public class ProjectController : Controller
     [HttpPost("project/{id}")]
     public JsonResult Delete(int id)
     {
+        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Json("please login");
         if (!UniversalHelper.getProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
+        _logger.LogInformation("User with the id <{}> deleted a project", userID);
+
         _context?.projects?.Remove(project);
+        UpdateProjectsInCache();
         return Json("ok");
     }
     
@@ -59,12 +82,18 @@ public class ProjectController : Controller
     /// Vyhledávání
     /// </summary>
     [HttpPost("search")]
-    public ActionResult Search([FromBody] string searchQuery)
+    public ActionResult Search([FromBody] SearchData data)
     {
-        if (searchQuery == string.Empty) return Ok();
-        List<Project> projects  = _context?.projects?.ToList().Where(project => project.name.Contains(searchQuery)).ToList();
-        if (projects.Count == 0) return Json("Nic nenalezeno");
-        // Budeme posílat JSON, ať si to JS užijí :D
+        if (data.text == string.Empty) return Ok();
+        List<Project> projects  = _context?.projects?.ToList().Where(project => project.name.Contains(data.text)).ToList();
+        if (projects == null) return Json("Nic nenalezeno");
         return Json(projects);
+    }
+
+
+    public void UpdateProjectsInCache()
+    {
+        var projects = _context?.projects?.ToList();
+        _cache.Set("AllProjects", projects);
     }
 }

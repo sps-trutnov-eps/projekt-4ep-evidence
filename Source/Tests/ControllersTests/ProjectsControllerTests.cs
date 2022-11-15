@@ -1,8 +1,11 @@
 using EvidenceProject.Controllers;
+using EvidenceProject.Controllers.ActionData;
 using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Data;
 using EvidenceProject.Data.DataModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework.Internal;
 
 #nullable disable
@@ -13,10 +16,16 @@ public class ProjectControllerTests : ControllerTestsBase
 
     ProjectController Controller { get; set;}
 
+    MemoryCacheOptions Opt = new();
+
+    ILogger<ProjectController> Logger { get; set; }
+
+
     public ProjectControllerTests()
     {
+        MemoryCache memoryCache = new(Opt);
         DBContext = GetContext();
-        Controller = new ProjectController(DBContext);
+        Controller = new ProjectController(DBContext, memoryCache, Logger);
     }
 
     [Test]
@@ -25,8 +34,12 @@ public class ProjectControllerTests : ControllerTestsBase
     [TestCase("st", "test")]
     public void SearchProject(string projectQuery, string expectedProject)
     {
-        var response = (ViewResult)Controller.Search(projectQuery);
-        var data = (List<Project>)response.Model;
+        SearchData searchData = new()
+        {
+            text = projectQuery,
+        };
+        var response = (JsonResult)Controller.Search(searchData);
+        var data = (List<Project>)response.Value;
         Assert.That(data?.First().name, Is.EqualTo(expectedProject));
     }
 
