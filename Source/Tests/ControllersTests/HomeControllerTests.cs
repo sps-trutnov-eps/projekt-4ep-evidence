@@ -1,12 +1,10 @@
 using EvidenceProject.Controllers;
-
+using EvidenceProject.Data;
+using EvidenceProject.Data.DataModels;
+using Microsoft.AspNetCore.Mvc;
 namespace Tests.ControllersTests
 {
-    public class HomeControllerTests
+    public class HomeControllerTests : ControllerTestsBase
     {
-
-        private HomeController homeController = new();
-        [Test]
-        public void Test1() => Assert.Pass();
     }
 }

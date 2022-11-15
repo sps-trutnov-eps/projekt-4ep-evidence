@@ -1,17 +1,24 @@
-using EvidenceProject.Controllers.RequestClasses;
-using EvidenceProject.Helpers;
-
 namespace EvidenceProject.Controllers;
-public class AdminController : Controller
+public class UserController : Controller
 {
-    // <summary>
-    // Stranka admina  
-    // </summary>
-    [HttpGet("admin")]
-    public IActionResult Index()
+    private readonly ProjectContext _context;
+    private readonly ILogger _logger;
+
+    public UserController(ProjectContext context, ILogger<UserController> logger)
     {
-        if (HttpContext.Session.GetString("loggedin") != "true") 
+        _logger = logger;
+        _context = context;
+    }
+    
+    [HttpGet("admin")]
+    public ActionResult Index()
+    {
+        bool isLoggedIn = HttpContext.Session.GetString(UniversalHelper.LoggedInKey) == "1";
+        if (!isLoggedIn)
+        {
+            _logger.LogInformation("An unauthorized user tried accessing the admin panel.");
             return Redirect("/users/login");
+        }
         return View();
     }
 
@@ -19,42 +26,64 @@ public class AdminController : Controller
     // Login view (get)
     // </summary>
     [HttpGet("users/login")]
-    public IActionResult Login() 
-    {
-        return View();
-    }
-
+    public ActionResult Login() => View();
+    
     // <summary>
     // Login (post)
     // </summary>
     [HttpPost("users/login")]
-    public IActionResult LoginPost([FromForm] LoginData data) 
+    public ActionResult LoginPost([FromForm] LoginData data, bool testing = false) 
     {
-        // TODO
-        if (data.password == "heslo") {
-            HttpContext.Session.SetString(UniversalHelper.LoggedInKey, "true");
-            return Redirect("/");
-        }
-        return Redirect("/users/login");
+        AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.username);
+        if (user == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+
+        if (data.password == null || data.username == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+
+        if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
+
+        _logger.LogInformation("{0} logged in.", data.username);
+        if (testing) return Redirect("/"); 
+        HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
+        return Redirect("/");
     }
 
 
     // <summary>
     // Register view (get)
     // </summary>
-    [HttpPost("users/register")]
-    public IActionResult RegisterGet()
-    {
-        return View();
-    }
+    [HttpGet("users/register")]
+    public ActionResult Register() => View();
 
     // <summary>
     // Register (post)
     // </summary>
     [HttpPost("users/register")]
-    public IActionResult RegisterPost([FromForm] LoginData data)
+    public ActionResult RegisterPost([FromForm] LoginData data)
     {
-        // TODO
-        return Redirect("/user/login");
+        if (data.username == null || data.password == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+        var contextList = _context?.globalUsers?.ToList();
+
+        var doesUserExist = contextList.Any(u => u.username == data.username);
+        if (doesUserExist)
+        {
+            _logger.LogInformation("Someone tried registering with an exisiting username.");
+            return Json("Uživatel již existuje"); // Don't allow 2 users with the same name
+        }
+        var isFirstUser = contextList.Any(); // if there is no user 
+        string passwordHash = PasswordHelper.CreateHash(data.password);
+        var newUser = new AuthUser()
+        {
+            fullName = data.username,
+            username = data.username,
+            password = passwordHash,
+            studyField = null,
+            contactDetails = null,
+            globalAdmin = !isFirstUser
+        };
+        _logger.LogInformation("A new user created - username: {0}, fullName: {1}, globalAdmin: {2}", newUser.username, newUser.fullName, newUser.globalAdmin);
+
+        _context?.globalUsers?.Add(newUser);
+        _context?.SaveChanges();
+        return Redirect("/users/login");
     }
 }

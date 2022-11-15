@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvidenceProject;
 public class Program
@@ -6,20 +6,10 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
         // Add services to the container.
         builder.Services.AddControllersWithViews();
-
-
-        // TODO zkusit najit admina
-        // TODO pokud nebude ulozit do DB
-
-        // konfigurace z appsettings.json
-        IConfiguration configurationBUilder = new ConfigurationBuilder()
-                                .AddJsonFile("appsettings.json",false).Build();
-        configurationBUilder.GetValue<string>("Admin:username");
-        configurationBUilder.GetValue<string>("Admin:password");
-        
 
         // Session
         builder.Services.AddSession(options =>
@@ -31,29 +21,41 @@ public class Program
             options.Cookie.MaxAge = TimeSpan.FromDays(8);
         });
 
-        var app = builder.Build();
+        builder.Services.AddDbContext<ProjectContext>(opt =>
+            opt.UseSqlServer(
+                builder.Configuration["DatabaseConnection"]));
 
-        // Configure the HTTP request pipeline.
+        builder.Services.AddControllersWithViews();
+        var app = builder.Build();
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
+        app.Logger.LogInformation("Logging enabled!");
 
+        app.Logger.LogInformation("Enabling https redirection.");
         app.UseHttpsRedirection();
+
+        app.Logger.LogInformation("Enabling static file use.");
         app.UseStaticFiles();
 
+        app.Logger.LogInformation("Enabling routing.");
         app.UseRouting();
-
+        
+        app.Logger.LogInformation("Enabling authorization.");
         app.UseAuthorization();
-
+        
+        app.Logger.LogInformation("Enabling sessions.");
         app.UseSession();
-
+        
+        app.Logger.LogInformation("Mapping routes.");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
+        app.Logger.LogInformation("Starting app.");
         app.Run();
     }
 }
+    

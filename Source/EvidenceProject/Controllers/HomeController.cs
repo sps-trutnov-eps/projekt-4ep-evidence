@@ -1,8 +1,25 @@
-﻿namespace EvidenceProject.Controllers;
+﻿
+using Microsoft.Extensions.Caching.Memory;
+
+namespace EvidenceProject.Controllers;
 public class HomeController : Controller
 {
+    private readonly ProjectContext _context;
+    private readonly IMemoryCache _cache;
+    public HomeController(ProjectContext context, IMemoryCache cache)
+    {
+        _context = context;
+        _cache = cache;
+    } 
     public IActionResult Index()
     {
-        return View();
-    }
+        var projects = _cache.Get("AllProjects");
+        if (projects != null)
+            return View(projects);
+        
+        projects = _context?.projects?.ToList();
+        _cache.Set("AllProjects", projects);
+        return View(projects);
+    } 
+    
 }
