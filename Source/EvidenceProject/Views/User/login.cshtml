@@ -1,7 +1,9 @@
+@using EvidenceProject.Controllers.ActionData
 @{
     ViewData["Title"] = "Login";
     ViewData["Page"] = "login";
 }
+@model CustomMessageResponse
 
 <form action="/users/login" method="post">
     <label for="username">Username:</label>
@@ -11,5 +13,6 @@
     <input type="submit" value="Login"> 
     <button onclick="menitHeslo()">Změna hesla</button>
 </form>
+<p style="color: red">@Model.Response</p>
 
 <a asp-controller="User" asp-action="Register">Registrovat se</a>

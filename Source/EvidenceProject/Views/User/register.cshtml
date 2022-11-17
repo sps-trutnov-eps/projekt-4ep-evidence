@@ -1,6 +1,9 @@
+@using EvidenceProject.Controllers.ActionData
 @{
     ViewData["Title"] = "Register";
 }
+
+@model CustomMessageResponse
 
 <form action="/users/register" method="post">
     <label for="username">Username:</label>
@@ -9,3 +12,4 @@
     <input type="password" name="password">
     <input type="submit" value="Register">
 </form>
+<p  style="color: red">@Model.Response</p>

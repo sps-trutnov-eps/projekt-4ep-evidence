@@ -54,8 +54,8 @@ public class ProjectController : Controller
     {
         if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
         GETProjectCreate GETProject = new();
-        GETProject.dialCodes = _context?.dialCodes?.ToList();
-        GETProject.dialInfos = _context?.dialInfos?.ToList();
+        GETProject.DialCodes = _context?.dialCodes?.ToList();
+        GETProject.DialInfos = _context?.dialInfos?.ToList();
         return View(GETProject);
     }
 

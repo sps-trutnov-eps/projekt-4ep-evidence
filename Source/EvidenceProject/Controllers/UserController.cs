@@ -1,10 +1,12 @@
+using EvidenceProject.Controllers.ActionData;
 using bcrypt = BCrypt.Net.BCrypt;
 namespace EvidenceProject.Controllers;
 public class UserController : Controller
 {
     private readonly ProjectContext _context;
     private readonly ILogger _logger;
-
+    CustomMessageResponse messageResponse = new();
+    CustomMessageResponse GetMessageResponse = new() { Response = null };
     public UserController(ProjectContext context, ILogger<UserController> logger)
     {
         _logger = logger;
@@ -30,7 +32,7 @@ public class UserController : Controller
     // Login view (get)
     // </summary>
     [HttpGet("users/login")]
-    public ActionResult Login() => View();
+    public ActionResult Login() => View(GetMessageResponse);
     
     // <summary>
     // Login (post)
@@ -39,12 +41,12 @@ public class UserController : Controller
     public ActionResult LoginPost([FromForm] LoginData data, bool testing = false) 
     {
         AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.username);
-        if (user == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+        if (user == null) return View("Login", messageResponse);
 
-        if (data.password == null || data.username == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+        if (data.password == null || data.username == null) return View("Login",messageResponse);
 
         //if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
-        if(!bcrypt.Verify(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
+        if(!bcrypt.Verify(data.password, user.password)) return View("Login", messageResponse);
 
         _logger.LogInformation("{0} logged in.", data.username);
         if (testing) return Redirect("/"); 
@@ -56,7 +58,7 @@ public class UserController : Controller
     // Register view (get)
     // </summary>
     [HttpGet("users/register")]
-    public ActionResult Register() => View();
+    public ActionResult Register() => View(GetMessageResponse);
 
     // <summary>
     // Register (post)
@@ -64,14 +66,14 @@ public class UserController : Controller
     [HttpPost("users/register")]
     public ActionResult RegisterPost([FromForm] LoginData data)
     {
-        if (data.username == null || data.password == null) return Json(UniversalHelper.SomethingWentWrongMessage);
+        if (data.username == null || data.password == null) return View("Register", messageResponse);
         var contextList = _context?.globalUsers?.ToList();
 
         var doesUserExist = contextList.Any(u => u.username == data.username);
         if (doesUserExist)
         {
             _logger.LogInformation("Someone tried registering with an exisiting username.");
-            return Json(UniversalHelper.SomethingWentWrongMessage); // Don't allow 2 users with the same name
+            return View("Register", messageResponse); // Don't allow 2 users with the same name
         }
         var isFirstUser = contextList.Any(); // if there is no user 
         var hashedPassword = bcrypt.HashPassword(data.password);

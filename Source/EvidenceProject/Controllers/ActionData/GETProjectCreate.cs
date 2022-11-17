@@ -2,7 +2,7 @@
 {
     public class GETProjectCreate
     {
-        public List<DialCode>? dialCodes { get; set; }
-        public List<DialInfo>? dialInfos { get; set; }
+        public List<DialCode>? DialCodes { get; set; }
+        public List<DialInfo>? DialInfos { get; set; }
     }
 }
