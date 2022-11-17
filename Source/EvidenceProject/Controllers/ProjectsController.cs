@@ -52,8 +52,11 @@ public class ProjectController : Controller
     [HttpGet("project/create")]
     public ActionResult Create()
     {
-        var dialCodes = _context?.dialCodes?.ToList();
-        return View(dialCodes);
+        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
+        GETProjectCreate GETProject = new();
+        GETProject.dialCodes = _context?.dialCodes?.ToList();
+        GETProject.dialInfos = _context?.dialInfos?.ToList();
+        return View(GETProject);
     }
 
     /// <summary>
