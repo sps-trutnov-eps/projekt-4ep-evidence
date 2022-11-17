@@ -1,8 +1,9 @@
-﻿@{
+﻿@using EvidenceProject.Controllers.ActionData
+@{
     ViewData["Title"] = "Create Project";
     ViewData["Page"] = "create";
 }
-@model List<EvidenceProject.Data.DataModels.DialCode>
+@model GETProjectCreate
 <form action="/project/create" method="post">
     <label for="name">Název projektu: </label>
     <input name="projectName" type="text" placeholder="..." id="name"/>
@@ -21,7 +22,7 @@
 
     <datalist id="stavy">
         @{
-            foreach(var dialInfo in Model){
+            foreach(var dialInfo in Model.DialInfos){
                         <option>@dialInfo.name</option>
             }
         }
@@ -29,6 +30,7 @@
   
 </form>
 
-@await Html.PartialAsync("../Shared/DialInfosPV", Model)
+@await Html.PartialAsync("../Shared/DialCodesPV", Model.DialCodes)
+@await Html.PartialAsync("../Shared/DialInfosPV", Model.DialInfos)
 
 

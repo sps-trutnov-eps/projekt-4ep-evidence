@@ -52,8 +52,11 @@ public class ProjectController : Controller
     [HttpGet("project/create")]
     public ActionResult Create()
     {
-        var dialCodes = _context?.dialCodes?.ToList();
-        return View(dialCodes);
+        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
+        GETProjectCreate GETProject = new();
+        GETProject.DialCodes = _context?.dialCodes?.ToList();
+        GETProject.DialInfos = _context?.dialInfos?.ToList();
+        return View(GETProject);
     }
 
     /// <summary>
@@ -62,7 +65,7 @@ public class ProjectController : Controller
     [HttpPost("project/{id}")]
     public JsonResult Delete(int id)
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Json("please login");
+        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Json("Nejsi admin/přihlášen");
         if (!UniversalHelper.getProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
         _logger.LogInformation("User with the id <{}> deleted a project", userID);
 
