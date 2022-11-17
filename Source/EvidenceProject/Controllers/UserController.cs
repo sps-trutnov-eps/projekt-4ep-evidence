@@ -1,3 +1,4 @@
+using bcrypt = BCrypt.Net.BCrypt;
 namespace EvidenceProject.Controllers;
 public class UserController : Controller
 {
@@ -42,7 +43,8 @@ public class UserController : Controller
 
         if (data.password == null || data.username == null) return Json(UniversalHelper.SomethingWentWrongMessage);
 
-        if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
+        //if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
+        if(!bcrypt.Verify(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
 
         _logger.LogInformation("{0} logged in.", data.username);
         if (testing) return Redirect("/"); 
@@ -72,12 +74,12 @@ public class UserController : Controller
             return Json(UniversalHelper.SomethingWentWrongMessage); // Don't allow 2 users with the same name
         }
         var isFirstUser = contextList.Any(); // if there is no user 
-        string passwordHash = PasswordHelper.CreateHash(data.password);
+        var hashedPassword = bcrypt.HashPassword(data.password);
         var newUser = new AuthUser()
         {
             fullName = data.username,
             username = data.username,
-            password = data.password,
+            password = hashedPassword,
             studyField = null,
             contactDetails = null,
             globalAdmin = !isFirstUser

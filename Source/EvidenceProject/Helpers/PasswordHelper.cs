@@ -4,8 +4,9 @@ using System.Text;
 namespace EvidenceProject.Helpers;
 public class PasswordHelper 
 {
-    //  Zmìna argonu na bcrypt?
-    //  Je to pøipraveno v modelech
+    // Todo odstranit
+    // V modelech je bcrypt
+    [Obsolete("Použít bcrypt")]
     static public string CreateHash(string input)
     {
         var argon = new Argon2id(Encoding.UTF8.GetBytes(input));
@@ -17,6 +18,7 @@ public class PasswordHelper
         return Convert.ToHexString(argon.GetBytes(16));
     }
 
+    [Obsolete("Použít bcrypt")]
     static public bool VerifyHash(string input, string hash)
     {
         var novejHash = CreateHash(input);

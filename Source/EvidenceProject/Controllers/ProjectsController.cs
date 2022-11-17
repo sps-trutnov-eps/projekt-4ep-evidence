@@ -62,7 +62,7 @@ public class ProjectController : Controller
     [HttpPost("project/{id}")]
     public JsonResult Delete(int id)
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Json("please login");
+        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Json("Nejsi admin/přihlášen");
         if (!UniversalHelper.getProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
         _logger.LogInformation("User with the id <{}> deleted a project", userID);
 
