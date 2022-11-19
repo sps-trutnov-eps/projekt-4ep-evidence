@@ -56,6 +56,9 @@ public class Project
     [Required]
     public virtual List<User>? assignees { get; set; }
 
+    [Required]
+    public virtual List<DbFile>? files { get; set; }
+
     //TODO Artefacts(Files, text) 
     //TODO Showcase??(Files?, Photos?)
 
