@@ -1,7 +1,5 @@
 Tutorial jak nastavit ASP.NET aplikaci na Raspberry pi:
 
-- Budeme předpokládát že už máme operační systém na který to budeme nasazovat.
-
 1) vypublikujeme aplikaci
 
 2) překopírujeme složku s aplikací na Raspberry pi
