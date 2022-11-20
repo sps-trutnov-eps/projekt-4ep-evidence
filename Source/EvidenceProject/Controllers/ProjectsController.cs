@@ -43,8 +43,7 @@ public class ProjectController : Controller
             projectTechnology = new DialCode(),
             projectType = new DialCode()
         };
-        _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID,
-            projectData.projectName);
+        _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);
         _context?.SaveChanges();
         UpdateProjectsInCache();
@@ -100,7 +99,6 @@ public class ProjectController : Controller
         if (projects == null) return Json("Nic nenalezeno");
         return Json(projects);
     }
-
 
     public void UpdateProjectsInCache()
     {
