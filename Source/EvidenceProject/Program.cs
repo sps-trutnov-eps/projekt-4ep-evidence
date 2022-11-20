@@ -19,7 +19,7 @@ public class Program
             options.Cookie.IsEssential = true;
             options.Cookie.MaxAge = TimeSpan.FromDays(8);
         });
-
+        // Stavitel
         builder.Services.AddDbContext<ProjectContext>(opt =>
             opt.UseSqlServer(
                 builder.Configuration["DatabaseConnection"]));
