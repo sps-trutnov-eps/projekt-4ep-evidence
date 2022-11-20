@@ -57,9 +57,8 @@ function nazvySouboru(){
         const fileList = event.target.files;
         document.getElementById("nazvy").innerHTML = "";
         for (let i = 0; i < fileList.length; i++) {
-            ted = document.getElementById("nazvy").innerText;
+            ted = document.getElementById("nazvy").innerText; 
             document.getElementById("nazvy").innerHTML = ted + ", " + fileList[i].name;
-
         }
     });
 }
@@ -145,5 +144,8 @@ async function login() {
     })
     let data = await res.json();
 }
+
+
+
 
 
