@@ -1,4 +1,4 @@
-using EvidenceProject.Controllers.ActionData;
+﻿using EvidenceProject.Controllers.ActionData;
 using bcrypt = BCrypt.Net.BCrypt;
 namespace EvidenceProject.Controllers;
 
@@ -95,5 +95,18 @@ public class UserController : Controller
         _context?.globalUsers?.Add(newUser);
         _context?.SaveChanges();
         return Redirect("/users/login");
+    }
+
+    [HttpPost("users/password/update")]
+    public ActionResult UpdatePasswordPost([FromForm] LoginData data)
+    {
+        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != null && userID != "1") return Json("Nejsi přihlášen");
+        int.TryParse(userID, out int user_id);
+        AuthUser? user = AuthUser.FindUser(_context, user_id);
+        if (user == null) return Json("Uživatel neexistuje?!");
+        if (user.password != bcrypt.HashPassword(data.original_password)) return Json("Špatné heslo");
+        user.password = bcrypt.HashPassword(data.password);
+        _context.SaveChanges();
+        return Json("Heslo změněno úspěšně!");
     }
 }
