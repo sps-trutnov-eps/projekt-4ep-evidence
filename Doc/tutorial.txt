@@ -1,20 +1,17 @@
 Tutorial jak nastavit ASP.NET aplikaci na Raspberry pi:
 
 1) vypublikujeme aplikaci
+	otevřeme Visual Studio -> build -> publish
+		target: folder -> finish
+		v settings: z deployment mode: framework-dependent -> self-contained
+		    	z target runtime: win-x86 -> linux-arm - Save
+	Publish
 
 2) překopírujeme složku s aplikací na Raspberry pi
 
 3) vytvoříme nového uživatele s omezeným oprávněním
 
 4) vytvoříme soubor který zajistí aby se aplikace spouštěla automaticky
-
-
-
-
-
-
-
-
 
 
 
