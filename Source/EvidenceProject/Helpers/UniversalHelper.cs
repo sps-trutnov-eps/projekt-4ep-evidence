@@ -1,29 +1,29 @@
 ﻿namespace EvidenceProject.Helpers;
+
 public class UniversalHelper
 {
-
     /// <summary>
-    /// Jméno cookie
+    ///     Jméno cookie
     /// </summary>
     public static string LoggedInKey => "loggedin";
 
     /// <summary>
-    /// Json hláška při chybě
+    ///     Json hláška při chybě
     /// </summary>
     public static string SomethingWentWrongMessage => "Něco se pokazilo";
 
     /// <summary>
-    /// Klíč k listu zacachovaných dialInfos
+    ///     Klíč k listu zacachovaných dialInfos
     /// </summary>
     public static string DialInfoCacheKey => "dialInfos";
 
     /// <summary>
-    /// Klíč k listu zacachovaných dialCodes
+    ///     Klíč k listu zacachovaných dialCodes
     /// </summary>
     public static string DialCodeCacheKey => "dialCodes";
 
     /// <summary>
-    /// Zjistíme, zda je přihlášen uživatel
+    ///     Zjistíme, zda je přihlášen uživatel
     /// </summary>
     public static bool getLoggedUser(HttpContext context, out string? userID)
     {
@@ -32,7 +32,7 @@ public class UniversalHelper
     }
 
     /// <summary>
-    /// Vyhledání projektu dle ID
+    ///     Vyhledání projektu dle ID
     /// </summary>
     public static bool getProject(ProjectContext context, int id, out Project project)
     {

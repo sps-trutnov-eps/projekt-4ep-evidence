@@ -7,7 +7,8 @@ public class DbFile
     /// <summary>
     ///     Unikátní identifikátor souboru
     /// </summary>
-    [Key] public Guid id { get; set; }
+    [Key]
+    public Guid id { get; set; }
 
     /// <summary>
     ///     Název souboru
@@ -20,11 +21,12 @@ public class DbFile
     /// </summary>
     [Required]
     public byte[] fileData { get; set; }
-    
+
     /// <summary>
     ///     Mime type souboru
     /// </summary>
-    [Required] public string mimeType { get; set; }
+    [Required]
+    public string mimeType { get; set; }
 }
 
 public static class FileExtension
@@ -41,12 +43,12 @@ public static class FileExtension
         memoryStream.Write(file.fileData, 0, file.fileData.Length);
         return memoryStream;
     }
-    
+
     /// <summary>
     ///     Write file to database
     /// </summary>
     /// <param name="file"></param>
-    /// <param name="formFile"><see cref="IFormFile"/> to write</param>
+    /// <param name="formFile"><see cref="IFormFile" /> to write</param>
     public static void WriteFile(this DbFile file, IFormFile formFile)
     {
         using var memoryStream = new MemoryStream();

@@ -18,7 +18,7 @@
     <a id="nazvy"></a>
     <label for="achievments">Úspěchy: </label>
     <input name="achievements" type="text" id="achievements"/>
-    <input type="submit"/> 
+    <input type="submit"/>
 
     <datalist id="stavy">
         @{
@@ -27,7 +27,7 @@
             }
         }
     </datalist>
-  
+
 </form>
 
 @await Html.PartialAsync("../Shared/DialCodesPV", Model.DialCodes)
