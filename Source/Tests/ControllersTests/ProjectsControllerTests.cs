@@ -18,8 +18,7 @@ public class ProjectControllerTests : ControllerTestsBase
 
     MemoryCacheOptions Opt = new();
 
-    ILogger<ProjectController> Logger { get; set; }
-
+    Logger<ProjectController> Logger = new(ControllerTestsBase.LoggerFactory);
 
     public ProjectControllerTests()
     {
@@ -62,15 +61,12 @@ public class ProjectControllerTests : ControllerTestsBase
     [Test]
     public void CreateProject()
     {
-        string name = $"Test{Guid.NewGuid().ToString("N")}";
+        string name = $"Test{Guid.NewGuid().ToString("N")}"[0..25];
         ProjectCreateData data = new()
         {
             projectName = name,
-            projectState = "State",
-            projectType = "Type",
-            technology = "Technology"
         };
-        var response = (ViewResult)Controller.Create(data);
+        var response = (ViewResult)Controller.Create(data, true);
         Assert.That(response.ViewName, Is.EqualTo("Index"));
     }
 
