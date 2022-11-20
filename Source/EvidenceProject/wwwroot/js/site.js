@@ -8,10 +8,8 @@ function plynulyPrechodMeziStrankami(){
 
     $(document).on("click", ".odkaz", function () {
         let link = $(this).attr('href');
-
         $("main").empty();
         $("main").html("<div>načítám data...</div>");
-    
         $.ajax({
             type : "GET",
             url : link,
@@ -46,7 +44,9 @@ function spustitScript(){
     if (lokace == "/project/create") {
         nazvySouboru();
     } else if (lokace == "/users/login") {
-        loginText();
+        prihlaseniRegistraceText("#login form","/",'Přihlašování ...');
+    } else if (lokace == "/users/register") {
+        prihlaseniRegistraceText("#register form", "/users/login", 'Registrování ...');
     }
 }
 
@@ -63,12 +63,12 @@ function nazvySouboru(){
     });
 }
 
-function loginText() {
-    $("#login form").submit(function(event) {
+function prihlaseniRegistraceText(selektor, presmerovani, text) {
+    $(selektor).submit(function(event) {
         event.preventDefault();
         let formular = $(this);
         $('#hlaska').remove();
-        $('.myLogin').after('<p id="hlaska">logging in...</p>');
+        $(selektor).after(`<p id="hlaska">${text}</p>`);
         $.ajax({
             type: formular.attr("method"),
             url: formular.attr("action"),
@@ -77,13 +77,13 @@ function loginText() {
             {
                 if(!data.includes("<!DOCTYPE html>")){
                     $('#hlaska').remove();
-                    $('.myLogin').after(`<p id="hlaska">${data}</p>`);
+                    $(selektor).after(`<p id="hlaska">${data}</p>`);
                 } else {
                     let stranka = $($.parseHTML(data));
                     $("header").replaceWith(stranka.filter("header"));
                     $("main").replaceWith(stranka.filter("main"));
                     $("title").replaceWith(stranka.filter("title"));
-                    history.pushState({"html":data}, "", "/");
+                    history.pushState({"html":data}, "", presmerovani);
                     spustitScript();
                 }
             }
@@ -92,8 +92,8 @@ function loginText() {
 }
 
 function zmenitHeslo() {
-    alert("zatím nejde");
-    console.log("zatím nejde");
+    window.open('https://youtu.be/dQw4w9WgXcQ', '_blank');
+    alert('Byl jsi napálen.');
 }
 
 $(document).on("click", ".mode", function(event){
