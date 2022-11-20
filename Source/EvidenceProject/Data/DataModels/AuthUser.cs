@@ -73,6 +73,16 @@ public class AuthUser : User
     }
 
     /// <summary>
+    ///     Získání uživatele dle ID - najde uživatele v dodaném <paramref name="context" />, pokud uživatel s daným id neexistuje vrátí null.
+    /// </summary>
+    /// <param name="context">DBContext/param>
+    /// <param name="user_id">ID uživatele kterého hledáme</param>
+    static public AuthUser? FindUser(ProjectContext context, int user_id)
+    {
+        return context?.globalUsers?.FirstOrDefault(user => user.id == user_id);
+    }
+
+    /// <summary>
     ///     Login ověřeného uživatele - je unikátní
     /// </summary>
     [Required]
