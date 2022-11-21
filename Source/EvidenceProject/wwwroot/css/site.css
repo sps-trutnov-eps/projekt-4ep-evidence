@@ -16,6 +16,24 @@ nav {
     background-color: var(--secondary);
 }
 
+header > div {
+    background-color: var(--sps-cyan);
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    gap: 2rem;
+    height: 2rem;
+}
+
+    header > div a {
+        font-size: 14px;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
 .container-fluid {
     flex-shrink: 1;
     flex-direction: column;
@@ -77,7 +95,7 @@ footer {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 #login {
@@ -103,21 +121,21 @@ body {
         padding: 0.25rem;
     }
 
-#login form input:nth-child(5) {
-    grid-column: 1/ span 2 ;
-    background: #2ecc71;
-    width: 90%;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    color: white;
-    border-radius: 2px;
-    border: #27ae60 1px solid;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 23px;
-    font-weight: 800;
-    font-size: 0.8em;
-}
+        #login form input:nth-child(5) {
+            grid-column: 1/ span 2;
+            background: #2ecc71;
+            width: 90%;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            color: white;
+            border-radius: 2px;
+            border: #27ae60 1px solid;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 23px;
+            font-weight: 800;
+            font-size: 0.8em;
+        }
 
 .myLogin:hover {
     background: #2CC06B;
@@ -149,13 +167,18 @@ body {
 }
 
 @media (min-width: 480px) {
-    .login{
+    header > div a{
+        font-size: 16px;
+    }
+    .login {
         margin: 0 auto;
     }
-    #login form{
+
+    #login form {
         left: calc(50% - 250px);
         grid-template-columns: auto auto;
     }
+
     #login > form button {
         background: #2ecc71;
         width: 85%;
@@ -170,6 +193,7 @@ body {
         font-weight: 800;
         font-size: 0.8em;
     }
+
     input.myLogin {
         grid-column: 1 !important;
         background: #2ecc71;
@@ -185,25 +209,30 @@ body {
         font-weight: 800;
         font-size: 0.8em;
     }
-    #login form{
+
+    #login form {
         width: 500px;
         background-color: var(--secondary);
     }
-    #login form input{
-        margin-top: 10%;
-        height: 50px;
-        width: 90%;
-        margin-left: 5%;
-    }
-    #login form input.myLogin{
-        grid-column: 1/ span 1 !important;
-    }
-    #login form button{
-        margin-top: 10%;
-        width: 200px;
-        height: 50px;
-    }
-    #login label{
+
+        #login form input {
+            margin-top: 10%;
+            height: 50px;
+            width: 90%;
+            margin-left: 5%;
+        }
+
+            #login form input.myLogin {
+                grid-column: 1/ span 1 !important;
+            }
+
+        #login form button {
+            margin-top: 10%;
+            width: 200px;
+            height: 50px;
+        }
+
+    #login label {
         grid-column: 1/span 2;
         justify-content: center;
         align-self: center;
@@ -214,9 +243,11 @@ body {
         text-align: center;
         height: 50px;
     }
-    #login input{
+
+    #login input {
         grid-column: 1/span 2;
     }
+
     html {
         font-size: 25px;
     }
@@ -224,24 +255,30 @@ body {
     .container-fluid {
         flex-direction: column;
     }
+
     #hlaska {
         font-weight: bold;
         position: absolute;
         top: 700px;
     }
-    main{
+
+    main {
         height: auto;
     }
 
-    footer.border-top{
+    footer.border-top {
         display: none;
     }
-    footer{
+
+    footer {
         bottom: 0px;
     }
 }
 
 @media (min-width: 1024px) {
+    header > div a {
+        font-size: 18px;
+    }
     #hlaska {
         font-weight: bold;
         position: absolute;
@@ -271,7 +308,7 @@ body {
         max-width: 250px;
     }
 
-    label{
+    label {
         color: var(--secondary);
     }
 
