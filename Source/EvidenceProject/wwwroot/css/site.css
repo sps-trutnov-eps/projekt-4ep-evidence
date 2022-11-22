@@ -16,6 +16,24 @@ nav {
     background-color: var(--secondary);
 }
 
+header > div {
+    background-color: var(--sps-cyan);
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    gap: 2rem;
+    height: 2rem;
+}
+
+    header > div a {
+        font-size: 14px;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
 .container-fluid {
     flex-shrink: 1;
     flex-direction: column;
@@ -77,7 +95,7 @@ footer {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 #login {
@@ -87,8 +105,7 @@ body {
 }
 
     #login form input {
-        text-align: center;
-        width: 90%;
+        width: 100%;
         grid-column: 1/span 2;
     }
 
@@ -104,21 +121,21 @@ body {
         padding: 0.25rem;
     }
 
-input.myLogin {
-    grid-column: 1 !important;
-    background: #2ecc71;
-    width: 105px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    color: white;
-    border-radius: 2px;
-    border: #27ae60 1px solid;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 0;
-    font-weight: 800;
-    font-size: 0.8em;
-}
+        #login form input:nth-child(5) {
+            grid-column: 1/ span 2;
+            background: #2ecc71;
+            width: 90%;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            color: white;
+            border-radius: 2px;
+            border: #27ae60 1px solid;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 23px;
+            font-weight: 800;
+            font-size: 0.8em;
+        }
 
 .myLogin:hover {
     background: #2CC06B;
@@ -150,13 +167,18 @@ input.myLogin {
 }
 
 @media (min-width: 480px) {
-    .login{
+    header > div a{
+        font-size: 16px;
+    }
+    .login {
         margin: 0 auto;
     }
-    #login form{
+
+    #login form {
         left: calc(50% - 250px);
         grid-template-columns: auto auto;
     }
+
     #login > form button {
         background: #2ecc71;
         width: 85%;
@@ -165,12 +187,13 @@ input.myLogin {
         color: white;
         border-radius: 4px;
         border: #27ae60 1px solid;
-        margin-top: 20px;
-        margin-bottom: 20px;
+        margin-top: 5px;
+        margin-bottom: 5px;
         margin-left: 16px;
         font-weight: 800;
         font-size: 0.8em;
     }
+
     input.myLogin {
         grid-column: 1 !important;
         background: #2ecc71;
@@ -180,31 +203,51 @@ input.myLogin {
         color: white;
         border-radius: 4px;
         border: #27ae60 1px solid;
-        margin-top: 20px;
-        margin-bottom: 20px;
+        margin-top: 5px;
+        margin-bottom: 5px;
         margin-left: 16px;
         font-weight: 800;
         font-size: 0.8em;
     }
-    #login form{
+
+    #login form {
         width: 500px;
-        height: 200px;
+        background-color: var(--secondary);
     }
-    #login form input{
-        margin-top: 10%;
+
+        #login form input {
+            margin-top: 10%;
+            height: 50px;
+            width: 90%;
+            margin-left: 5%;
+        }
+
+            #login form input.myLogin {
+                grid-column: 1/ span 1 !important;
+            }
+
+        #login form button {
+            margin-top: 10%;
+            width: 200px;
+            height: 50px;
+        }
+
+    #login label {
+        grid-column: 1/span 2;
+        justify-content: center;
+        align-self: center;
+        padding-top: 35px;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: center;
         height: 50px;
-        width: 200px;
-        margin-left: 5%;
-        grid-column: span 1;
     }
-    #login form input.myLogin{
-        grid-column: 1/ span 1 !important;
+
+    #login input {
+        grid-column: 1/span 2;
     }
-    #login form button{
-        margin-top: 10%;
-        width: 200px;
-        height: 50px;
-    }
+
     html {
         font-size: 25px;
     }
@@ -212,24 +255,30 @@ input.myLogin {
     .container-fluid {
         flex-direction: column;
     }
+
     #hlaska {
         font-weight: bold;
         position: absolute;
         top: 700px;
     }
-    #login{
-        height: 100%;
-    }
-    main{
-        height: 750px;
+
+    main {
+        height: auto;
     }
 
-    footer{
+    footer.border-top {
+        display: none;
+    }
+
+    footer {
         bottom: 0px;
     }
 }
 
 @media (min-width: 1024px) {
+    header > div a {
+        font-size: 18px;
+    }
     #hlaska {
         font-weight: bold;
         position: absolute;
@@ -260,6 +309,10 @@ input.myLogin {
     }
 
     label {
+        color: var(--secondary);
+    }
+
+    .nav-item label {
         position: absolute;
         top: 10.5%;
         right: 25%;
