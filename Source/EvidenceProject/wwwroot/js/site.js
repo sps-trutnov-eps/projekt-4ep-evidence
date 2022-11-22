@@ -42,6 +42,9 @@ window.onpopstate = function(e){
 
 function spustitScript(){
     let lokace = $(location).attr("pathname");
+
+    search();
+
     if (lokace == "/project/create") {
         nazvySouboru();
     } else if (lokace == "/users/login") {
@@ -109,24 +112,25 @@ function nastaveniStylu() {
     }
 }
 
-async function search(query) {
-    if (query != ""){
-        $.ajax({
-            type : "POST",
-            url : "search",
-            data: JSON.stringify(query),
-            headers: {
-                "Content-Type": "application/json"
-            },
-            dataType: "json",
-            success : function(data){
-                $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${query}"</h2><div id="vysledky">${data}</div></div>`);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
-            }
-        });
-    }
+function search() {
+    $('#searchform').submit(function(event) {
+        event.preventDefault();
+        let formular = $(this);
+        let hledanyVyraz = formular.serializeArray()[0].value.trim();
+        if (hledanyVyraz){
+            $.ajax({
+                type: formular.attr("method"),
+                url: formular.attr("action"),
+                data: formular.serialize(),
+                success : function(data){
+                    $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${hledanyVyraz}"</h2><div id="vysledky">${data}</div></div>`);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
+                }
+            });
+        }
+    });
 }
 
 async function login() {
