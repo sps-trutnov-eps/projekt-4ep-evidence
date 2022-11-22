@@ -18,13 +18,15 @@ public class DialStuffController : Controller
     }
 
     [HttpPost("dialcode/add")]
-    public JsonResult AddDialCode([FromBody] DialCodeData? data)
+    public ActionResult AddDialCode([FromForm] DialCodeData? data)
     {
+        // Todo error message
         if (_context.dialCodes.Any(x => x.name == data.name)) return Json("ERROR");
-        if (data?.description.Length == 0 || data?.name.Length == 0 || data.dialInfoId == null) return Json("ERROR");
+        // Todo error message
+        if (data?.description.Length == 0 || data?.name.Length == 0 || data.dialInfoName == null) return Json("ERROR");
 
         var color = Color.FromArgb(data.alpha, data.red, data.green, data.blue);
-        var dialInfo = _context.dialInfos.FirstOrDefault(x => x.id == data.dialInfoId);
+        var dialInfo = _context.dialInfos.FirstOrDefault(x => x.name == data.name);
         if (dialInfo == null) return Json("Není taková kategorie");
         DialCode dialCode = new()
         {
@@ -36,25 +38,27 @@ public class DialStuffController : Controller
         _context.dialCodes.Add(dialCode);
         _context.SaveChanges();
         _cache.Set(UniversalHelper.DialCodeCacheKey, _context.dialInfos.ToList());
-        return Json("OK");
+        return Redirect("/project/create");
     }
 
     [HttpPost("dialinfo/add")]
-    public JsonResult AddDialInfo([FromBody] DialInfoData? data)
+    public ActionResult AddDialInfo([FromForm] DialInfoData? data)
     {
+        // Todo error message
         if (_context.dialInfos.Any(x => x.name == data.name)) return Json("ERROR");
-        if (data?.desc.Length == 0 || data?.name.Length == 0) return Json("ERROR");
+        // Todo error message
+        if (data?.description.Length == 0 || data?.name.Length == 0) return Json("ERROR");
 
         // Vytvoření kategorie
         DialInfo dialInfo = new()
         {
             name = data.name,
-            desc = data.desc
+            desc = data.description
         };
         _context.dialInfos.Add(dialInfo);
         _context.SaveChanges();
         _cache.Set(UniversalHelper.DialInfoCacheKey, _context.dialInfos.ToList());
-        return Json("OK");
+        return Redirect("/project/create");
     }
 
     public ActionResult GetDialInfos()
