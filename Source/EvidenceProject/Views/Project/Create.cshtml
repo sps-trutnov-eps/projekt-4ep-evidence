@@ -6,18 +6,24 @@
 @model GETProjectCreate
 <form action="/project/create" method="post">
     <label for="name">Název projektu: </label>
-    <input name="projectName" type="text" placeholder="..." id="name"/>
+    <input name="name" type="text" placeholder="..." id="name"/>
+    <label for="assignees">Lidi: </label>
+    <input name="assignees" type="text" placeholder="..." id="assignees" />
     <label for="state">Stav: </label>
-    <input name="projectState" list="stavy" id="state"/>
+    <input name="projectState" list="stavy" id="state" />
     <label for="type">Typ: </label>
-    <input name="projectType" type="text" placeholder="..." id="type"/>
+    <input name="projectType" type="text" placeholder="..." id="type" />
     <label for="technology">Technologie: </label>
-    <input name="technology" type="text" placeholder="..." id="technology"/>
+    <input name="projectTechnology" type="text" placeholder="..." id="technology" />
     <label for="photo">Fotografie: </label>
-    <input name="photo" type="file" multiple="multiple" id="photo"/>
+    <input name="files" type="file" multiple="multiple" id="photo"/>
     <a id="nazvy"></a>
     <label for="achievments">Úspěchy: </label>
-    <input name="achievements" type="text" id="achievements"/>
+    <input name="projectAchievements" type="text" id="achievements" />
+    <label for="slack">Slack: </label>
+    <input name="slack" type="text" id="slack" />
+    <label for="github">Github: </label>
+    <input name="github" type="text" id="github" />
     <input type="submit"/>
 
     <datalist id="stavy">
