@@ -26,7 +26,7 @@ public class DialStuffController : Controller
         if (data?.description.Length == 0 || data?.name.Length == 0 || data.dialInfoName == null) return Json("ERROR");
 
         var color = Color.FromArgb(data.alpha, data.red, data.green, data.blue);
-        var dialInfo = _context.dialInfos.FirstOrDefault(x => x.name == data.name);
+        var dialInfo = _context.dialInfos.FirstOrDefault(x => x.name == data.dialInfoName);
         if (dialInfo == null) return Json("Není taková kategorie");
         DialCode dialCode = new()
         {

@@ -25,11 +25,19 @@
     <label for="github">Github: </label>
     <input name="github" type="text" id="github" />
     <input type="submit"/>
-
     <datalist id="stavy">
         @{
             foreach(var dialInfo in Model.DialInfos){
-                        <option>@dialInfo.name</option>
+                   <option id="@dialInfo.name">@dialInfo.name</option>
+            }
+        }
+    </datalist>
+
+    <datalist id="dialCodes">
+        @{
+            foreach (var dialcode in Model.DialCodes)
+            {
+                <option class="@dialcode.dialInfo.name">@dialcode.name</option>
             }
         }
     </datalist>
