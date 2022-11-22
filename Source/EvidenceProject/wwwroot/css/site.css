@@ -45,7 +45,7 @@ form{
 
 .navbar-collapse {
   border-top: 2px solid rgb(32, 117, 173);
-  padding-left: 1rem;
+  padding-left: 2rem;
 }
 
 @media (min-width: 768px) {
