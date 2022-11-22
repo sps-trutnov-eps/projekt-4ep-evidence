@@ -101,12 +101,15 @@ public class UserController : Controller
     public ActionResult UpdatePasswordPost([FromForm] LoginData data)
     {
         if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != null && userID != "1") return Json("Nejsi přihlášen");
-        int.TryParse(userID, out int user_id);
+        if (!int.TryParse(userID, out int user_id)) return Json("Id neni cisilko");
         AuthUser? user = AuthUser.FindUser(_context, user_id);
+
         if (user == null) return Json("Uživatel neexistuje?!");
         if (user.password != bcrypt.HashPassword(data.original_password)) return Json("Špatné heslo");
+
         user.password = bcrypt.HashPassword(data.password);
         _context.SaveChanges();
+
         return Json("Heslo změněno úspěšně!");
     }
 }
