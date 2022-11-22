@@ -33,15 +33,27 @@ public class ProjectController : Controller
     public ActionResult Create([FromForm] ProjectCreateData projectData, bool test = false)
     {
         var userID = string.Empty;
-        if (!test)
-            if (!UniversalHelper.getLoggedUser(HttpContext, out userID) && userID != "1")
-                return Redirect("/");
+        if (!test) if (!UniversalHelper.getLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
+
+        List<DbFile> files = new();
+        foreach (var file in projectData.photos)
+        {
+            var dbFile = new DbFile();
+            dbFile.WriteFile(file);
+            files.Add(dbFile);
+        }
 
         Project project = new()
         {
             name = projectData.projectName,
             projectTechnology = new DialCode(),
-            projectType = new DialCode()
+            projectType = new DialCode(),
+            assignees = null,
+            github = projectData.github,
+            slack = projectData.slack,
+            projectAchievements = null,
+            files = files,
+            projectState = null,
         };
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);
