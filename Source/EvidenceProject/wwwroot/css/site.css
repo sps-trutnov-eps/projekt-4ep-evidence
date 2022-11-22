@@ -98,6 +98,58 @@ body {
     margin-bottom: 60px;
 }
 
+#register{
+    margin: 0 auto;
+    align-items: center;
+    align-content: center;
+}
+
+    #register form 
+{
+    height: 100%;
+    width: 500px;
+    display: grid;
+    grid-template-columns: auto auto;
+    border: #2980b9 4px solid;
+    border-radius: 6px;
+    background-color: var(--secondary);
+    margin: 0 auto 0 auto;
+    padding: 0.25rem;
+}
+        #register form input {
+            margin-top: 10%;
+            height: 50px;
+            width: 90%;
+            margin-left: 5%;
+            grid-column: 1/ span 2;
+        }
+    #register label {
+        grid-column: 1/span 2;
+        justify-content: center;
+        align-self: center;
+        padding-top: 35px;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: center;
+        height: 50px;
+    }
+    #register form input[type=submit] {
+        grid-column: 1/span 2 !important;
+        background: #2ecc71;
+        width: 90%;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        color: white;
+        border-radius: 2px;
+        border: #27ae60 1px solid;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 23px;
+        font-weight: 800;
+        font-size: 0.8em;
+    }
+
 #login {
     margin: 0 auto;
     align-items: center;
@@ -105,6 +157,7 @@ body {
 }
 
     #login form input {
+        margin-top: 10px;
         width: 100%;
         grid-column: 1/span 2;
     }
