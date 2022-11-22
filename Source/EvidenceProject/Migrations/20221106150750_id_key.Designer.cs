@@ -4,6 +4,7 @@ using EvidenceProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EvidenceProject.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    partial class ProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20221106150750_id_key")]
+    partial class id_key
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,9 +45,6 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("Projectid")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("fileData")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
@@ -54,13 +53,7 @@ namespace EvidenceProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("mimeType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("id");
-
-                    b.HasIndex("Projectid");
 
                     b.ToTable("files");
                 });
@@ -250,13 +243,6 @@ namespace EvidenceProject.Migrations
                     b.Navigation("project");
                 });
 
-            modelBuilder.Entity("EvidenceProject.Data.DataModels.DbFile", b =>
-                {
-                    b.HasOne("EvidenceProject.Data.DataModels.Project", null)
-                        .WithMany("files")
-                        .HasForeignKey("Projectid");
-                });
-
             modelBuilder.Entity("EvidenceProject.Data.DataModels.DialCode", b =>
                 {
                     b.HasOne("EvidenceProject.Data.DataModels.DialInfo", "dialInfo")
@@ -317,8 +303,6 @@ namespace EvidenceProject.Migrations
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Project", b =>
                 {
-                    b.Navigation("files");
-
                     b.Navigation("projectAchievements");
                 });
 #pragma warning restore 612, 618

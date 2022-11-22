@@ -1,0 +1,187 @@
+html {
+  font-size: 30px;
+  position: relative;
+  min-height: 100%;
+  background-color: rgb(154, 112, 252);
+}
+
+:root {
+  --primary: #237edf;
+  --sps-color: #1b8797;
+  --secondary: #54a184;
+}
+
+nav {
+  display: flex;
+  background-color: var(--secondary);
+}
+
+.container-fluid {
+  flex-shrink: 1;
+  flex-direction: column;
+  background-color: var(--primary);
+  padding: 1rem;
+}
+
+form {
+  margin-left: 0.55rem;
+}
+
+.navbar-toggler {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+}
+
+
+.navbar-light .navbar-brand {
+  text-align: center;
+  margin-right: 0;
+  font-weight: bold;
+  color: white;
+}
+
+.navbar-collapse {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  border-top: 4px solid var(--secondary);
+  padding-left: 1rem;
+}
+
+.nav-link {
+  padding: 0.5rem 5rem;
+}
+
+.nav-link:hover {
+  background-color: var(--sps-color);
+
+}
+
+
+h1 {
+  font-weight: bold;
+  color: black;
+}
+
+.text-dark {
+  color: rgb(155, 155, 155) !important;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+footer {
+  padding: 1rem;
+}
+
+body {
+  margin-bottom: 55px;
+}
+
+#login {
+  margin: 0 auto;
+  align-items: center;
+  align-content: center;
+}
+
+#login form input {
+  grid-column: 1/span 2;
+}
+
+#login form {
+  display: grid;
+  grid-template-columns: auto auto;
+  width: 500px;
+  border: #2980b9 4px solid;
+  border-radius: 6px;
+  background-color: white;
+  margin: 0 auto 0 auto;
+  padding: 0.25rem;
+}
+
+input.myLogin {
+  grid-column: 1/ span 1 !important;
+  background: #2ecc71;
+  width: 85%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: white;
+  border-radius: 4px;
+  border: #27ae60 1px solid;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 16px;
+  font-weight: 800;
+  font-size: 0.8em;
+}
+
+.myLogin:hover {
+  background: #2CC06B;
+}
+
+#login>form button {
+  background: #2ecc71;
+  width: 85%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: white;
+  border-radius: 4px;
+  border: #277cae 1px solid;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 16px;
+  font-weight: 800;
+  font-size: 0.8em;
+}
+
+#login>form button:hover {
+  background: #2c9dc0;
+}
+
+@media (min-width: 480px) {
+  html {
+    font-size: 25px;
+  }
+
+  .container-fluid {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 16px;
+  }
+
+  .container-fluid {
+    flex-direction: row;
+  }
+
+  .navbar-collapse {
+    border-top: none;
+    margin-left: 1rem;
+    border-left: 5px solid var(--secondary);
+    padding-left: 1rem;
+  }
+
+  #search {
+    position: absolute;
+    top: 10%;
+    right: 30%;
+    width: 50%;
+    max-width: 250px;
+  }
+
+  label {
+    position: absolute;
+    top: 10.5%;
+    right: 25%;
+    height: 25px;
+    width: 25px;
+    color: transparent;
+    background-image: url('../icons/lupaIcon.png');
+    background-size: cover;
+    background-repeat: none;
+  }
+}
