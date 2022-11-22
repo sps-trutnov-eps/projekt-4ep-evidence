@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EvidenceProject.Data.DataModels;
@@ -55,6 +55,9 @@ public class Project
     /// </summary>
     [Required]
     public virtual List<User>? assignees { get; set; }
+
+    [Required]
+    public virtual List<DbFile>? files { get; set; }
 
     //TODO Artefacts(Files, text) 
     //TODO Showcase??(Files?, Photos?)

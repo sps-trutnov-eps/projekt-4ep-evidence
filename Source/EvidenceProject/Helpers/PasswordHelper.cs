@@ -1,11 +1,13 @@
-using Konscious.Security.Cryptography;
 using System.Text;
+using Konscious.Security.Cryptography;
 
 namespace EvidenceProject.Helpers;
-public class PasswordHelper 
+
+public class PasswordHelper
 {
-    //  Zmìna argonu na bcrypt?
-    //  Je to pøipraveno v modelech
+    // Todo odstranit
+    // V modelech je bcrypt
+    [Obsolete("Pouï¿½ï¿½t bcrypt")]
     static public string CreateHash(string input)
     {
         var argon = new Argon2id(Encoding.UTF8.GetBytes(input));
@@ -17,6 +19,7 @@ public class PasswordHelper
         return Convert.ToHexString(argon.GetBytes(16));
     }
 
+    [Obsolete("Pouï¿½ï¿½t bcrypt")]
     static public bool VerifyHash(string input, string hash)
     {
         var novejHash = CreateHash(input);

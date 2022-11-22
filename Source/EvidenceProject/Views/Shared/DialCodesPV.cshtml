@@ -1,0 +1,16 @@
+﻿@model List<EvidenceProject.Data.DataModels.DialCode>
+<p>@Model.Count</p>
+
+<form method="POST" action="/dialcode/add">
+    <label for="name">Name:</label>
+    <input name="name" type="text" placeholder="..." id="name" />
+    <label for="description">Description:</label>
+    <input name="description" type="text" placeholder="..." id="description" />
+    <label for="alpha">Color:</label>
+    <input name="alpha" type="number" placeholder="..." id="alpha" />
+    <input name="red" type="number" placeholder="..." id="red" />
+    <input name="green" type="number" placeholder="..." id="green" />
+    <input name="blue" type="number" placeholder="..." id="blue" />
+
+    <input type="submit" value="Enter" />
+</form>

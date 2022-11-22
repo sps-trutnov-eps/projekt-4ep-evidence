@@ -1,8 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Project Details";
 }
-@model EvidenceProject.Data.DataModels.Project
-@using EvidenceProject.Helpers
+@model Project
 
 @*
 <l>
@@ -14,23 +13,26 @@
 </l>
 *@
 
+<a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
 
-@if(Model != null)
+@if (Model != null)
 {
-    <p><b>@Model.name</b></p>
+    <p>
+        <b>@Model.name</b>
+    </p>
     <p>Autor: @Model.assignees</p>
     <p>Stav: @Model.projectState</p>
-    <p>Použitá technologie: @Model.projectTechnology</p>      
-    <p>Úspěchy: @Model.projectAchievements</p>       
+    <p>Použitá technologie: @Model.projectTechnology</p>
+    <p>Úspěchy: @Model.projectAchievements</p>
     <p>Github: @Model.github</p>
     <p>Slack: @Model.slack</p>
 }
 
 <p>Projevit zájem</p>
 <form method="post" action="/project/apply">
-    <input type="text" name="firstname" placeholder="Jméno..." />
-    <input type="text" name="lastname" placeholder="Příjmení..." />
-    <input type="text" name="class" placeholder="Třída..." />
-    <input type="text" name="email" placeholder="Email..." />
-    <input type="submit" value="Mám zájem" />
+    <input type="text" name="firstname" placeholder="Jméno..."/>
+    <input type="text" name="lastname" placeholder="Příjmení..."/>
+    <input type="text" name="class" placeholder="Třída..."/>
+    <input type="text" name="email" placeholder="Email..."/>
+    <input type="submit" value="Mám zájem"/>
 </form>
