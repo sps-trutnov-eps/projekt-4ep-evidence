@@ -107,7 +107,7 @@ public class ProjectController : Controller
     ///     Vyhledávání
     /// </summary>
     [HttpPost("search")]
-    public ActionResult Search([FromBody] SearchData data)
+    public ActionResult Search([FromForm] SearchData data)
     {
         if (data.text == string.Empty) return Ok();
         var projects = _context?.projects?.ToList().Where(project => project.name.Contains(data.text)).ToList();

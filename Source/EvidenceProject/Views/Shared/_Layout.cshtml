@@ -28,7 +28,9 @@
                         <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Login">Login</a>
                         <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
                         <label for="search">Vyhledat:</label>
-                        <input onchange="search(this.value)" id="search" name="searchQuery" type="search" placeholder="..."/>
+                        <form id="searchform" action="/search" method="post">
+                            <input id="search" name="text" type="search" placeholder="..." />
+                        </form>
                     </li>
                 </ul>
             </div>
