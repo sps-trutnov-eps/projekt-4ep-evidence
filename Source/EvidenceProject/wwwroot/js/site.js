@@ -42,6 +42,9 @@ window.onpopstate = function(e){
 
 function spustitScript(){
     let lokace = $(location).attr("pathname");
+
+    search();
+
     if (lokace == "/project/create") {
         nazvySouboru();
     } else if (lokace == "/users/login") {
@@ -109,24 +112,25 @@ function nastaveniStylu() {
     }
 }
 
-async function search(query) {
-    if (query != ""){
-        $.ajax({
-            type : "POST",
-            url : "search",
-            data: JSON.stringify(query),
-            headers: {
-                "Content-Type": "application/json"
-            },
-            dataType: "json",
-            success : function(data){
-                $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${query}"</h2><div id="vysledky">${data}</div></div>`);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
-            }
-        });
-    }
+function search() {
+    $('#searchform').submit(function(event) {
+        event.preventDefault();
+        let formular = $(this);
+        let hledanyVyraz = formular.serializeArray()[0].value.trim();
+        if (hledanyVyraz){
+            $.ajax({
+                type: formular.attr("method"),
+                url: formular.attr("action"),
+                data: formular.serialize(),
+                success : function(data){
+                    $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${hledanyVyraz}"</h2><div id="vysledky">${data}</div></div>`);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
+                }
+            });
+        }
+    });
 }
 
 async function login() {
@@ -145,5 +149,39 @@ async function login() {
     })
     let data = await res.json();
 }
+let jedna = 0
 
-
+function veci(e, cojeto) {
+    let value = e.target.value;
+    let tech = document.getElementsByClassName(value);
+    let more = "";
+    let vole = "";
+    try {
+        vole = Array.from(document.getElementById(cojeto).getElementsByTagName("option")).map(e=> e.innerText);
+        console.log(vole);
+    }
+    catch {}
+    try {
+        document.getElementById(cojeto).remove();
+    }
+    catch {}
+    if (cojeto == "tech") {
+        more += '<select name = "' + cojeto + '"' + 'id = "' + cojeto +  '" multiple size = ' + tech.length + ">";
+        if (jedna != 0) {
+            for (let i = 0; i < vole.length; i ++) {    
+                more += '<option value = "' + vole[i] + '">' + vole[i] +'</option>'
+                console.log(vole[i] + "jjjjj");
+            }
+        }
+        jedna += 1;
+        document.getElementById("technology").value = "";
+    }
+    else {
+        more += '<select name = "' + cojeto + '"' + 'id = "' + cojeto + '">';
+    }
+    for(let i = 0; i < tech.length; i++ ) {
+        more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>'
+    }
+    more += '</select>'
+    $( e.target ).after( more );
+}
