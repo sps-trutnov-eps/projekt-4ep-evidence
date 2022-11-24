@@ -10,11 +10,11 @@
     <label for="assignees">Lidi: </label>
     <input name="assignees" type="text" placeholder="..." id="assignees" />
     <label for="state">Stav: </label>
-    <input name="projectState" list="stavy" id="state" />
+    <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" />
     <label for="type">Typ: </label>
-    <input name="projectType" type="text" placeholder="..." id="type" />
+    <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" />
     <label for="technology">Technologie: </label>
-    <input name="projectTechnology" type="text" placeholder="..." id="technology" />
+    <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
     <label for="photo">Fotografie: </label>
     <input name="files" type="file" multiple="multiple" id="photo"/>
     <a id="nazvy"></a>
@@ -42,9 +42,14 @@
         }
     </datalist>
 
+   
+
 </form>
+
+
 
 @await Html.PartialAsync("../Shared/DialCodesPV", Model.DialInfos)
 @await Html.PartialAsync("../Shared/DialInfosPV", Model.DialInfos)
+
 
 
