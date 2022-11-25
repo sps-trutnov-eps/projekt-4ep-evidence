@@ -4,6 +4,8 @@
     ViewData["Page"] = "create";
 }
 @model GETProjectCreate
+
+<h2>Vytvoření projektu</h2>
 <form action="/project/create" method="post">
     <label for="name">Název projektu: </label>
     <input name="name" type="text" placeholder="..." id="name"/>
@@ -37,7 +39,7 @@
         @{
             foreach (var dialcode in Model.DialCodes)
             {
-                <option class="@dialcode.dialInfo.name">@dialcode.name</option>
+                <option class="@dialcode.dialInfo?.name">@dialcode.name</option>
             }
         }
     </datalist>
@@ -47,8 +49,11 @@
 </form>
 
 
-
+<br />
+<br />
 @await Html.PartialAsync("../Shared/DialCodesPV", Model.DialInfos)
+<br />
+<br />
 @await Html.PartialAsync("../Shared/DialInfosPV", Model.DialInfos)
 
 

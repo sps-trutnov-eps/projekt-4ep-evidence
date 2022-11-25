@@ -1,19 +1,15 @@
 ﻿@model List<EvidenceProject.Data.DataModels.DialInfo>
 
+
+<h3>Přidání položky do kategorie</h3>
 <form method="POST" action="/dialcode/add">
-    <label for="name">Name:</label>
+    <label for="name">Název:</label>
     <input name="name" type="text" placeholder="..." id="name" />
-    <label for="description">Description:</label>
+    <label for="description">Popis:</label>
     <input name="description" type="text" placeholder="..." id="description" />
-    <label>Alpha</label>
-    <input name="alpha" type="number" placeholder="..." id="alpha" />
-    <label>R</label>
-    <input name="red" type="number" placeholder="..." id="red" />
-    <label>G</label>
-    <input name="green" type="number" placeholder="..." id="green" />
-    <label>B</label>
-    <input name="blue" type="number" placeholder="..." id="blue" />
-    <label>DialInfoId</label>
+    <label>Barva</label>
+    <input type="color" name="color" />
+    <label>Kategorie</label>
     <input name="dialInfoName" list="stavy" />
     <datalist id="stavy">
         @{

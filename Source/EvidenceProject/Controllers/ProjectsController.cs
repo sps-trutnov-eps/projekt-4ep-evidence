@@ -72,8 +72,24 @@ public class ProjectController : Controller
     {
         if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
         GETProjectCreate GETProject = new();
-        GETProject.DialCodes = _context?.dialCodes?.ToList();
-        GETProject.DialInfos = _context?.dialInfos?.ToList();
+        var dialinfos = _cache.Get(UniversalHelper.DialInfoCacheKey);
+        if (dialinfos == null)
+        {
+            dialinfos = _context?.dialInfos?.ToList();
+            _cache.Set(UniversalHelper.DialInfoCacheKey, dialinfos);
+            GETProject.DialInfos = (List<DialInfo>)dialinfos;
+        }
+        else GETProject.DialInfos = (List<DialInfo>)dialinfos;
+
+        var dialcodes = _cache.Get(UniversalHelper.DialCodeCacheKey);
+        if (dialcodes == null)
+        {
+            dialcodes = _context?.dialCodes?.ToList();
+            _cache.Set(UniversalHelper.DialCodeCacheKey, dialcodes);
+            GETProject.DialCodes = (List<DialCode>)dialcodes;
+        }
+        else GETProject.DialCodes = (List<DialCode>)dialcodes;
+
         GETProject.Users = _context?.globalUsers?.ToList();
         return View(GETProject);
     }
