@@ -8,7 +8,7 @@ public class ProjectCreateData
 
     public string? projectType { get; set; }
 
-    public string? technology { get; set; }
+    public string[]? tech { get; set; }
 
     public IFormFileCollection? photos { get; set; }
 

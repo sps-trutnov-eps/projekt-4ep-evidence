@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 
 namespace EvidenceProject.Data.DataModels;
-
+// item v Kategorii
 public class DialCode
 {
     /// <summary>
