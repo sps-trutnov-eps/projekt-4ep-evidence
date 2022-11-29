@@ -97,6 +97,51 @@ footer {
 body {
     margin-bottom: 60px;
 }
+div#create {
+    width: 1300px;
+    height: 1350px;
+    background-color: var(--secondary);
+    border: 8px solid var(--sps-cyan);
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 1rem;
+}
+
+    div#create form {
+        display: grid;
+        justify-content: center;
+        grid-template-rows: 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px;
+        align-items: baseline;
+        justify-items: center;
+        align-content: space-evenly;
+        padding: 1rem;
+    }
+
+    div#create input[type=submit] {
+        background: #2ecc71;
+        width: 90%;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        color: white;
+        border-radius: 2px;
+        border: #27ae60 1px solid;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 23px;
+        font-weight: 800;
+        font-size: 0.8em;
+    }
+
+    div#create form label {
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    div#create form input {
+        height: 35px;
+    }
 
 #register{
     margin: 0 auto;
