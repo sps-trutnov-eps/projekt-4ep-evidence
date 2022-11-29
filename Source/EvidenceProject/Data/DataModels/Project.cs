@@ -59,7 +59,6 @@ public class Project
     ///     Žáci přiřazení k projektu.
     /// </summary>
     [Required]
-    [Obsolete("Nebude potřeba, uživatelé se nemusí regstrovat, list<string> ? nebo se to bude dávat do desc")]
     public virtual List<User>? assignees { get; set; }
 
     /// <summary>
@@ -71,12 +70,10 @@ public class Project
     /// <summary>
     ///     Url adresa Github repozitáře.
     /// </summary>
-    [StringLength(100)]
     public string? github { get; set; }
 
     /// <summary>
     ///     Url adresa slack kanálu.
     /// </summary>
-    [StringLength(100)]
     public string? slack { get; set; }
 }
