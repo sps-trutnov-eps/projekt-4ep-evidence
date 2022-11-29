@@ -8,10 +8,7 @@
 {
     @foreach (var project in Model)
     {
-        <p>
-            <b>@project.name</b>
-        </p>
-        <l>fotka</l>
+        <p><b>@project.name</b></p>
         <p>Stav: @project.projectState</p>
         <a href="/project/@project.id">Detail</a>
     }

@@ -68,6 +68,7 @@ public class ProjectController : Controller
             projectAchievements = new List<Achievement>(),
             files = files,
             projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.projectState),
+            projectDescription = projectData.description
         };
         
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
@@ -127,7 +128,7 @@ public class ProjectController : Controller
     ///     Stránka s projektem
     /// </summary>
     [HttpGet("project/{id}")]
-    public ActionResult ProjectInfo(int id)
+    public ActionResult Project(int id)
     {
         if (!UniversalHelper.GetProject(_context, id, out var project)) return Redirect("/");
         return View(project);
@@ -149,5 +150,15 @@ public class ProjectController : Controller
     {
         var projects = _context?.projects?.ToList();
         _cache.Set("AllProjects", projects);
+    }
+
+
+    [HttpPost("/project/apply")]
+    public ActionResult Apply([FromForm] UserApplyData data) 
+    {
+        if (!UniversalHelper.CheckAllParams(data)) return View();
+        var project = _context.projects.FirstOrDefault(x => x.id == int.Parse(data.ProjectId));
+        // todo
+        return Json("OK");
     }
 }
