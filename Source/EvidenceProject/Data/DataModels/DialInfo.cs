@@ -2,6 +2,7 @@
 
 namespace EvidenceProject.Data.DataModels;
 
+// "Kategorie"
 public class DialInfo
 {
     /// <summary>
