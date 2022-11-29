@@ -59,7 +59,6 @@ public class Project
     ///     Žáci přiřazení k projektu.
     /// </summary>
     [Required]
-    [Obsolete("Nebude potřeba, uživatelé se nemusí regstrovat, list<string> ? nebo se to bude dávat do desc")]
     public virtual List<User>? assignees { get; set; }
 
     /// <summary>
