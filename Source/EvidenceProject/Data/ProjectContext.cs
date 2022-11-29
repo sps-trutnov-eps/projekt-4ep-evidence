@@ -42,7 +42,7 @@ public class ProjectContext : DbContext
 
         // Cascades
         builder.Entity<Project>().HasOne(p => p.projectState).WithMany().OnDelete(DeleteBehavior.Restrict);
-        builder.Entity<Project>().HasOne(p => p.projectTechnology).WithMany().OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<Project>().HasMany(p => p.projectTechnology).WithMany();
         builder.Entity<Project>().HasOne(p => p.projectType).WithMany().OnDelete(DeleteBehavior.Restrict);
     }
 

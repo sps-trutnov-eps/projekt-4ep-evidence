@@ -47,7 +47,7 @@ public class ProjectController : Controller
         Project project = new()
         {
             name = projectData.projectName,
-            projectTechnology = new DialCode(),
+            projectTechnology = new List<DialCode>(),
             projectType = new DialCode(),
             assignees = null,
             github = projectData.github,
