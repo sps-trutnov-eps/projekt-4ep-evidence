@@ -17,10 +17,8 @@
 
 @if (Model != null)
 {
-    <p>
-        <b>@Model.name</b>
-    </p>
-    <p>Autor: @Model.assignees</p>
+    <p><b>@Model.name</b></p>
+    <p>Autor: @Model.projectManager.fullName</p>
     <p>Stav: @Model.projectState</p>
     <p>Použitá technologie: @Model.projectTechnology</p>
     <p>Úspěchy: @Model.projectAchievements</p>

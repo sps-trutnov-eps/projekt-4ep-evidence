@@ -69,7 +69,7 @@ public class ProjectController : Controller
             files = files,
             projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.projectState),
         };
-
+        
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);
         _context?.SaveChanges();
@@ -126,10 +126,10 @@ public class ProjectController : Controller
     /// <summary>
     ///     Stránka s projektem
     /// </summary>
-    [HttpGet("projectinfo/{id}")]
+    [HttpGet("project/{id}")]
     public ActionResult ProjectInfo(int id)
     {
-        if (!UniversalHelper.GetProject(_context, id, out var project)) return View();
+        if (!UniversalHelper.GetProject(_context, id, out var project)) return Redirect("/");
         return View(project);
     }
 
