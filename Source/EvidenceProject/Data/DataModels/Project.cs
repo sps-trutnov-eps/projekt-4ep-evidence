@@ -47,7 +47,7 @@ public class Project
     /// </summary>
     [Required]
     [ForeignKey("Technology")]
-    public virtual DialCode[]? projectTechnology { get; set; }
+    public virtual List<DialCode>? projectTechnology { get; set; }
 
     /// <summary>
     ///     Úspechy projektu.
