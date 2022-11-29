@@ -55,5 +55,6 @@ public static class FileExtension
         formFile.CopyTo(memoryStream);
         file.fileData = memoryStream.ToArray();
         file.mimeType = formFile.ContentType;
+        file.fileName = formFile.FileName;
     }
 }

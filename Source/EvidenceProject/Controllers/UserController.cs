@@ -1,4 +1,5 @@
 ﻿using EvidenceProject.Controllers.ActionData;
+using EvidenceProject.Controllers.RequestClasses;
 using bcrypt = BCrypt.Net.BCrypt;
 namespace EvidenceProject.Controllers;
 
@@ -45,7 +46,7 @@ public class UserController : Controller
         AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.username);
         if (user == null) return View("Login", messageResponse);
 
-        if (data.password == null || data.username == null) return View("Login",messageResponse);
+        if (!UniversalHelper.CheckAllParams(data)) return View("Login",messageResponse);
 
         //if (!PasswordHelper.VerifyHash(data.password, user.password)) return Json(UniversalHelper.SomethingWentWrongMessage);
         if(!bcrypt.Verify(data.password, user.password)) return View("Login", messageResponse);
@@ -68,7 +69,7 @@ public class UserController : Controller
     [HttpPost("users/register")]
     public ActionResult RegisterPost([FromForm] LoginData data)
     {
-        if (data.username == null || data.password == null) return View("Register", messageResponse);
+        if (!UniversalHelper.CheckAllParams(data)) return View("Register", messageResponse);
         var contextList = _context?.globalUsers?.ToList();
 
         var doesUserExist = contextList.Any(u => u.username == data.username);
@@ -98,9 +99,9 @@ public class UserController : Controller
     }
 
     [HttpPost("users/password/update")]
-    public ActionResult UpdatePasswordPost([FromForm] LoginData data)
+    public ActionResult UpdatePasswordPost([FromForm] LoginDataUpdate data)
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != null && userID != "1") return Json("Nejsi přihlášen");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != null && userID != "1") return Json("Nejsi přihlášen");
         if (!int.TryParse(userID, out int user_id)) return Json("Id neni cisilko");
         AuthUser? user = AuthUser.FindUser(_context, user_id);
 

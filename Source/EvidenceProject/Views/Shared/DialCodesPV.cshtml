@@ -13,6 +13,7 @@
     <input name="dialInfoName" list="stavy" />
     <datalist id="stavy">
         @{
+            if (Model == null) return;
             foreach (var dialInfo in Model)
             {
                 <option value="@dialInfo.name">@dialInfo.name</option>

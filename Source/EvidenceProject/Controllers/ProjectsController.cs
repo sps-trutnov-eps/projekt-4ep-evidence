@@ -22,7 +22,7 @@ public class ProjectController : Controller
     [HttpGet("project")]
     public ActionResult Index()
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
         return Redirect("project/create");
     }
 
@@ -33,9 +33,14 @@ public class ProjectController : Controller
     public ActionResult Create([FromForm] ProjectCreateData projectData, bool test = false)
     {
         var userID = string.Empty;
-        if (!test) if (!UniversalHelper.getLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
-
+        if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
+        
+       
         List<DbFile> files = new();
+
+        if (!UniversalHelper.CheckAllParams(projectData)) return View();
+
+        if (projectData.photos == null || projectData.tech == null) return View();
 
         foreach (var file in projectData?.photos)
         {
@@ -43,16 +48,24 @@ public class ProjectController : Controller
             dbFile.WriteFile(file);
             files.Add(dbFile);
         }
+        List<DialCode> tech = new();
+
+        foreach (var item in projectData.tech)
+        {
+            var dialCode = _context?.dialCodes?.FirstOrDefault(x => x.name == item);
+            if (dialCode == null) continue;
+            tech.Add(dialCode);
+        }
 
         Project project = new()
         {
             name = projectData.projectName,
-            projectTechnology = _context.dialCodes.FirstOrDefault(x => x.name == projectData.tech[0]),
+            projectTechnology = tech,
             projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.projectType),
             assignees = null,
             github = projectData.github,
             slack = projectData.slack,
-            projectAchievements = null,
+            projectAchievements = new List<Achievement>(),
             files = files,
             projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.projectState),
         };
@@ -70,7 +83,7 @@ public class ProjectController : Controller
     [HttpGet("project/create")]
     public ActionResult Create()
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
         GETProjectCreate GETProject = new();
         var dialinfos = _cache.Get(UniversalHelper.DialInfoCacheKey);
         if (dialinfos == null)
@@ -100,12 +113,13 @@ public class ProjectController : Controller
     [HttpPost("project/{id}")]
     public JsonResult Delete(int id)
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Json("Nejsi admin/přihlášen");
-        if (!UniversalHelper.getProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Json("Nejsi admin/přihlášen");
+        if (!UniversalHelper.GetProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
         _logger.LogInformation("User with the id <{}> deleted a project", userID);
 
         _context?.projects?.Remove(project);
         UpdateProjectsInCache();
+        _context?.SaveChanges();
         return Json("ok");
     }
 
@@ -115,7 +129,7 @@ public class ProjectController : Controller
     [HttpGet("projectinfo/{id}")]
     public ActionResult ProjectInfo(int id)
     {
-        if (!UniversalHelper.getProject(_context, id, out var project)) return View();
+        if (!UniversalHelper.GetProject(_context, id, out var project)) return View();
         return View(project);
     }
 

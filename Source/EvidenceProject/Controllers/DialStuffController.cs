@@ -20,11 +20,9 @@ public class DialStuffController : Controller
     [HttpPost("dialcode/add")]
     public ActionResult AddDialCode([FromForm] DialCodeData? data)
     {
+        if(!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
         // Todo error message
         if (_context.dialCodes.Any(x => x.name == data.Name)) return Json("ERROR");
-        // Todo error message
-        if (data?.Description?.Length == 0 || data?.Name?.Length == 0 || data?.DialInfoName == null
-            || data?.Color == null) return Json("ERROR");
 
         var color = ColorTranslator.FromHtml(data?.Color);
         var dialInfo = _context.dialInfos.FirstOrDefault(x => x.name == data.DialInfoName);
@@ -48,7 +46,7 @@ public class DialStuffController : Controller
         // Todo error message
         if (_context.dialInfos.Any(x => x.name == data.name)) return Json("ERROR");
         // Todo error message
-        if (data?.description?.Length == 0 || data?.name?.Length == 0) return Json("ERROR");
+        if(!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
 
         // Vytvoření kategorie
         DialInfo dialInfo = new()

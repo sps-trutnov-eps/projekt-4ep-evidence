@@ -4,13 +4,15 @@ public class ProjectCreateData
 {
     public string? projectName { get; set; }
 
+    public string? description { get; set; }
+
     public string? projectState { get; set; }
 
     public string? projectType { get; set; }
 
     public string[]? tech { get; set; }
 
-    public IFormFileCollection? photos { get; set; }
+    public IFormFileCollection photos { get; set; }
 
     public string? achievements { get; set; }
 
