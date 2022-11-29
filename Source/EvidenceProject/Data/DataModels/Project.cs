@@ -17,11 +17,16 @@ public class Project
     public int id { init; get; }
 
     /// <summary>
-    ///     Název projektu. Max 50 znaků.
+    ///     Název projektu. 
     /// </summary>
     [Required]
-    [StringLength(50)]
     public string? name { get; set; }
+    
+    /// <summary>
+    ///     Popis projektu. 
+    /// </summary>
+    [ForeignKey("Description")]
+    public string? projectDescription { get; set; }
 
     /// <summary>
     ///     Stav projektu - položka z číselníku (předdefinovaného výběru).
@@ -42,7 +47,7 @@ public class Project
     /// </summary>
     [Required]
     [ForeignKey("Technology")]
-    public virtual DialCode? projectTechnology { get; set; }
+    public virtual List<DialCode>? projectTechnology { get; set; }
 
     /// <summary>
     ///     Úspechy projektu.
@@ -57,21 +62,19 @@ public class Project
     [Obsolete("Nebude potřeba, uživatelé se nemusí regstrovat, list<string> ? nebo se to bude dávat do desc")]
     public virtual List<User>? assignees { get; set; }
 
+    /// <summary>
+    ///     Subory projektu.
+    /// </summary>
     [Required]
     public virtual List<DbFile>? files { get; set; }
-
-    //TODO Artefacts(Files, text) 
-    //TODO Showcase??(Files?, Photos?)
 
     /// <summary>
     ///     Url adresa Github repozitáře.
     /// </summary>
-    [StringLength(100)]
     public string? github { get; set; }
 
     /// <summary>
     ///     Url adresa slack kanálu.
     /// </summary>
-    [StringLength(100)]
     public string? slack { get; set; }
 }
