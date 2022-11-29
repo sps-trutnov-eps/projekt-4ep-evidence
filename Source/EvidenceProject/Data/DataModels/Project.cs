@@ -71,12 +71,10 @@ public class Project
     /// <summary>
     ///     Url adresa Github repozitáře.
     /// </summary>
-    [StringLength(100)]
     public string? github { get; set; }
 
     /// <summary>
     ///     Url adresa slack kanálu.
     /// </summary>
-    [StringLength(100)]
     public string? slack { get; set; }
 }

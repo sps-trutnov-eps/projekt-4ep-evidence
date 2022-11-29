@@ -14,13 +14,11 @@ public class DialInfo
     ///     Název/obsah kategrie. Max 50 znaků.
     /// </summary>
     [Required]
-    [StringLength(50)]
     public string? name { get; set; }
 
     /// <summary>
     ///     Popis kategorie záznamu. Max 200 znaků.
     /// </summary>
-    [StringLength(200)]
     public string? desc { get; set; }
 
     /// <summary>
