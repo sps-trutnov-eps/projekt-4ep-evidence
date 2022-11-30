@@ -8,11 +8,8 @@
 {
     @foreach (var project in Model)
     {
-        <p>
-            <b>@project.name</b>
-        </p>
-        <l>fotka</l>
+        <p><b>@project.name</b></p>
         <p>Stav: @project.projectState</p>
-        <a asp-area="" asp-controller="Projects" asp-action="ProjectInfo">Více</a>
+        <a href="/project/@project.id">Detail</a>
     }
 }

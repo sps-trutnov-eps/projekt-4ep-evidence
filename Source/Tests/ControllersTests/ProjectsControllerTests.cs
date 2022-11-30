@@ -45,7 +45,7 @@ public class ProjectControllerTests : ControllerTestsBase
     [Test]
     public void ProjectInfo()
     {
-        var response = (ViewResult)Controller.ProjectInfo(1);
+        var response = (ViewResult)Controller.Project(1);
         var data = (Project)response.Model;
         Assert.That(data, !Is.EqualTo(null));
     }
