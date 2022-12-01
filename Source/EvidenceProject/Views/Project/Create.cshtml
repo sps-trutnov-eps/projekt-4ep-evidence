@@ -10,6 +10,8 @@
     <input name="projectName" type="text" placeholder="..." id="name" />
     <label for="description">Popis projektu</label>
     <textarea name="description"></textarea>
+    <label for="users">Vedoucí: </label>
+    <input name="projectManager" type="text" placeholder="..." id="assignees" list="users" />
     <label for="assignees">Lidi: </label>
     <input name="assignees" type="text" placeholder="..." id="assignees" />
     <label for="state">Stav: </label>
@@ -27,6 +29,7 @@
     <label for="github">Github: </label>
     <input name="github" type="text" id="github" />
     <input type="submit"/>
+    @if (Model == null) return;
     <datalist id="stavy">
         @{
             if (Model.DialInfos == null) return;
@@ -42,6 +45,15 @@
             foreach (var dialcode in Model.DialCodes)
             {
                 <option class="@dialcode.dialInfo.name">@dialcode.name</option>
+            }
+        }
+    </datalist>
+    <datalist id="users">
+        @{
+            if (Model.Users == null) return;
+            foreach (var user in Model.Users)
+            {
+                <option>@user.fullName</option>
             }
         }
     </datalist>

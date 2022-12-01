@@ -10,7 +10,7 @@ public class ProjectCreateData
 
     public string? typy { get; set; }
 
-    //public int? projectManager { get; set; }
+    public string? projectManager { get; set; }
 
     public string[]? tech { get; set; }
 

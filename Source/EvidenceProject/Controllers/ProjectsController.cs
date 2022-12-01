@@ -10,6 +10,7 @@ public class ProjectController : Controller
     private readonly IMemoryCache _cache;
     private readonly ProjectContext _context;
     private readonly ILogger<ProjectController> _logger;
+    GETProjectCreate GETProject = new();
 
     public ProjectController(ProjectContext context, IMemoryCache cache, ILogger<ProjectController> logger)
     {
@@ -38,7 +39,7 @@ public class ProjectController : Controller
         if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
 
         List<DbFile> files = new();
-        if (!UniversalHelper.CheckAllParams(projectData)) return View();
+        if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject);
 
 
         foreach (var file in projectData?.photos)
@@ -68,6 +69,7 @@ public class ProjectController : Controller
             files = files,
             projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit),
             projectDescription = projectData.description,
+            projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager)
         };
         
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
@@ -84,7 +86,6 @@ public class ProjectController : Controller
     public ActionResult Create()
     {
         if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
-        GETProjectCreate GETProject = new();
         var dialinfos = _cache.Get(UniversalHelper.DialInfoCacheKey);
         if (dialinfos == null)
         {
@@ -107,6 +108,7 @@ public class ProjectController : Controller
         }
         else GETProject.DialCodes = (List<DialCode>)dialcodes;
 
+        // Todo projectManager
         GETProject.Users = _context?.globalUsers?.ToList();
         return View(GETProject);
     }
@@ -151,7 +153,10 @@ public class ProjectController : Controller
 
     public void UpdateProjectsInCache()
     {
-        var projects = _context?.projects?.ToList();
+        var projects = _context.projects
+            .Include(x => x.projectTechnology)
+            .Include(x => x.projectType)
+            .ToList();
         _cache.Set("AllProjects", projects);
     }
 

@@ -19,8 +19,7 @@ public class HomeController : Controller
         var projects = _cache.Get("AllProjects");
         if (projects != null) return View(projects);
 
-        projects = _context?.projects?.ToList();
-        _context.projects
+        projects =_context.projects
             .Include(x => x.projectTechnology)
             .Include(x => x.projectType)
             .ToList();
