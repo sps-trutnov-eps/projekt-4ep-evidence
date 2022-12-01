@@ -33,40 +33,40 @@ public class Project
     /// </summary>
     [Required]
     [ForeignKey("State")]
-    public virtual DialCode? projectState { get; set; }
+    virtual public DialCode? projectState { get; set; }
 
     /// <summary>
     ///     Typ projektu - položka z předdefinovaného výběru.
     /// </summary>
     [Required]
     [ForeignKey("Type")]
-    public virtual DialCode? projectType { get; set; }
+    virtual public DialCode? projectType { get; set; }
 
     /// <summary>
     ///     Technologie projektu - položka z předdefinovaného výběru.
     /// </summary>
     [Required]
     [ForeignKey("Technology")]
-    public virtual List<DialCode>? projectTechnology { get; set; }
+    virtual public List<DialCode>? projectTechnology { get; set; }
 
     /// <summary>
     ///     Úspechy projektu.
     /// </summary>
     [Required]
-    public virtual List<Achievement>? projectAchievements { get; set; }
+    virtual public List<Achievement>? projectAchievements { get; set; }
 
     /// <summary>
     ///     Žáci přiřazení k projektu.
     /// </summary>
     [Required]
     [Obsolete("Nebude potřeba, uživatelé se nemusí regstrovat, list<string> ? nebo se to bude dávat do desc")]
-    public virtual List<User>? assignees { get; set; }
+    virtual public List<User>? assignees { get; set; }
 
     /// <summary>
     ///     Subory projektu.
     /// </summary>
     [Required]
-    public virtual List<DbFile>? files { get; set; }
+    virtual public List<DbFile>? files { get; set; }
 
     /// <summary>
     ///     Url adresa Github repozitáře.

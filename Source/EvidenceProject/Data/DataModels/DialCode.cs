@@ -55,7 +55,7 @@ public class DialCode
     ///     Číselný záznam barvy pro uložení do DB.
     /// </summary>
     [Required]
-    private int _color { get; set; }
+    public int _color { get; set; }
 
     /// <summary>
     ///     Popis záznamu číselníku. Max 200 znaků.
