@@ -51,7 +51,6 @@ public class UniversalHelper
         var type = obj.GetType();
         var props = type.GetProperties(BindingFlags.Instance|System.Reflection.BindingFlags.Public)
         .Where(w => w.CanRead && w.CanWrite)
-        .Where(w => w.PropertyType == typeof(string))
         .Where(w => w.GetGetMethod(true).IsPublic)
         .Where(w => w.GetSetMethod(true).IsPublic);
         foreach (var prop in props)

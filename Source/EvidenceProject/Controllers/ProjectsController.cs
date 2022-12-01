@@ -1,5 +1,7 @@
 ﻿using EvidenceProject.Controllers.ActionData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using System.Reflection;
 
 namespace EvidenceProject.Controllers;
 
@@ -34,13 +36,10 @@ public class ProjectController : Controller
     {
         var userID = string.Empty;
         if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
-        
-       
-        List<DbFile> files = new();
 
+        List<DbFile> files = new();
         if (!UniversalHelper.CheckAllParams(projectData)) return View();
 
-        if (projectData.photos == null || projectData.tech == null) return View();
 
         foreach (var file in projectData?.photos)
         {
@@ -61,14 +60,14 @@ public class ProjectController : Controller
         {
             name = projectData.projectName,
             projectTechnology = tech,
-            projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.projectType),
+            projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.typy),
             assignees = null,
             github = projectData.github,
             slack = projectData.slack,
             projectAchievements = new List<Achievement>(),
             files = files,
-            projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.projectState),
-            projectDescription = projectData.description
+            projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit),
+            projectDescription = projectData.description,
         };
         
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
@@ -94,6 +93,10 @@ public class ProjectController : Controller
             GETProject.DialInfos = (List<DialInfo>)dialinfos;
         }
         else GETProject.DialInfos = (List<DialInfo>)dialinfos;
+
+        // Todo cache method? 
+        // TryGetFromCache(string key, out ListValue)
+        //var value = _context?.GetType().GetProperty("projects")?.GetValue(_context, null);
 
         var dialcodes = _cache.Get(UniversalHelper.DialCodeCacheKey);
         if (dialcodes == null)

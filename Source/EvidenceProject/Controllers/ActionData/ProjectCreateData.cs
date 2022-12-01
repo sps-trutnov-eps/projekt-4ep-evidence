@@ -6,13 +6,15 @@ public class ProjectCreateData
 
     public string? description { get; set; }
 
-    public string? projectState { get; set; }
+    public string? stavit { get; set; }
 
-    public string? projectType { get; set; }
+    public string? typy { get; set; }
+
+    //public int? projectManager { get; set; }
 
     public string[]? tech { get; set; }
 
-    public IFormFileCollection photos { get; set; }
+    public IFormFileCollection? photos { get; set; }
 
     public string? achievements { get; set; }
 

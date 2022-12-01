@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EvidenceProject.Controllers;
 
@@ -19,6 +20,10 @@ public class HomeController : Controller
         if (projects != null) return View(projects);
 
         projects = _context?.projects?.ToList();
+        _context.projects
+            .Include(x => x.projectTechnology)
+            .Include(x => x.projectType)
+            .ToList();
         _cache.Set("AllProjects", projects);
         return View(projects);
     }
