@@ -1,5 +1,6 @@
 ﻿using EvidenceProject.Controllers.ActionData;
 using EvidenceProject.Controllers.RequestClasses;
+using Microsoft.EntityFrameworkCore;
 using bcrypt = BCrypt.Net.BCrypt;
 namespace EvidenceProject.Controllers;
 
@@ -112,5 +113,14 @@ public class UserController : Controller
         _context.SaveChanges();
 
         return Json("Heslo změněno úspěšně!");
+    }
+
+
+    [HttpGet("user/profile")]
+    public ActionResult Profile()
+    {
+        if(!UniversalHelper.GetLoggedUser(HttpContext, out string id)) return Redirect("/");
+        var userData = _context.globalUsers.Include(x => x.Projects).ToList().FirstOrDefault(x => x.id == int.Parse(id));
+        return View(userData);
     }
 }

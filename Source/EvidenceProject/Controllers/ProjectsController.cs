@@ -120,7 +120,8 @@ public class ProjectController : Controller
     public JsonResult Delete(int id)
     {
         if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Json("Nejsi admin/přihlášen");
-        if (!UniversalHelper.GetProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
+        var project = UniversalHelper.GetProject(_context, id);
+        if (project == null) return Json("Takový projekt neexistuje");
         _logger.LogInformation("User with the id <{}> deleted a project", userID);
 
         _context?.projects?.Remove(project);
@@ -135,7 +136,8 @@ public class ProjectController : Controller
     [HttpGet("project/{id}")]
     public ActionResult Project(int id)
     {
-        if (!UniversalHelper.GetProject(_context, id, out var project)) return Redirect("/");
+        var project = UniversalHelper.GetProject(_context, id);
+        if (project == null) return Redirect("/");
         return View(project);
     }
 
@@ -146,7 +148,7 @@ public class ProjectController : Controller
     public ActionResult Search([FromForm] SearchData data)
     {
         if (data.text == string.Empty) return Ok();
-        var projects = _context?.projects?.ToList().Where(project => project.name.Contains(data.text)).ToList();
+        var projects = UniversalHelper.GetProjectsWithIncludes(_context)?.Where(project => project.name.Contains(data.text)).ToList();
         if (projects == null) return Json("Nic nenalezeno");
         return Json(projects);
     }
@@ -168,5 +170,15 @@ public class ProjectController : Controller
         var project = _context.projects.FirstOrDefault(x => x.id == int.Parse(data.ProjectId));
         // todo
         return Json("OK");
+    }
+
+
+    [HttpGet("project/edit/{id}")]
+    public ActionResult Edit(int id)
+    {
+        var project =_context.projects.FirstOrDefault(x => x.id == id);
+        if (project == null) return Redirect("/user/profile");
+
+        return View(project);
     }
 }

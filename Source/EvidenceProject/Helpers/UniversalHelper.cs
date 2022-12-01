@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 namespace EvidenceProject.Helpers;
 
 public class UniversalHelper
@@ -33,14 +34,24 @@ public class UniversalHelper
     }
 
     /// <summary>
-    ///     Vyhledání projektu dle ID
-    /// </summary>
-    public static bool GetProject(ProjectContext context, int id, out Project project)
+    /// Získání všech projektů
+    /// </summary>    
+    public static List<Project>? GetProjectsWithIncludes(ProjectContext context)
     {
-        project = context?.projects?.ToList().FirstOrDefault(project => project.id == id);
-        return project != null;
+        var projects = context.projects
+            .Include(x => x.projectTechnology)
+            .Include(x => x.projectType)
+            .Include(x => x.files)
+            .ToList();
+
+        return projects;
     }
 
+    /// <summary>
+    /// Získání dle id
+    /// </summary>    
+    public static Project? GetProject(ProjectContext context, int id) => GetProjectsWithIncludes(context)?.FirstOrDefault(x => x.id == id);
+    
     /// <summary>
     /// Pokud něco bude prázdné v objektu, vrátí null
     /// </summary>
