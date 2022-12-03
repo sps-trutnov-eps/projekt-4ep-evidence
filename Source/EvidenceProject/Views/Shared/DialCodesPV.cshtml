@@ -1,16 +1,27 @@
-﻿@model List<EvidenceProject.Data.DataModels.DialCode>
-<p>@Model.Count</p>
+﻿@model List<EvidenceProject.Data.DataModels.DialInfo>
 
 <form method="POST" action="/dialcode/add">
     <label for="name">Name:</label>
     <input name="name" type="text" placeholder="..." id="name" />
     <label for="description">Description:</label>
     <input name="description" type="text" placeholder="..." id="description" />
-    <label for="alpha">Color:</label>
+    <label>Alpha</label>
     <input name="alpha" type="number" placeholder="..." id="alpha" />
+    <label>R</label>
     <input name="red" type="number" placeholder="..." id="red" />
+    <label>G</label>
     <input name="green" type="number" placeholder="..." id="green" />
+    <label>B</label>
     <input name="blue" type="number" placeholder="..." id="blue" />
-
-    <input type="submit" value="Enter" />
-</form>
+    <label>DialInfoId</label>
+    <input name="dialInfoName" list="stavy" />
+    <datalist id="stavy">
+        @{
+            foreach (var dialInfo in Model)
+            {
+                <option value="@dialInfo.name">@dialInfo.name</option>
+            }
+        }
+        </datalist>
+    <input type="submit" value="Přidat do kategorie" />
+    </form>
