@@ -4,29 +4,37 @@ $(document).ready(function () {
     spustitScript();
 })
 
-function plynulyPrechodMeziStrankami(){
-    history.replaceState({"html":$("html").prop("outerHTML")}, "", $(location).attr("pathname"));
+const xhr = new XMLHttpRequest();
+const domp = new DOMParser();
+const xmls = new XMLSerializer();
 
+function plynulyPrechodMeziStrankami(){
+    history.replaceState({"html":xmls.serializeToString(document)}, "", location.href);
+    
     $(document).on("click", ".odkaz", function () {
         let link = $(this).attr('href');
-        $("main").empty();
-        $("main").html("<div>načítám data...</div>");
-        $.ajax({
-            type : "GET",
-            url : link,
-            dataType: "html",
-            success : function(html){
-                let stranka = $($.parseHTML(html));
-                $("header").replaceWith(stranka.filter("header"));
-                $("main").replaceWith(stranka.filter("main"));
-                $("title").replaceWith(stranka.filter("title"));
-                history.pushState({"html":html}, "", link);
+
+        $("main").html(`<div>Načítám data...</div>`);
+
+        xhr.open('GET', link, true);
+        xhr.responseType = "text";
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                const text = xhr.responseText
+                const doc = domp.parseFromString(text, "text/html")
+
+                document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
+                document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
+
+                history.pushState({"html": text }, "", xhr.responseURL);
+
                 spustitScript();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
+            } else {
+                // errror
+                $("main").html(`<div>Chyba: ${xhr.status} ${xhr.statusText}</div>`);
             }
-        });
+        };
+        xhr.send();
 
         return false;
     }); 
@@ -34,9 +42,12 @@ function plynulyPrechodMeziStrankami(){
 
 window.onpopstate = function(e){
     if (e.state == null) return;
-    let stranka = $($.parseHTML(e.state.html));
-    $("main").replaceWith(stranka.filter("main"));
-    $("title").replaceWith(stranka.filter("title"));
+    const text = e.state.html
+    const doc = domp.parseFromString(text, "text/html")
+
+    document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
+    document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
+
     spustitScript();
 }
 
@@ -104,11 +115,11 @@ $(document).on("click", ".mode", function(event){
 function nastaveniStylu() {
     let style = localStorage.getItem("mode")
     if (style == null) {
-        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
+        document.getElementsByTagName('head')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
     }
     else {
         /*document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';*/
-        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
+        document.getElementsByTagName('head')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
     }
 }
 
