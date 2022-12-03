@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EvidenceProject.Data.DataModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using System.Drawing;
 using System.Reflection;
 namespace EvidenceProject.Helpers;
 
@@ -23,6 +26,11 @@ public class UniversalHelper
     ///     Klíč k listu zacachovaných dialCodes
     /// </summary>
     public static string DialCodeCacheKey => "dialCodes";
+
+    /// <summary>
+    ///     Klíč k listu zacachovaných globalUsers
+    /// </summary>
+    public static string GlobalUsersCacheKey => "globalUsers";
 
     /// <summary>
     ///     Zjistíme, zda je přihlášen uživatel
@@ -71,4 +79,24 @@ public class UniversalHelper
         }
         return true;
     }
+
+    /// <summary>
+    /// Vrací hex barvu 
+    /// </summary>
+    public static string GetHtmlColor(Color? c) => ColorTranslator.ToHtml(c.Value);
+
+    /// <summary>
+    /// Získáme data z cache
+    /// </summary>
+    public static List<T> GetData<T>(ProjectContext context, IMemoryCache cache, string cacheKey, string propertyName, bool project = false)
+    {
+        var data = (List<T>)cache.Get(cacheKey);
+        if (data != null) return data;
+
+        IEnumerable<T> dbData = project? (IEnumerable<T>)GetProjectsWithIncludes(context) : (IEnumerable<T>)context.GetType().GetProperty(propertyName).GetValue(context, null);
+        var listData = dbData.ToList();
+        cache.Set(cacheKey, listData);
+        return listData;
+    }
+    
 }

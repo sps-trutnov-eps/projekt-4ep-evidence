@@ -16,11 +16,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var projects = _cache.Get("AllProjects");
-        if (projects != null) return View(projects);
-
-        projects = UniversalHelper.GetProjectsWithIncludes(_context);
-        _cache.Set("AllProjects", projects);
+        var projects = UniversalHelper.GetData<Project>(_context, _cache, "AllProjects", "project", true);
         return View(projects);
     }
 }

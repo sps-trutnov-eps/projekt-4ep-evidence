@@ -6,11 +6,11 @@
 @model CustomMessageResponse
 
 <form action="/users/login" method="post">
-    <label for="username">Username:</label>
+    <label for="username">Uživatelské jméno:</label>
     <input type="text" name="username">
     <label for="password">Heslo:</label>
     <input type="password" name="password">
-    <input type="submit" value="Login">
+    <input type="submit" value="Přihlásit se">
 </form>
 <p style="color: red">@Model.Response</p>
 

@@ -13,8 +13,8 @@
     <p>Popis: @project.projectDescription</p>
     <p>technologie:
     @foreach (var item in project?.projectTechnology)
-        {
-            <span style="color:@item.color.Value.Name">@item.name</span>
+        {   
+            <span style="color:@UniversalHelper.GetHtmlColor(item.color)">@item.name</span>
         }
     </p>
     <a href="/project/@project.id">Detail</a>

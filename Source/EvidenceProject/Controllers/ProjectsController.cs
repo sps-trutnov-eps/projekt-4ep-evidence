@@ -1,6 +1,7 @@
 ﻿using EvidenceProject.Controllers.ActionData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace EvidenceProject.Controllers;
@@ -10,7 +11,7 @@ public class ProjectController : Controller
     private readonly IMemoryCache _cache;
     private readonly ProjectContext _context;
     private readonly ILogger<ProjectController> _logger;
-    GETProjectCreate GETProject = new();
+    HashSet<string> fileExtensions = new HashSet<string>() { ".jpg" , ".jpeg" , ".jfif", ".png", ".webp" };
 
     public ProjectController(ProjectContext context, IMemoryCache cache, ILogger<ProjectController> logger)
     {
@@ -38,12 +39,15 @@ public class ProjectController : Controller
         var userID = string.Empty;
         if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
 
-        List<DbFile> files = new();
+        var GETProject = GetProjectCreateData();
         if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject);
 
 
+        List<DbFile> files = new();
         foreach (var file in projectData?.photos)
         {
+            var extension = Path.GetExtension(file.FileName);
+            if(!fileExtensions.Contains(extension)) return View(GETProject);
             var dbFile = new DbFile();
             dbFile.WriteFile(file);
             files.Add(dbFile);
@@ -86,31 +90,9 @@ public class ProjectController : Controller
     public ActionResult Create()
     {
         if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
-        var dialinfos = _cache.Get(UniversalHelper.DialInfoCacheKey);
-        if (dialinfos == null)
-        {
-            dialinfos = _context?.dialInfos?.ToList();
-            _cache.Set(UniversalHelper.DialInfoCacheKey, dialinfos);
-            GETProject.DialInfos = (List<DialInfo>)dialinfos;
-        }
-        else GETProject.DialInfos = (List<DialInfo>)dialinfos;
+        var data = GetProjectCreateData();
+        return View(data);
 
-        // Todo cache method? 
-        // TryGetFromCache(string key, out ListValue)
-        //var value = _context?.GetType().GetProperty("projects")?.GetValue(_context, null);
-
-        var dialcodes = _cache.Get(UniversalHelper.DialCodeCacheKey);
-        if (dialcodes == null)
-        {
-            dialcodes = _context?.dialCodes?.ToList();
-            _cache.Set(UniversalHelper.DialCodeCacheKey, dialcodes);
-            GETProject.DialCodes = (List<DialCode>)dialcodes;
-        }
-        else GETProject.DialCodes = (List<DialCode>)dialcodes;
-
-        // Todo projectManager
-        GETProject.Users = _context?.globalUsers?.ToList();
-        return View(GETProject);
     }
 
     /// <summary>
@@ -153,16 +135,6 @@ public class ProjectController : Controller
         return Json(projects);
     }
 
-    public void UpdateProjectsInCache()
-    {
-        var projects = _context.projects
-            .Include(x => x.projectTechnology)
-            .Include(x => x.projectType)
-            .ToList();
-        _cache.Set("AllProjects", projects);
-    }
-
-
     [HttpPost("/project/apply")]
     public ActionResult Apply([FromForm] UserApplyData data) 
     {
@@ -172,13 +144,29 @@ public class ProjectController : Controller
         return Json("OK");
     }
 
-
     [HttpGet("project/edit/{id}")]
     public ActionResult Edit(int id)
     {
-        var project =_context.projects.FirstOrDefault(x => x.id == id);
+        var project = UniversalHelper.GetProject(_context, id);
         if (project == null) return Redirect("/user/profile");
 
         return View(project);
     }
+
+    private void UpdateProjectsInCache()
+    {
+        var projects = UniversalHelper.GetProjectsWithIncludes(_context);
+        _cache.Set("AllProjects", projects);
+    }
+
+    private GETProjectCreate GetProjectCreateData()
+    {
+        GETProjectCreate GETProject = new();
+
+        GETProject.DialInfos = UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos");
+        GETProject.DialCodes = UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes");
+        GETProject.Users = UniversalHelper.GetData<AuthUser>(_context, _cache, UniversalHelper.GlobalUsersCacheKey, "globalUsers");
+        return GETProject;
+    }
+
 }
