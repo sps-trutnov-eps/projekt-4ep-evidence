@@ -17,60 +17,64 @@ public class Project
     public int id { init; get; }
 
     /// <summary>
-    ///     Název projektu. Max 50 znaků.
+    ///     Název projektu. 
     /// </summary>
     [Required]
-    [StringLength(50)]
     public string? name { get; set; }
+    
+    /// <summary>
+    ///     Popis projektu. 
+    /// </summary>
+    [ForeignKey("Description")]
+    public string? projectDescription { get; set; }
 
     /// <summary>
     ///     Stav projektu - položka z číselníku (předdefinovaného výběru).
     /// </summary>
     [Required]
     [ForeignKey("State")]
-    public virtual DialCode? projectState { get; set; }
+    virtual public DialCode? projectState { get; set; }
 
     /// <summary>
     ///     Typ projektu - položka z předdefinovaného výběru.
     /// </summary>
     [Required]
     [ForeignKey("Type")]
-    public virtual DialCode? projectType { get; set; }
+    virtual public DialCode? projectType { get; set; }
 
     /// <summary>
     ///     Technologie projektu - položka z předdefinovaného výběru.
     /// </summary>
     [Required]
     [ForeignKey("Technology")]
-    public virtual DialCode? projectTechnology { get; set; }
+    virtual public List<DialCode>? projectTechnology { get; set; }
 
     /// <summary>
     ///     Úspechy projektu.
     /// </summary>
     [Required]
-    public virtual List<Achievement>? projectAchievements { get; set; }
+    virtual public List<Achievement>? projectAchievements { get; set; }
 
     /// <summary>
     ///     Žáci přiřazení k projektu.
     /// </summary>
     [Required]
-    public virtual List<User>? assignees { get; set; }
+    [Obsolete("Nebude potřeba, uživatelé se nemusí regstrovat, list<string> ? nebo se to bude dávat do desc")]
+    virtual public List<User>? assignees { get; set; }
 
+    /// <summary>
+    ///     Subory projektu.
+    /// </summary>
     [Required]
-    public virtual List<DbFile>? files { get; set; }
-
-    //TODO Artefacts(Files, text) 
-    //TODO Showcase??(Files?, Photos?)
+    virtual public List<DbFile>? files { get; set; }
 
     /// <summary>
     ///     Url adresa Github repozitáře.
     /// </summary>
-    [StringLength(100)]
     public string? github { get; set; }
 
     /// <summary>
     ///     Url adresa slack kanálu.
     /// </summary>
-    [StringLength(100)]
     public string? slack { get; set; }
 }

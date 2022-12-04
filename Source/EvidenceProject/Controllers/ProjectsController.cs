@@ -1,5 +1,8 @@
 ﻿using EvidenceProject.Controllers.ActionData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace EvidenceProject.Controllers;
 
@@ -8,6 +11,7 @@ public class ProjectController : Controller
     private readonly IMemoryCache _cache;
     private readonly ProjectContext _context;
     private readonly ILogger<ProjectController> _logger;
+    HashSet<string> fileExtensions = new HashSet<string>() { ".jpg" , ".jpeg" , ".jfif", ".png", ".webp" };
 
     public ProjectController(ProjectContext context, IMemoryCache cache, ILogger<ProjectController> logger)
     {
@@ -22,7 +26,7 @@ public class ProjectController : Controller
     [HttpGet("project")]
     public ActionResult Index()
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
         return Redirect("project/create");
     }
 
@@ -33,28 +37,45 @@ public class ProjectController : Controller
     public ActionResult Create([FromForm] ProjectCreateData projectData, bool test = false)
     {
         var userID = string.Empty;
-        if (!test) if (!UniversalHelper.getLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
+        if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
+
+        var GETProject = GetProjectCreateData();
+        if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject);
+
 
         List<DbFile> files = new();
-        foreach (var file in projectData.photos)
+        foreach (var file in projectData?.photos)
         {
+            var extension = Path.GetExtension(file.FileName);
+            if(!fileExtensions.Contains(extension)) return View(GETProject);
             var dbFile = new DbFile();
             dbFile.WriteFile(file);
             files.Add(dbFile);
+        }
+        List<DialCode> tech = new();
+
+        foreach (var item in projectData.tech)
+        {
+            var dialCode = _context?.dialCodes?.FirstOrDefault(x => x.name == item);
+            if (dialCode == null) continue;
+            tech.Add(dialCode);
         }
 
         Project project = new()
         {
             name = projectData.projectName,
-            projectTechnology = new DialCode(),
-            projectType = new DialCode(),
+            projectTechnology = tech,
+            projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.typy),
             assignees = null,
             github = projectData.github,
             slack = projectData.slack,
-            projectAchievements = null,
+            projectAchievements = new List<Achievement>(),
             files = files,
-            projectState = null,
+            projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit),
+            projectDescription = projectData.description,
+            projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager)
         };
+        
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);
         _context?.SaveChanges();
@@ -68,11 +89,10 @@ public class ProjectController : Controller
     [HttpGet("project/create")]
     public ActionResult Create()
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
-        GETProjectCreate GETProject = new();
-        GETProject.DialCodes = _context?.dialCodes?.ToList();
-        GETProject.DialInfos = _context?.dialInfos?.ToList();
-        return View(GETProject);
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
+        var data = GetProjectCreateData();
+        return View(data);
+
     }
 
     /// <summary>
@@ -81,22 +101,25 @@ public class ProjectController : Controller
     [HttpPost("project/{id}")]
     public JsonResult Delete(int id)
     {
-        if (!UniversalHelper.getLoggedUser(HttpContext, out var userID) && userID != "1") return Json("Nejsi admin/přihlášen");
-        if (!UniversalHelper.getProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Json("Nejsi admin/přihlášen");
+        var project = UniversalHelper.GetProject(_context, id);
+        if (project == null) return Json("Takový projekt neexistuje");
         _logger.LogInformation("User with the id <{}> deleted a project", userID);
 
         _context?.projects?.Remove(project);
         UpdateProjectsInCache();
+        _context?.SaveChanges();
         return Json("ok");
     }
 
     /// <summary>
     ///     Stránka s projektem
     /// </summary>
-    [HttpGet("projectinfo/{id}")]
-    public ActionResult ProjectInfo(int id)
+    [HttpGet("project/{id}")]
+    public ActionResult Project(int id)
     {
-        if (!UniversalHelper.getProject(_context, id, out var project)) return View();
+        var project = UniversalHelper.GetProject(_context, id);
+        if (project == null) return Redirect("/");
         return View(project);
     }
 
@@ -104,17 +127,46 @@ public class ProjectController : Controller
     ///     Vyhledávání
     /// </summary>
     [HttpPost("search")]
-    public ActionResult Search([FromBody] SearchData data)
+    public ActionResult Search([FromForm] SearchData data)
     {
         if (data.text == string.Empty) return Ok();
-        var projects = _context?.projects?.ToList().Where(project => project.name.Contains(data.text)).ToList();
+        var projects = UniversalHelper.GetProjectsWithIncludes(_context)?.Where(project => project.name.Contains(data.text)).ToList();
         if (projects == null) return Json("Nic nenalezeno");
         return Json(projects);
     }
 
-    public void UpdateProjectsInCache()
+    [HttpPost("/project/apply")]
+    public ActionResult Apply([FromForm] UserApplyData data) 
     {
-        var projects = _context?.projects?.ToList();
+        if (!UniversalHelper.CheckAllParams(data)) return View();
+        var project = _context.projects.FirstOrDefault(x => x.id == int.Parse(data.ProjectId));
+        // todo
+        return Json("OK");
+    }
+
+    [HttpGet("project/edit/{id}")]
+    public ActionResult Edit(int id)
+    {
+        var project = UniversalHelper.GetProject(_context, id);
+        if (project == null) return Redirect("/user/profile");
+
+        return View(project);
+    }
+
+    private void UpdateProjectsInCache()
+    {
+        var projects = UniversalHelper.GetProjectsWithIncludes(_context);
         _cache.Set("AllProjects", projects);
     }
+
+    private GETProjectCreate GetProjectCreateData()
+    {
+        GETProjectCreate GETProject = new();
+
+        GETProject.DialInfos = UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos");
+        GETProject.DialCodes = UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes");
+        GETProject.Users = UniversalHelper.GetData<AuthUser>(_context, _cache, UniversalHelper.GlobalUsersCacheKey, "globalUsers");
+        return GETProject;
+    }
+
 }

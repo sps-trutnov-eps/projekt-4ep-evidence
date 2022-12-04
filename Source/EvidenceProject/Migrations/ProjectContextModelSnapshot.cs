@@ -17,10 +17,25 @@ namespace EvidenceProject.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DialCodeProject", b =>
+                {
+                    b.Property<int>("Technology")
+                        .HasColumnType("int");
+
+                    b.Property<int>("projectTechnologyid")
+                        .HasColumnType("int");
+
+                    b.HasKey("Technology", "projectTechnologyid");
+
+                    b.HasIndex("projectTechnologyid");
+
+                    b.ToTable("DialCodeProject");
+                });
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Achievement", b =>
                 {
@@ -71,19 +86,23 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("Technology")
+                        .HasColumnType("int");
+
+                    b.Property<int>("_color")
+                        .HasColumnType("int");
 
                     b.Property<string>("description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("dialInfoid")
                         .HasColumnType("int");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
 
@@ -101,16 +120,14 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("desc")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
 
@@ -126,35 +143,30 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Technology")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<string>("github")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("projectDescription")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("slack")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
                     b.HasIndex("State");
-
-                    b.HasIndex("Technology");
 
                     b.HasIndex("Type");
 
@@ -167,30 +179,29 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("contactDetails")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("fullName")
                         .IsRequired()
-                        .HasMaxLength(35)
-                        .HasColumnType("nvarchar(35)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("studyField")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
                     b.ToTable("User");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("ProjectUser", b =>
@@ -225,8 +236,7 @@ namespace EvidenceProject.Migrations
 
                     b.Property<string>("username")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasIndex("id_key")
                         .IsUnique()
@@ -237,6 +247,21 @@ namespace EvidenceProject.Migrations
                         .HasFilter("[username] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("AuthUser");
+                });
+
+            modelBuilder.Entity("DialCodeProject", b =>
+                {
+                    b.HasOne("EvidenceProject.Data.DataModels.Project", null)
+                        .WithMany()
+                        .HasForeignKey("Technology")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EvidenceProject.Data.DataModels.DialCode", null)
+                        .WithMany()
+                        .HasForeignKey("projectTechnologyid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Achievement", b =>
@@ -276,12 +301,6 @@ namespace EvidenceProject.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EvidenceProject.Data.DataModels.DialCode", "projectTechnology")
-                        .WithMany()
-                        .HasForeignKey("Technology")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("EvidenceProject.Data.DataModels.DialCode", "projectType")
                         .WithMany()
                         .HasForeignKey("Type")
@@ -289,8 +308,6 @@ namespace EvidenceProject.Migrations
                         .IsRequired();
 
                     b.Navigation("projectState");
-
-                    b.Navigation("projectTechnology");
 
                     b.Navigation("projectType");
                 });

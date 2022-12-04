@@ -4,39 +4,64 @@
     ViewData["Page"] = "create";
 }
 @model GETProjectCreate
-<form action="/project/create" method="post">
-    <label for="name">Název projektu: </label>
-    <input name="name" type="text" placeholder="..." id="name"/>
+<h2>Vytvoření projektu</h2>
+<form action="/project/create" method="post" enctype="multipart/form-data">
+    <label for="projectName">Název projektu: </label>
+    <input name="projectName" type="text" placeholder="..." id="name" />
+    <label for="description">Popis projektu</label>
+    <textarea name="description"></textarea>
+    <label for="users">Vedoucí: </label>
+    <input name="projectManager" type="text" placeholder="..." id="assignees" list="users" />
     <label for="assignees">Lidi: </label>
     <input name="assignees" type="text" placeholder="..." id="assignees" />
     <label for="state">Stav: </label>
-    <input name="projectState" list="stavy" id="state" />
+    <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" />
     <label for="type">Typ: </label>
-    <input name="projectType" type="text" placeholder="..." id="type" />
+    <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" />
     <label for="technology">Technologie: </label>
-    <input name="projectTechnology" type="text" placeholder="..." id="technology" />
-    <label for="photo">Fotografie: </label>
-    <input name="files" type="file" multiple="multiple" id="photo"/>
-    <a id="nazvy"></a>
-    <label for="achievments">Úspěchy: </label>
-    <input name="projectAchievements" type="text" id="achievements" />
+    <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
+    <label for="photos">Fotografie: </label>
+    <input name="photos" type="file" multiple="multiple" />
+    <label for="achievements">Úspěchy: </label>
+    <input name="achievements" type="text" id="achievements" />
     <label for="slack">Slack: </label>
     <input name="slack" type="text" id="slack" />
     <label for="github">Github: </label>
     <input name="github" type="text" id="github" />
     <input type="submit"/>
-
+    @if (Model == null) return;
     <datalist id="stavy">
         @{
+            if (Model.DialInfos == null) return;
             foreach(var dialInfo in Model.DialInfos){
-                        <option>@dialInfo.name</option>
+                <option id="@dialInfo.name">@dialInfo.name</option>
             }
         }
     </datalist>
 
+    <datalist id="dialCodes">
+        @{
+            if (Model.DialCodes == null) return;
+            foreach (var dialcode in Model.DialCodes)
+            {
+                <option class="@dialcode.dialInfo.name">@dialcode.name</option>
+            }
+        }
+    </datalist>
+    <datalist id="users">
+        @{
+            if (Model.Users == null) return;
+            foreach (var user in Model.Users)
+            {
+                <option>@user.fullName</option>
+            }
+        }
+    </datalist>
 </form>
+
 
 @await Html.PartialAsync("../Shared/DialCodesPV", Model.DialInfos)
 @await Html.PartialAsync("../Shared/DialInfosPV", Model.DialInfos)
+
 
 

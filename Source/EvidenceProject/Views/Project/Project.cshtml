@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Project Details";
+}
+@model Project
+
+<a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
+@if (Model == null) return;
+
+<p><b>@Model.name?</b></p>
+<p>Autor: @Model?.projectManager?.fullName</p>
+
+@if (Model.projectTechnology != null){
+    @foreach (var item in Model?.projectTechnology)
+    {
+        <span style="color:@UniversalHelper.GetHtmlColor(item.color)">@item.name</span>
+    }
+}
+<p>Stav: @Model?.projectState?.name</p>
+<p>Úspěchy: @Model?.projectAchievements</p>
+<p>Github: @Model?.github</p>
+<p>Slack: @Model?.slack</p>
+<p>Typ: @Model?.projectType?.name</p>
+
+
+<p>Projevit zájem</p>
+<form method="post" action="/project/apply">
+    <input type="text" name="Firstname" placeholder="Jméno..."/>
+    <input type="text" name="Lastname" placeholder="Příjmení..."/>
+    <input type="text" name="Class" placeholder="Třída..."/>
+    <input type="text" name="Email" placeholder="Email..."/>
+    <input type="hidden" name="ProjectId" value="@Model.id"/>
+    <input type="submit" value="Mám zájem"/>
+</form>

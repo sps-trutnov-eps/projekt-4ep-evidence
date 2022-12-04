@@ -16,19 +16,16 @@ public class User
     ///     Celé jméno uživatele
     /// </summary>
     [Required]
-    [StringLength(35)]
     public string? fullName { get; set; }
 
     /// <summary>
     ///     Studijní obor uživatele
     /// </summary>
-    [StringLength(50)]
     public string? studyField { get; set; }
 
     /// <summary>
     ///     Kontaktní údaje uživatele
     /// </summary>
-    [StringLength(100)]
     public string? contactDetails { get; set; }
 
     /// <summary>
@@ -62,7 +59,7 @@ public class AuthUser : User
         bool admin = false, ProjectContext? context = null)
     {
         username = login;
-        HashPassword(pass);
+        password = pass;
         GenerateIdKey(context);
 
         fullName = fullname;
@@ -86,7 +83,6 @@ public class AuthUser : User
     ///     Login ověřeného uživatele - je unikátní
     /// </summary>
     [Required]
-    [StringLength(25)]
     public string? username { init; get; }
 
     /// <summary>
@@ -106,24 +102,17 @@ public class AuthUser : User
     [Required]
     public string? id_key { get; private set; }
 
-    /// <summary>
-    ///     Metoda zahashuje heslo dle knihovny bcrypt.
-    /// </summary>
-    /// <param name="pass">Nezahashované heslo. Pakliže je null, pracuje se s heslem obj.</param>
-    public void HashPassword(string? pass = null)
-    {
-        password = bcrypt.HashPassword(pass ?? password);
-    }
+
 
     /// <summary>
     ///     Metoda porovná hesla.
     /// </summary>
     /// <param name="passToCompare">Heslo k porovnání s nastaveným obj.</param>
     /// <returns>Vrací bool hodnotu: True pakliže je vše správné.</returns>
+    [Obsolete("Používáme bcrypt - bcrypt.Verify()")]
     public bool VerifyPassword(string passToCompare)
     {
-        if (bcrypt.Verify(passToCompare, password)) return true;
-
+        if (passToCompare == password) return true;
         return false;
     }
 
