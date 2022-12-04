@@ -21,6 +21,8 @@ public class ProjectContext : DbContext
 
         builder.Entity<Project>().HasMany(p => p.assignees).WithMany(a => a.Projects);
 
+        builder.Entity<Project>().HasMany(p => p.applicants).WithMany();
+
         builder.Entity<Project>().HasMany(p => p.files).WithOne();
 
         builder.Entity<Project>().HasMany(p => p.projectAchievements).WithOne(a => a.project);
