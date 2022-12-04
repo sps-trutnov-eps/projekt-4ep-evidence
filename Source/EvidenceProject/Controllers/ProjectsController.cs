@@ -1,5 +1,8 @@
 ﻿using EvidenceProject.Controllers.ActionData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace EvidenceProject.Controllers;
 
@@ -8,6 +11,7 @@ public class ProjectController : Controller
     private readonly IMemoryCache _cache;
     private readonly ProjectContext _context;
     private readonly ILogger<ProjectController> _logger;
+    HashSet<string> fileExtensions = new HashSet<string>() { ".jpg" , ".jpeg" , ".jfif", ".png", ".webp" };
 
     public ProjectController(ProjectContext context, IMemoryCache cache, ILogger<ProjectController> logger)
     {
@@ -34,16 +38,16 @@ public class ProjectController : Controller
     {
         var userID = string.Empty;
         if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
-        
-       
+
+        var GETProject = GetProjectCreateData();
+        if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject);
+
+
         List<DbFile> files = new();
-
-        if (!UniversalHelper.CheckAllParams(projectData)) return View();
-
-        if (projectData.photos == null || projectData.tech == null) return View();
-
         foreach (var file in projectData?.photos)
         {
+            var extension = Path.GetExtension(file.FileName);
+            if(!fileExtensions.Contains(extension)) return View(GETProject);
             var dbFile = new DbFile();
             dbFile.WriteFile(file);
             files.Add(dbFile);
@@ -61,14 +65,15 @@ public class ProjectController : Controller
         {
             name = projectData.projectName,
             projectTechnology = tech,
-            projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.projectType),
+            projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.typy),
             assignees = null,
             github = projectData.github,
             slack = projectData.slack,
             projectAchievements = new List<Achievement>(),
             files = files,
-            projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.projectState),
-            projectDescription = projectData.description
+            projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit),
+            projectDescription = projectData.description,
+            projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager)
         };
         
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
@@ -85,27 +90,9 @@ public class ProjectController : Controller
     public ActionResult Create()
     {
         if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
-        GETProjectCreate GETProject = new();
-        var dialinfos = _cache.Get(UniversalHelper.DialInfoCacheKey);
-        if (dialinfos == null)
-        {
-            dialinfos = _context?.dialInfos?.ToList();
-            _cache.Set(UniversalHelper.DialInfoCacheKey, dialinfos);
-            GETProject.DialInfos = (List<DialInfo>)dialinfos;
-        }
-        else GETProject.DialInfos = (List<DialInfo>)dialinfos;
+        var data = GetProjectCreateData();
+        return View(data);
 
-        var dialcodes = _cache.Get(UniversalHelper.DialCodeCacheKey);
-        if (dialcodes == null)
-        {
-            dialcodes = _context?.dialCodes?.ToList();
-            _cache.Set(UniversalHelper.DialCodeCacheKey, dialcodes);
-            GETProject.DialCodes = (List<DialCode>)dialcodes;
-        }
-        else GETProject.DialCodes = (List<DialCode>)dialcodes;
-
-        GETProject.Users = _context?.globalUsers?.ToList();
-        return View(GETProject);
     }
 
     /// <summary>
@@ -115,7 +102,8 @@ public class ProjectController : Controller
     public JsonResult Delete(int id)
     {
         if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Json("Nejsi admin/přihlášen");
-        if (!UniversalHelper.GetProject(_context, id, out var project)) return Json("Takový projekt neexistuje");
+        var project = UniversalHelper.GetProject(_context, id);
+        if (project == null) return Json("Takový projekt neexistuje");
         _logger.LogInformation("User with the id <{}> deleted a project", userID);
 
         _context?.projects?.Remove(project);
@@ -130,7 +118,8 @@ public class ProjectController : Controller
     [HttpGet("project/{id}")]
     public ActionResult Project(int id)
     {
-        if (!UniversalHelper.GetProject(_context, id, out var project)) return Redirect("/");
+        var project = UniversalHelper.GetProject(_context, id);
+        if (project == null) return Redirect("/");
         return View(project);
     }
 
@@ -141,17 +130,10 @@ public class ProjectController : Controller
     public ActionResult Search([FromForm] SearchData data)
     {
         if (data.text == string.Empty) return Ok();
-        var projects = _context?.projects?.ToList().Where(project => project.name.Contains(data.text)).ToList();
+        var projects = UniversalHelper.GetProjectsWithIncludes(_context)?.Where(project => project.name.Contains(data.text)).ToList();
         if (projects == null) return Json("Nic nenalezeno");
         return Json(projects);
     }
-
-    public void UpdateProjectsInCache()
-    {
-        var projects = _context?.projects?.ToList();
-        _cache.Set("AllProjects", projects);
-    }
-
 
     [HttpPost("/project/apply")]
     public ActionResult Apply([FromForm] UserApplyData data) 
@@ -161,4 +143,30 @@ public class ProjectController : Controller
         // todo
         return Json("OK");
     }
+
+    [HttpGet("project/edit/{id}")]
+    public ActionResult Edit(int id)
+    {
+        var project = UniversalHelper.GetProject(_context, id);
+        if (project == null) return Redirect("/user/profile");
+
+        return View(project);
+    }
+
+    private void UpdateProjectsInCache()
+    {
+        var projects = UniversalHelper.GetProjectsWithIncludes(_context);
+        _cache.Set("AllProjects", projects);
+    }
+
+    private GETProjectCreate GetProjectCreateData()
+    {
+        GETProjectCreate GETProject = new();
+
+        GETProject.DialInfos = UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos");
+        GETProject.DialCodes = UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes");
+        GETProject.Users = UniversalHelper.GetData<AuthUser>(_context, _cache, UniversalHelper.GlobalUsersCacheKey, "globalUsers");
+        return GETProject;
+    }
+
 }

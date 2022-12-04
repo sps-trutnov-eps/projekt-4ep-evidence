@@ -6,6 +6,7 @@ namespace Tests.ControllersTests;
 public class ControllerTestsBase
 {
     public static LoggerFactory LoggerFactory = new();
+
     /// <summary>
     /// Získání dat z DB
     /// </summary>

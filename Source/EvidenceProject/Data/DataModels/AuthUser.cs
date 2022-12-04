@@ -109,6 +109,7 @@ public class AuthUser : User
     /// </summary>
     /// <param name="passToCompare">Heslo k porovnání s nastaveným obj.</param>
     /// <returns>Vrací bool hodnotu: True pakliže je vše správné.</returns>
+    [Obsolete("Používáme bcrypt - bcrypt.Verify()")]
     public bool VerifyPassword(string passToCompare)
     {
         if (passToCompare == password) return true;

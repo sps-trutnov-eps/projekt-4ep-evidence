@@ -27,13 +27,8 @@ public class DialStuffController : Controller
         var color = ColorTranslator.FromHtml(data?.Color);
         var dialInfo = _context.dialInfos.FirstOrDefault(x => x.name == data.DialInfoName);
         if (dialInfo == null) return Json("Není taková kategorie");
-        DialCode dialCode = new()
-        {
-            name = data.Name,
-            description = data.Description,
-            color = color,
-            dialInfo = dialInfo
-        };
+        DialCode dialCode = new(data?.Name, dialInfo, color, data.Description);
+
         _context.dialCodes.Add(dialCode);
         _context.SaveChanges();
         _cache.Set(UniversalHelper.DialCodeCacheKey, _context.dialCodes.ToList());

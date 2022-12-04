@@ -1,0 +1,15 @@
+﻿@model AuthUser
+
+@if(Model == null) return;
+
+<p>@Model.fullName</p>
+@if (Model.Projects == null) return;
+@foreach (var project in Model.Projects)
+{
+    <p>@project.name</p>
+}
+    
+    
+    
+
+

@@ -91,17 +91,18 @@ namespace EvidenceProject.Migrations
                     b.Property<int?>("Technology")
                         .HasColumnType("int");
 
+                    b.Property<int>("_color")
+                        .HasColumnType("int");
+
                     b.Property<string>("description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("dialInfoid")
                         .HasColumnType("int");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
 
@@ -122,13 +123,11 @@ namespace EvidenceProject.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("desc")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
 
@@ -153,8 +152,7 @@ namespace EvidenceProject.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("github")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -164,8 +162,7 @@ namespace EvidenceProject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("slack")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
@@ -189,17 +186,14 @@ namespace EvidenceProject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("contactDetails")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("fullName")
                         .IsRequired()
-                        .HasMaxLength(35)
-                        .HasColumnType("nvarchar(35)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("studyField")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
@@ -242,8 +236,7 @@ namespace EvidenceProject.Migrations
 
                     b.Property<string>("username")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasIndex("id_key")
                         .IsUnique()
