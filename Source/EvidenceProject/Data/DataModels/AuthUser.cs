@@ -102,20 +102,6 @@ public class AuthUser : User
     [Required]
     public string? id_key { get; private set; }
 
-
-
-    /// <summary>
-    ///     Metoda porovná hesla.
-    /// </summary>
-    /// <param name="passToCompare">Heslo k porovnání s nastaveným obj.</param>
-    /// <returns>Vrací bool hodnotu: True pakliže je vše správné.</returns>
-    [Obsolete("Používáme bcrypt - bcrypt.Verify()")]
-    public bool VerifyPassword(string passToCompare)
-    {
-        if (passToCompare == password) return true;
-        return false;
-    }
-
     /// <summary>
     ///     Metoda nastaví obj. vygenerovaný a ověřený <see cref="id_key" />
     /// </summary>

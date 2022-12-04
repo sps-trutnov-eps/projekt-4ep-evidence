@@ -60,7 +60,14 @@ public class Project
     /// </summary>
     [Required]
     [Obsolete("Nebude potřeba, uživatelé se nemusí regstrovat, list<string> ? nebo se to bude dávat do desc")]
+    [ForeignKey("Assigness")]
     virtual public List<User>? assignees { get; set; }
+
+    /// <summary>
+    ///     Žadatelé o zapojení do projektu.
+    /// </summary>
+    [ForeignKey("Applicants")]
+    virtual public List<User>? applicants { get; set; }
 
     /// <summary>
     ///     Subory projektu.
