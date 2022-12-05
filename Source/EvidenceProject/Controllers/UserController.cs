@@ -126,11 +126,10 @@ public class UserController : Controller
         return View(profileData);
     }
 
-
-    [HttpPost("user/logout")]
+    [HttpGet("user/logout")]
     public ActionResult Logout()
     {
         HttpContext.Session.Remove(UniversalHelper.LoggedInKey);
-        return Json("OK");
+        return RedirectToAction("Index", controllerName: "Home");
     }
 }
