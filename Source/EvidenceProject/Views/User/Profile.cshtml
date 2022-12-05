@@ -1,13 +1,41 @@
-﻿@model AuthUser
+﻿@model EvidenceProject.Controllers.ActionData.ProfileData
 
 @if(Model == null) return;
 
-<p>@Model.fullName</p>
-@if (Model.Projects == null) return;
-@foreach (var project in Model.Projects)
-{
-    <p>@project.name</p>
+@if(Model.AuthUser != null){
+    <h2>Profil</h2>
+    <p>@Model.AuthUser.fullName</p>
 }
+
+@if(Model.Projects != null)
+{
+    <h2>Projekty</h2>
+    foreach(var project in Model.Projects.OrderBy(x => x.projectManager?.id == Model.AuthUser.id))
+    {
+        <p>@project.name</p>
+        if(project.projectManager.id == Model.AuthUser?.id)
+        {
+            <a href="/project/edit/@project.id">Editovat</a>
+        }
+    }
+}
+@if(Model.Users != null){
+    <h2>Všichni uživatelé</h2>
+    @foreach (var user in Model.Users)
+    {
+        <p>@user.fullName</p>
+    }
+}
+
+@if(Model.Categories != null){
+    <h2>Úprava kategorií:</h2>
+    @foreach (var user in Model.Categories)
+    {
+        <p>@user.name</p>
+    }
+}
+
+
     
     
     

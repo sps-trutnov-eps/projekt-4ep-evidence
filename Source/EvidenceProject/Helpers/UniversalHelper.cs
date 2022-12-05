@@ -37,6 +37,7 @@ public class UniversalHelper
     /// </summary>
     public static bool GetLoggedUser(HttpContext context, out string? userID)
     {
+        //TODO Session.GetInt32() 
         userID = context.Session.GetString(LoggedInKey);
         return userID != null;
     }
@@ -46,9 +47,11 @@ public class UniversalHelper
     /// </summary>    
     public static List<Project>? GetProjectsWithIncludes(ProjectContext context)
     {
-        var projects = context.projects
+        if (context.projects?.ToList().Count == 0 || context.projects?.ToList()== null) return null;
+        var projects = context.projects?
             .Include(x => x.projectTechnology)
             .Include(x => x.projectType)
+            .Include(x => x.projectState)
             .Include(x => x.files)
             .ToList();
 
@@ -88,12 +91,17 @@ public class UniversalHelper
     /// <summary>
     /// Získáme data z cache
     /// </summary>
-    public static List<T> GetData<T>(ProjectContext context, IMemoryCache cache, string cacheKey, string propertyName, bool project = false)
+    public static List<T>? GetData<T>(ProjectContext context, IMemoryCache cache, string cacheKey, string propertyName, bool project = false)
     {
         var data = (List<T>)cache.Get(cacheKey);
         if (data != null) return data;
 
         IEnumerable<T> dbData = project? (IEnumerable<T>)GetProjectsWithIncludes(context) : (IEnumerable<T>)context.GetType().GetProperty(propertyName).GetValue(context, null);
+        if(dbData == null)
+        {
+            cache.Set(cacheKey, new List<T>());
+            return null;
+        }
         var listData = dbData.ToList();
         cache.Set(cacheKey, listData);
         return listData;

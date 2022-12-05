@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out string? userId);
+}
+
+<!DOCTYPE html>
 <html lang="cs" style="height: 100%;">
 <head>
     <meta charset="utf-8"/>
@@ -24,21 +28,33 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
-                        <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                        @if (userId == "1")
+                        {
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
+                        }
+                        @if(userId == null)
+                        {
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                        }
                         <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
-                        <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Profile">Profil</a>
-                        <label for="search">Vyhledat:</label>
-                        <form id="searchform" action="/search" method="post">
-                            <input id="search" name="text" type="search" placeholder="..." />
-                        </form>
+                        @if(userId != null)
+                        {
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Profile">Profil</a>
+                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Logout">Odhlásit se</a>
+                        }
                     </li>
                 </ul>
+                <div class="searchDiv">
+                    <label style="color: white" for="search">Vyhledat:</label>
+                    <form id="searchform" action="/search" method="post">
+                        <input id="search" name="text" type="search" placeholder="..." />
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
 </header>
-<main>
+<main class="mainPart">
     <div id="@ViewData["Page"]">
         @RenderBody()
     </div>

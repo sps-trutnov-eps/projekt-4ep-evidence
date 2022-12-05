@@ -145,6 +145,9 @@ namespace EvidenceProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("AuthUser")
+                        .HasColumnType("int");
+
                     b.Property<int>("State")
                         .HasColumnType("int");
 
@@ -166,6 +169,8 @@ namespace EvidenceProject.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("AuthUser");
+
                     b.HasIndex("State");
 
                     b.HasIndex("Type");
@@ -181,6 +186,12 @@ namespace EvidenceProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("Applicants")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Assigness")
+                        .HasColumnType("int");
+
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -191,6 +202,9 @@ namespace EvidenceProject.Migrations
                     b.Property<string>("fullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte?>("schoolYear")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("studyField")
                         .HasColumnType("nvarchar(max)");
@@ -206,17 +220,32 @@ namespace EvidenceProject.Migrations
 
             modelBuilder.Entity("ProjectUser", b =>
                 {
-                    b.Property<int>("Projectsid")
+                    b.Property<int>("Assigness")
                         .HasColumnType("int");
 
                     b.Property<int>("assigneesid")
                         .HasColumnType("int");
 
-                    b.HasKey("Projectsid", "assigneesid");
+                    b.HasKey("Assigness", "assigneesid");
 
                     b.HasIndex("assigneesid");
 
                     b.ToTable("ProjectUser");
+                });
+
+            modelBuilder.Entity("ProjectUser1", b =>
+                {
+                    b.Property<int>("Applicants")
+                        .HasColumnType("int");
+
+                    b.Property<int>("applicantsid")
+                        .HasColumnType("int");
+
+                    b.HasKey("Applicants", "applicantsid");
+
+                    b.HasIndex("applicantsid");
+
+                    b.ToTable("ProjectUser1");
                 });
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.AuthUser", b =>
@@ -295,6 +324,10 @@ namespace EvidenceProject.Migrations
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Project", b =>
                 {
+                    b.HasOne("EvidenceProject.Data.DataModels.AuthUser", "projectManager")
+                        .WithMany()
+                        .HasForeignKey("AuthUser");
+
                     b.HasOne("EvidenceProject.Data.DataModels.DialCode", "projectState")
                         .WithMany()
                         .HasForeignKey("State")
@@ -307,6 +340,8 @@ namespace EvidenceProject.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("projectManager");
+
                     b.Navigation("projectState");
 
                     b.Navigation("projectType");
@@ -316,13 +351,28 @@ namespace EvidenceProject.Migrations
                 {
                     b.HasOne("EvidenceProject.Data.DataModels.Project", null)
                         .WithMany()
-                        .HasForeignKey("Projectsid")
+                        .HasForeignKey("Assigness")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EvidenceProject.Data.DataModels.User", null)
                         .WithMany()
                         .HasForeignKey("assigneesid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectUser1", b =>
+                {
+                    b.HasOne("EvidenceProject.Data.DataModels.Project", null)
+                        .WithMany()
+                        .HasForeignKey("Applicants")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EvidenceProject.Data.DataModels.User", null)
+                        .WithMany()
+                        .HasForeignKey("applicantsid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

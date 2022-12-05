@@ -7,8 +7,6 @@
 @if (Model == null) return;
 
 <p><b>@Model.name?</b></p>
-<p>Autor: @Model?.projectManager?.fullName</p>
-
 @if (Model.projectTechnology != null){
     @foreach (var item in Model?.projectTechnology)
     {
@@ -20,14 +18,25 @@
 <p>Github: @Model?.github</p>
 <p>Slack: @Model?.slack</p>
 <p>Typ: @Model?.projectType?.name</p>
+<p>Obrázky</p>
+
+@foreach(var item in Model.files)
+{
+    var memoryStreamBytes = item.ReadFile().ToArray();
+    var output = Convert.ToBase64String(memoryStreamBytes);
+    <img id="image" src="data:image/png;base64,@output"/>
+}    
+
 
 
 <p>Projevit zájem</p>
 <form method="post" action="/project/apply">
-    <input type="text" name="Firstname" placeholder="Jméno..."/>
-    <input type="text" name="Lastname" placeholder="Příjmení..."/>
-    <input type="text" name="Class" placeholder="Třída..."/>
-    <input type="text" name="Email" placeholder="Email..."/>
+    <input type="text" name="firstname" placeholder="Jméno..." required />
+    <input type="text" name="lastname" placeholder="Příjmení..." required />
+    <input type="text" name="studyField" placeholder="Obor..." list="obory" required />
+    <input type="text" name="schoolYear" placeholder="Ročník..." list="rocniky" required />
+    <input type="text" name="contact" placeholder="Kontakt..." required />
     <input type="hidden" name="ProjectId" value="@Model.id"/>
     <input type="submit" value="Mám zájem"/>
+    @await Html.PartialAsync("../Shared/DatalistsPV")
 </form>
