@@ -135,22 +135,48 @@ public class ProjectController : Controller
         return Json(projects);
     }
 
-    [HttpPost("/project/apply")]
-    public ActionResult Apply([FromForm] UserApplyData data) 
-    {
-        if (!UniversalHelper.CheckAllParams(data)) return View();
-        var project = _context.projects.FirstOrDefault(x => x.id == int.Parse(data.ProjectId));
-        // todo
-        return Json("OK");
-    }
-
     [HttpGet("project/edit/{id}")]
     public ActionResult Edit(int id)
     {
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID)) 
+            return Redirect("/user/profile/");
         var project = UniversalHelper.GetProject(_context, id);
-        if (project == null) return Redirect("/user/profile");
+        if (project == null) return Redirect("/user/profile/");
+        if(project.projectManager?.id != int.Parse(userID) && userID != "1") return Redirect("/user/profile/");
 
-        return View(project);
+        GETProjectEdit data = new();
+        var GETProjectData = GetProjectCreateData();
+        data.CurrentData = project;
+        data.Users = GETProjectData.Users;
+        data.DialInfos = GETProjectData.DialInfos;
+        data.DialCodes = GETProjectData.DialCodes;
+
+       
+        return View(data);
+    }
+
+
+    [HttpPost("/project/apply")]
+    public ActionResult Apply([FromForm] ProjectApplyData data)
+    {
+        int ProjectIdNum = int.Parse(data.ProjectId);
+        if (!UniversalHelper.CheckAllParams(data)) return Redirect($"/project/{data.ProjectId}");
+
+        var project = UniversalHelper.GetProjectsWithIncludes(_context).FirstOrDefault(x => x.id == ProjectIdNum);
+
+        if (project?.applicants == null) project.applicants = new List<User>();
+
+        project?.applicants?.Add(new Data.DataModels.User()
+        {
+            fullName = $"{data.firstname} {data.lastname}",
+            schoolYear = byte.Parse(data.schoolYear),
+            studyField = data.studyField,
+            contactDetails = data.contact
+        });
+
+        _context.projects?.Update(project);
+        _context.SaveChanges();
+        return Redirect($"/project/{data.ProjectId}");
     }
 
     private void UpdateProjectsInCache()

@@ -8,7 +8,7 @@ public class Project
     /// <summary>
     ///     Ověřený uživatel spravující projekt.
     /// </summary>
-    [ForeignKey("AuthUser")] public AuthUser? projectManager;
+    [ForeignKey("AuthUser")] public AuthUser? projectManager { get; set; }
 
     /// <summary>
     ///     Unikátní identifikátor záznamu.
@@ -59,7 +59,6 @@ public class Project
     ///     Žáci přiřazení k projektu.
     /// </summary>
     [Required]
-    [Obsolete("Nebude potřeba, uživatelé se nemusí regstrovat, list<string> ? nebo se to bude dávat do desc")]
     [ForeignKey("Assigness")]
     virtual public List<User>? assignees { get; set; }
 

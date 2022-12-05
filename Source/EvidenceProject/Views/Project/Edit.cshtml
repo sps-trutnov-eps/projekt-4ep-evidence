@@ -1,0 +1,65 @@
+﻿@using EvidenceProject.Controllers.ActionData
+@{
+    ViewData["Title"] = "Create Project";
+    ViewData["Page"] = "create";
+}
+@model GETProjectEdit
+<h2>Editace projektu</h2>
+<form action="/project/create" method="post" enctype="multipart/form-data">
+    <label for="projectName">Název projektu: </label>
+    <input name="projectName" type="text" placeholder="..." id="name" value="@Model.CurrentData.name" />
+    <label for="description">Popis projektu</label>
+    <textarea name="description">@Model.CurrentData.projectDescription</textarea>
+    <label for="users">Vedoucí: </label>
+    <input name="projectManager" type="text" placeholder="..." id="assignees" list="users" value="@Model.CurrentData.projectManager?.fullName" />
+    <label for="state">Stav: </label>
+    <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" value="@Model.CurrentData.projectState?.name" />
+    <label for="type">Typ: </label>
+    <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" value="@Model.CurrentData.projectType?.name" />
+    <label for="technology">Technologie: </label>
+    <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" value="@Model.CurrentData.projectTechnology?[0].name,.." />
+    <label for="photos">Fotografie: </label>
+    <input name="photos" type="file" multiple="multiple" />
+    <label for="achievements" >Úspěchy: </label>
+    <input name="achievements" type="text" id="achievements" value="@Model.CurrentData.projectAchievements" />
+    <label for="slack">Slack: </label>
+    <input name="slack" type="text" id="slack" value="@Model.CurrentData.slack" />
+    <label for="github">Github: </label>
+    <input name="github" type="text" id="github" value="@Model.CurrentData.github" />
+    <input type="submit"/>
+    @if (Model == null) return;
+    <datalist id="stavy">
+        @{
+            if (Model.DialInfos == null) return;
+            foreach(var dialInfo in Model.DialInfos){
+                <option id="@dialInfo.name">@dialInfo.name</option>
+            }
+        }
+    </datalist>
+
+    <datalist id="dialCodes">
+        @{
+            if (Model.DialCodes == null) return;
+            foreach (var dialcode in Model.DialCodes)
+            {
+                <option class="@dialcode.dialInfo.name">@dialcode.name</option>
+            }
+        }
+    </datalist>
+    <datalist id="users">
+        @{
+            if (Model.Users == null) return;
+            foreach (var user in Model.Users)
+            {
+                <option>@user.fullName</option>
+            }
+        }
+    </datalist>
+</form>
+
+
+@await Html.PartialAsync("../Shared/DialCodesPV", Model.DialInfos)
+@await Html.PartialAsync("../Shared/DialInfosPV", Model.DialInfos)
+
+
+

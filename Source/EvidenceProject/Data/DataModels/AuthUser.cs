@@ -24,6 +24,11 @@ public class User
     public string? studyField { get; set; }
 
     /// <summary>
+    ///     Ročník žáka
+    /// </summary>
+    public byte? schoolYear { get; set; }
+
+    /// <summary>
     ///     Kontaktní údaje uživatele
     /// </summary>
     public string? contactDetails { get; set; }
@@ -55,7 +60,7 @@ public class AuthUser : User
     /// <param name="contact">Kontaktní údaje.</param>
     /// <param name="admin">Je global admin?</param>
     /// <param name="context">DB context - pro kontrolu unikátnosti ID_Key v rámci Db.</param>
-    public AuthUser(string login, string pass, string fullname = "", string studyfield = "", string contact = "",
+    public AuthUser(string login, string pass, string fullname = "", string studyfield = "", string contact = "", byte year =0,
         bool admin = false, ProjectContext? context = null)
     {
         username = login;
@@ -66,6 +71,7 @@ public class AuthUser : User
         studyField = studyfield;
         contactDetails = contact;
 
+        schoolYear = year;
         globalAdmin = admin;
     }
 
