@@ -1,4 +1,5 @@
 ﻿using EvidenceProject.Controllers;
+using EvidenceProject.Controllers.ActionData;
 using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Data;
 using EvidenceProject.Helpers;
@@ -26,7 +27,7 @@ public class UserControllerTests : ControllerTestsBase
     [TestCase(null,null, false)]
     public void Register(string username, string password, bool successful)
     {
-        var data = new LoginData()
+        var data = new RegisterData()
         {
             username = username == "guid" ? Guid.NewGuid().ToString("N") : username,
             password = password

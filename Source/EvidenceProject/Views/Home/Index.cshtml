@@ -7,8 +7,11 @@
 
 @if (Model == null) return;
 
+<div class="projects">
+
 @foreach (var project in Model)
 {
+    <div class="project"> 
     <p><b>@project.name</b></p>
     <p>Popis: @project.projectDescription</p>
     <p>technologie:
@@ -17,5 +20,21 @@
             <span style="color:@UniversalHelper.GetHtmlColor(item.color)">@item.name</span>
         }
     </p>
+
+    <p>Stav: @project?.projectState?.name</p>
+    <p>Úspěchy: @project?.projectAchievements</p>
+    <p>Github: @project?.github</p>
+    <p>Slack: @project?.slack</p>
+    <p>Typ: @project?.projectType?.name</p>
+    <p>Obrázky</p>
+
+    @foreach (var item in project.files)
+    {
+        var memoryStreamBytes = item.ReadFile().ToArray();
+        var output = Convert.ToBase64String(memoryStreamBytes);
+        <img id="image" src="data:image/png;base64,@output" />
+    }    
     <a href="/project/@project.id">Detail</a>
+    </div>
 }
+</div>

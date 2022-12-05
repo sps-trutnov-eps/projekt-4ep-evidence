@@ -62,7 +62,7 @@ public class UserController : Controller
     // Register (post)
     // </summary>
     [HttpPost("users/register")]
-    public ActionResult RegisterPost([FromForm] LoginData data)
+    public ActionResult RegisterPost([FromForm] RegisterData data)
     {
         if (!UniversalHelper.CheckAllParams(data)) return View("Register", messageResponse);
         var contextList = _context?.globalUsers?.ToList();
@@ -78,11 +78,12 @@ public class UserController : Controller
         var hashedPassword = bcrypt.HashPassword(data.password);
         var newUser = new AuthUser()
         {
-            fullName = data.username,
+            fullName = $"{data.firstname} {data.lastname}",
             username = data.username,
             password = hashedPassword,
-            studyField = null,
-            contactDetails = null,
+            studyField = data.studyField,
+            contactDetails = data.contact,
+            schoolYear = byte.Parse(data.schoolYear),
             globalAdmin = !isFirstUser
         };
         _logger.LogInformation("A new user created - username: {0}, fullName: {1}, globalAdmin: {2}", newUser.username,
@@ -110,18 +111,24 @@ public class UserController : Controller
         return Redirect("/");
     }
 
-
     [HttpGet("user/profile")]
     public ActionResult Profile()
     {
         if(!UniversalHelper.GetLoggedUser(HttpContext, out string id)) return Redirect("/");
-        var userData = _context.globalUsers.FirstOrDefault(x => x.id == int.Parse(id));
-        userData.Projects = UniversalHelper.GetProjectsWithIncludes(_context)?.Where(x => x.projectManager.id == int.Parse(id)).ToList();
-        return View(userData);
+        ProfileData profileData = new();
+        var userId = int.Parse(id);
+
+        profileData.AuthUser= _context.globalUsers.FirstOrDefault(x => x.id == userId);
+        bool isAdmin = profileData.AuthUser.globalAdmin.Value;
+        profileData.Users = isAdmin ? _context.globalUsers.ToList() : null;
+        profileData.Categories = isAdmin ? _context.dialInfos.ToList() : null;
+        profileData.Projects = isAdmin ? UniversalHelper.GetProjectsWithIncludes(_context) : UniversalHelper.GetProjectsWithIncludes(_context).Where(x => x.assignees.Any(x=> x.id == userId) || x.projectManager.id == userId).ToList();
+        return View(profileData);
     }
 
+
     [HttpPost("user/logout")]
-    public ActionResult LogOut()
+    public ActionResult Logout()
     {
         HttpContext.Session.Remove(UniversalHelper.LoggedInKey);
         return Json("OK");

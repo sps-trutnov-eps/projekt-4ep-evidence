@@ -11,8 +11,7 @@
     <label for="password">Heslo:</label>
     <input type="password" name="password">
     <input type="submit" value="Přihlásit se">
+    <p style="color: red">@Model.Response</p>
+    <br />
+    <a asp-controller="User" asp-action="Register" class="odkaz">Registrovat se</a>
 </form>
-<p style="color: red">@Model.Response</p>
-
-<a asp-controller="User" asp-action="Register" class="odkaz">Registrovat se</a>
-<button onclick="zmenitHeslo()">Změna hesla</button>

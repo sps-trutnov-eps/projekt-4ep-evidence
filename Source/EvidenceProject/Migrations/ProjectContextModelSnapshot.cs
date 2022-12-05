@@ -145,6 +145,9 @@ namespace EvidenceProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("AuthUser")
+                        .HasColumnType("int");
+
                     b.Property<int>("State")
                         .HasColumnType("int");
 
@@ -165,6 +168,8 @@ namespace EvidenceProject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("AuthUser");
 
                     b.HasIndex("State");
 
@@ -197,6 +202,9 @@ namespace EvidenceProject.Migrations
                     b.Property<string>("fullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte?>("schoolYear")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("studyField")
                         .HasColumnType("nvarchar(max)");
@@ -316,6 +324,10 @@ namespace EvidenceProject.Migrations
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Project", b =>
                 {
+                    b.HasOne("EvidenceProject.Data.DataModels.AuthUser", "projectManager")
+                        .WithMany()
+                        .HasForeignKey("AuthUser");
+
                     b.HasOne("EvidenceProject.Data.DataModels.DialCode", "projectState")
                         .WithMany()
                         .HasForeignKey("State")
@@ -327,6 +339,8 @@ namespace EvidenceProject.Migrations
                         .HasForeignKey("Type")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("projectManager");
 
                     b.Navigation("projectState");
 
