@@ -66,6 +66,9 @@ public class UniversalHelper
             .Include(x => x.projectState)
             .Include(x => x.files)
             .Include(x => x.projectAchievements)
+            .Include(x => x.projectManager)
+            .Include(x => x.applicants)
+            .Include(x => x.assignees)
             .ToList();
 
         return projects;

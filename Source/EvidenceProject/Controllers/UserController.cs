@@ -2,18 +2,21 @@
 using EvidenceProject.Controllers.RequestClasses;
 using Microsoft.EntityFrameworkCore;
 using bcrypt = BCrypt.Net.BCrypt;
+using Microsoft.Extensions.Caching.Memory;
 namespace EvidenceProject.Controllers;
 
 public class UserController : Controller
 {
     private readonly ProjectContext _context;
     private readonly ILogger _logger;
+    private readonly IMemoryCache _cache;
     CustomMessageResponse messageResponse = new();
     CustomMessageResponse GetMessageResponse = new() { Response = null };
-    public UserController(ProjectContext context, ILogger<UserController> logger)
+    public UserController(ProjectContext context, ILogger<UserController> logger, IMemoryCache cache)
     {
         _logger = logger;
         _context = context;
+        _cache = cache;
     }
 
     // <summary>
@@ -118,13 +121,25 @@ public class UserController : Controller
     {
         if(!UniversalHelper.GetLoggedUser(HttpContext, out var id)) return Redirect("/");
         ProfileData profileData = new();
-        var userId = (int)id;
+        var userId = id.Value;
 
-        profileData.AuthUser= _context.globalUsers.FirstOrDefault(x => x.id == userId);
+        var projectsWithIncludes = UniversalHelper.GetData<Project>(_context, _cache, "AllProjects", "projects", true);
+        List<User> users = new();
+        foreach (var project in projectsWithIncludes)
+        {
+            if(project.assignees != null) foreach (var assignee in project?.assignees) users.Add(assignee);
+            if(project.applicants != null) foreach (var applicant in project?.applicants) users.Add(applicant);
+        }
+        profileData.AuthUser = _context.globalUsers.FirstOrDefault(x => x.id == userId);
+        var userProjects = projectsWithIncludes.Where(x => x.assignees?.ToList().Any(x => x.id == userId) == true || x.projectManager.id == userId);
+        var userProjectsData = userProjects == null ? null : userProjects.ToList();
+
         bool isAdmin = profileData.AuthUser.globalAdmin.Value;
+        profileData.NonAuthUsers = isAdmin ? users : null;
         profileData.Users = isAdmin ? _context.globalUsers.ToList() : null;
         profileData.Categories = isAdmin ? _context.dialInfos.Include(x => x.dialCodes).ToList() : null;
-        profileData.Projects = isAdmin ? UniversalHelper.GetProjectsWithIncludes(_context) : UniversalHelper.GetProjectsWithIncludes(_context).Where(x => x.assignees.Any(x=> x.id == userId) || x.projectManager.id == userId).ToList();
+        profileData.Projects = isAdmin ? projectsWithIncludes : userProjectsData;
+        profileData.AuthUser = _context.globalUsers.FirstOrDefault(x => x.id == userId);
         return View(profileData);
     }
 
@@ -133,5 +148,35 @@ public class UserController : Controller
     {
         HttpContext.Session.Remove(UniversalHelper.LoggedInKey);
         return RedirectToAction("Index", controllerName: "Home");
+    }
+
+
+    [HttpPost("user/edit/{id}")]
+    public ActionResult ChangeUser(int id, RegisterData data)
+    {
+        if (!UniversalHelper.CheckAllParams(data)) return Redirect("/user/profile");
+
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out int? Uid)) return Redirect("/");
+
+        var loggedId = Uid.Value;
+
+        var user = _context.globalUsers.FirstOrDefault(x => x.id == loggedId);
+        var admin = _context.globalUsers.FirstOrDefault(x => x.globalAdmin.Value);
+
+        if (loggedId != user.id && admin.id != loggedId) return Redirect("/user/profile");
+
+        var hashedPassword = bcrypt.HashPassword(data.password);
+
+        user.fullName = $"{data.firstname} {data.lastname}";
+        user.username = data.username;
+        user.password = hashedPassword;
+        user.studyField = data.studyField;
+        user.contactDetails = data.contact;
+        user.schoolYear = byte.Parse(data.schoolYear);
+
+        _context.globalUsers.Update(user);
+        _context.SaveChanges();
+
+        return Redirect("/user/profile");
     }
 }

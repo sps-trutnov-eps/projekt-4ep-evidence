@@ -38,13 +38,10 @@
 
 
 <p>Projevit zájem</p>
-<form method="post" action="/project/apply">
+<form method="post" action="/project/apply/@Model.id">
     <input type="text" name="firstname" placeholder="Jméno..." required />
     <input type="text" name="lastname" placeholder="Příjmení..." required />
-    <input type="text" name="studyField" placeholder="Obor..." list="obory" required />
-    <input type="text" name="schoolYear" placeholder="Ročník..." list="rocniky" required />
+    @await Html.PartialAsync("../Shared/DatalistsPV", model: null)
     <input type="text" name="contact" placeholder="Kontakt..." required />
-    <input type="hidden" name="ProjectId" value="@Model.id"/>
     <input type="submit" value="Mám zájem"/>
-    @await Html.PartialAsync("../Shared/DatalistsPV")
 </form>

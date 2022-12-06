@@ -19,7 +19,7 @@
     <label for="type">Typ: </label>
     <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" required/>
     <label for="technology">Technologie: </label>
-    <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" required />
+    <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
     <label for="photos">Fotografie: </label>
     <input name="photos" type="file" multiple="multiple" required/>
     <label for="achievements">Úspěchy: </label>
@@ -34,7 +34,7 @@
         @{
             if (Model.DialInfos == null) return;
             foreach(var dialInfo in Model.DialInfos){
-                <option id="tag-@dialInfo.name">@dialInfo.name</option>
+                <option id="@dialInfo.name">@dialInfo.name</option>
             }
         }
     </datalist>

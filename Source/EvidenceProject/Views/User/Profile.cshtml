@@ -1,29 +1,25 @@
 ﻿@model EvidenceProject.Controllers.ActionData.ProfileData
 
 @if(Model == null) return;
-
+@{var splittedName = Model.AuthUser.fullName?.Split(" ");}
 @if(Model.AuthUser != null){
     <h2>Profil</h2>
-    <form method="post" action="/user/change">
+    <form method="post" action="/user/edit/@Model.AuthUser.id">
         <label for="firstname">Jméno:</label>
-        <input type="text" name="firstname" value="@Model.AuthUser.fullName?.Split("")[0]" required>
+        <input type="text" name="firstname" value="@splittedName[0]" required>
         <label for="lastname">Příjmení:</label>
         @{
-
-            if (Model.AuthUser.fullName?.Split("").Length == 2)
+            if (splittedName.Length >= 2)
             {
-                    <input type="text" name="lastname" value="@Model.AuthUser.fullName?.Split("")[1]" required>
+                                        <input type="text" name="lastname" value="@splittedName[1]" required>
             }
             else{
-                    <input type="text" name="lastname" required>
+                                        <input type="text" name="lastname" required>
             }
         }
         <label for="contact">Kontakt(email, github,..):</label>
         <input type="text" name="contact" value="@Model.AuthUser.contactDetails" required>
-        <label for="studyField">Obor:</label>
-        <input type="text" name="studyField" list="obory" value="@Model.AuthUser.studyField"  required>
-        <label for="schoolYear">Ročník:</label>
-        <input type="text" name="schoolYear" list="rocniky" value="@Model.AuthUser.schoolYear">
+        @await Html.PartialAsync("../Shared/DatalistsPV", Model.AuthUser)
         <label for="username">Uživatelské jméno:</label>
         <input type="text" name="username" value="@Model.AuthUser.username" required>
         <label for="password">Heslo:</label>
@@ -39,7 +35,7 @@
     @foreach(var project in Model.Projects.OrderBy(x => x.projectManager?.id == Model.AuthUser.id))
     {
         <p>@project.name</p>
-        if(project.projectManager.id == Model.AuthUser?.id)
+        if(project.projectManager.id == Model.AuthUser?.id || Model.AuthUser.globalAdmin.Value)
         {
             <a href="/project/edit/@project.id">Editovat</a>
         }
@@ -48,19 +44,20 @@
 }
 @if(Model.Users != null){
     <div id="user">
-    <h2>Všichni uživatelé</h2>
+    <h2>Všichni ověření uživatelé</h2>
     @foreach (var user in Model.Users)
     {
+        splittedName = Model.AuthUser.fullName?.Split(" ");
         <p>Uživatel: @user.fullName</p>
-        <form method="post" action="/user/edit/">
+        <form method="post" action="/user/edit/@user.id">
             <label for="firstname">Jméno:</label>
-            <input type="text" name="firstname" value="@user.fullName?.Split("")[0]" required>
+                <input type="text" name="firstname" value="@splittedName[0]" required>
             <label for="lastname">Příjmení:</label>
             @{
 
-                if (user.fullName?.Split("").Length == 2)
+                if (splittedName.Length >= 2)
                 {
-                        <input type="text" name="lastname" value="@user.fullName?.Split("")[1]" required>
+                        <input type="text" name="lastname" value="@splittedName[1]" required>
                 }
                 else{
                         <input type="text" name="lastname" required>
@@ -68,17 +65,27 @@
             }
             <label for="contact">Kontakt(email, github,..):</label>
             <input type="text" name="contact" value="@user.contactDetails" required>
-            <label for="studyField">Obor:</label>
-            <input type="text" name="studyField" list="obory" value="@user.studyField" required>
-            <label for="schoolYear">Ročník:</label>
-            <input type="text" name="schoolYear" list="rocniky" value="@user.schoolYear" required>
+            @await Html.PartialAsync("../Shared/DatalistsPV", Model.AuthUser)
             <label for="username">Uživatelské jméno:</label>
             <input type="text" name="username" value="@user.username" required>
             <label for="password">Heslo:</label>
-            <input type="hidden" name="userId" value="@user.id">
             <input type="password" name="password" required>
             <input type="submit" value="Změnit">
         </form>
+    }
+    </div>
+}
+
+@if(Model.NonAuthUsers != null)
+{
+    <br />
+    <div id="nonuser">
+    <h2>Žádosti o přiřazení k projektu</h2>
+    @foreach (var item in Model.NonAuthUsers)
+    {
+        <p>@item.fullName žádá o přiřazení k projektu: @Model.Projects.FirstOrDefault(x => x.applicants.Any(x => x.id == item.id)).name </p> 
+        <a style="color: darkgreen" href="/project/addUser/@item.id">Přijmout</a>
+        <a style="color: darkred" href="/project/deleteUser/@item.id">Odmítnout</a>
     }
     </div>
 }
@@ -89,18 +96,17 @@
     @foreach (var category in Model.Categories)
     {
         <p>Název kategorie: @category.name</p>
-            <form action="/dialinfo/edit">
+            <form action="/dialinfo/edit/@category.id">
             <label for="name">Název kategorie:</label>
             <input name="name" type="text" placeholder="..." id="name" value="@category.name"/>
             <label for="description">Popis:</label>
             <input name="description" type="text" placeholder="..." id="description" value="@category.desc" />
-            <input type="hidden" value="@category.id" />
             <input type="submit" placeholder="Změnit" />
         </form>
         
         @foreach(var categoryItem in category?.dialCodes?.ToList()){
             <p>@category.name -> @categoryItem.name</p>
-            <form action="/dialcode/edit">
+            <form action="/dialcode/edit/@categoryItem.id">
                 <label for="name">Název:</label>
                 <input name="name" type="text" placeholder="..." id="name" value="@categoryItem.name" />
                 <label for="description">Popis:</label>
@@ -109,7 +115,6 @@
                 <input type="color" name="color" value="@UniversalHelper.GetHtmlColor(categoryItem.color)" />
                 <label>Kategorie</label>
                 <input name="dialInfoName" list="stavy" value="@categoryItem.dialInfo.name"/>
-                <input type="hidden" value="@categoryItem.id" />
                 <input type="submit" placeholder="Změnit" />
             </form>
         }
@@ -117,7 +122,6 @@
     </div>
 }
 
-    
-@await Html.PartialAsync("../Shared/DatalistsPV")
+   
 
 

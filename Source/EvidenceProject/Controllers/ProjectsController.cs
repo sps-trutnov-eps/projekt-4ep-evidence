@@ -231,13 +231,12 @@ public class ProjectController : Controller
         return Redirect("Index");
     }
 
-    [HttpPost("/project/apply")]
-    public ActionResult Apply([FromForm] ProjectApplyData data)
+    [HttpPost("/project/apply/{id}")]
+    public ActionResult Apply(int id,[FromForm] ProjectApplyData data)
     {
-        int ProjectIdNum = int.Parse(data.ProjectId);
-        if (!UniversalHelper.CheckAllParams(data)) return Redirect($"/project/{data.ProjectId}");
+        if (!UniversalHelper.CheckAllParams(data)) return Redirect($"/project/{id}");
 
-        var project = UniversalHelper.GetProjectsWithIncludes(_context).FirstOrDefault(x => x.id == ProjectIdNum);
+        var project = _context.projects.FirstOrDefault(x => x.id == id);
 
         if (project?.applicants == null) project.applicants = new List<User>();
 
@@ -251,7 +250,8 @@ public class ProjectController : Controller
 
         _context.projects?.Update(project);
         _context.SaveChanges();
-        return Redirect($"/project/{data.ProjectId}");
+        UpdateProjectsInCache();
+        return Redirect($"/project/{id}");
     }
 
     private void UpdateProjectsInCache()

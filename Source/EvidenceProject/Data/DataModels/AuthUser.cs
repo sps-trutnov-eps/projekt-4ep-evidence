@@ -46,7 +46,7 @@ public class AuthUser : User
     ///     Login ověřeného uživatele - je unikátní
     /// </summary>
     [Required]
-    public string? username { init; get; }
+    public string? username { get; set; }
 
     /// <summary>
     ///     Heslo ověřeného uživatele
