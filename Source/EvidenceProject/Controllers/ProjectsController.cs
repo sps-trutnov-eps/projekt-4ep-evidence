@@ -218,7 +218,7 @@ public class ProjectController : Controller
         project.projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager);
 
         _logger.LogInformation("User with the id <{}> edited a project called \"{}\"", userID, projectData.projectName);
-        _context?.projects?.Add(project);
+        _context?.projects?.Update(project);
         _context?.SaveChanges();
         UpdateProjectsInCache();
         return Redirect("Index");
