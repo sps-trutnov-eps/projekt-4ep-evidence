@@ -14,17 +14,25 @@
     }
 }
 <p>Stav: @Model?.projectState?.name</p>
-<p>Úspěchy: @Model?.projectAchievements</p>
+<p>Úspěchy: @UniversalHelper.GetAchievements(Model.projectAchievements?.ToList())</p>
 <p>Github: @Model?.github</p>
 <p>Slack: @Model?.slack</p>
 <p>Typ: @Model?.projectType?.name</p>
+<p>Zapojení lidé: </p>
+@if(Model.assignees != null){
+    @foreach (var assignee in Model.assignees?.ToList())
+    {
+        <p> @assignee.fullName</p>
+    }           
+}
+
 <p>Obrázky</p>
 
 @foreach(var item in Model.files)
 {
-    var memoryStreamBytes = item.ReadFile().ToArray();
-    var output = Convert.ToBase64String(memoryStreamBytes);
-    <img id="image" src="data:image/png;base64,@output"/>
+    //var memoryStreamBytes = item.ReadFile().ToArray();
+    //var output = Convert.ToBase64String(memoryStreamBytes);
+    <!--TODO-->
 }    
 
 

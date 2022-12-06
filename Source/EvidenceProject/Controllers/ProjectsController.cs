@@ -1,4 +1,5 @@
 ﻿using EvidenceProject.Controllers.ActionData;
+using EvidenceProject.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
@@ -62,7 +63,7 @@ public class ProjectController : Controller
 
         List<Achievement> achivements = new();
 
-        achivements.Add(new Achievement() { name = projectData.achievements });
+        var splittedAchievements = projectData?.achievements?.Split(";");
 
         // Správný způsob načítání achivementů
         //foreach (string achiv in projectData.achievements ?? new List<string>() { string.Empty })
@@ -76,13 +77,22 @@ public class ProjectController : Controller
             assignees = null,
             github = projectData.github,
             slack = projectData.slack,
-            projectAchievements = achivements,
+            projectAchievements = null,
             files = files,
             projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit),
             projectDescription = projectData.description,
             projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager)
         };
-        
+        foreach (var item in splittedAchievements?.ToList())
+        {
+            achivements.Add(new Achievement()
+            {
+                name = item,
+                project = project,
+            });
+        }
+        project.projectAchievements = achivements;
+
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);
         _context?.SaveChanges();

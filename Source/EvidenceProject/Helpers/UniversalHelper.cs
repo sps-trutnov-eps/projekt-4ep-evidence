@@ -119,5 +119,17 @@ public class UniversalHelper
         cache.Set(cacheKey, listData);
         return listData;
     }
+
+    /// <summary>
+    /// Získání stringu achievementů z listu
+    /// </summary>
+    public static string? GetAchievements(List<Achievement>? achievements, bool withParser = false)
+    {
+        if (achievements == null) return null;
+        string achievementString = "";
+        string parser = withParser ? ";" : " ";
+        foreach (var item in achievements) achievementString += $"{item.name}{parser}";
+        return achievementString;
+    }
     
 }

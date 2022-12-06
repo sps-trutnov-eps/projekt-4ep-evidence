@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Create Project";
     ViewData["Page"] = "create";
+
 }
 @model GETProjectEdit
 <h2>Editace projektu</h2>
@@ -21,7 +22,7 @@
     <label for="photos">Fotografie: </label>
     <input name="photos" type="file" multiple="multiple" />
     <label for="achievements" >Úspěchy: </label>
-    <input name="achievements" type="text" id="achievements" value="@Model.CurrentData.projectAchievements" />
+    <input name="achievements" type="text" id="achievements" value="@UniversalHelper.GetAchievements(Model?.CurrentData?.projectAchievements)" />
     <label for="slack">Slack: </label>
     <input name="slack" type="text" id="slack" value="@Model.CurrentData.slack" />
     <label for="github">Github: </label>
