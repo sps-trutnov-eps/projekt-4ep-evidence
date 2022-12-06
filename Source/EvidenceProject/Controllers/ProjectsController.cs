@@ -62,6 +62,14 @@ public class ProjectController : Controller
             tech.Add(dialCode);
         }
 
+        List<Achievement> achivements = new();
+
+        achivements.Add(new Achievement() { name = projectData.achievements });
+
+        // Správný způsob načítání achivementů
+        //foreach (string achiv in projectData.achievements ?? new List<string>() { string.Empty })
+        //    achivements.Add(new Achievement() { name = achiv });
+
         Project project = new()
         {
             name = projectData.projectName,
@@ -70,7 +78,7 @@ public class ProjectController : Controller
             assignees = null,
             github = projectData.github,
             slack = projectData.slack,
-            projectAchievements = new List<Achievement>(),
+            projectAchievements = achivements,
             files = files,
             projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit),
             projectDescription = projectData.description,
@@ -156,6 +164,65 @@ public class ProjectController : Controller
         return View(data);
     }
 
+    [HttpPost("project/edit/{id}")]
+    public ActionResult Edit(int id, [FromForm] ProjectCreateData projectData, bool test = false)
+    {
+        int? userID = 0;
+
+        if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != 1) return Json("ERR");
+
+        var GETProject = GetProjectCreateData();
+        if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject);
+
+        Project? project = _context.projects?.FirstOrDefault(p => p.id == id);
+
+        if (project == null) return Redirect("index");
+
+
+        List<DbFile> files = new();
+        foreach (var file in projectData?.photos)
+        {
+            var extension = Path.GetExtension(file.FileName);
+            if (!fileExtensions.Contains(extension)) return View(GETProject);
+            var dbFile = new DbFile();
+            dbFile.WriteFile(file);
+            files.Add(dbFile);
+        }
+        List<DialCode> tech = new();
+
+        foreach (var item in projectData.tech)
+        {
+            var dialCode = _context?.dialCodes?.FirstOrDefault(x => x.name == item);
+            if (dialCode == null) continue;
+            tech.Add(dialCode);
+        }
+
+        List<Achievement> achivements = new();
+
+        achivements.Add(new Achievement() { name = projectData.achievements });
+
+        // Správný způsob načítání achivementů
+        //foreach (string achiv in projectData.achievements ?? new List<string>() { string.Empty })
+        //    achivements.Add(new Achievement() { name = achiv });
+
+        project.name = projectData.projectName;
+        project.projectTechnology = tech;
+        project.projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.typy);
+        project.assignees = null;
+        project.github = projectData.github;
+        project.slack = projectData.slack;
+        project.projectAchievements = achivements;
+        project.files = files;
+        project.projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit);
+        project.projectDescription = projectData.description;
+        project.projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager);
+
+        _logger.LogInformation("User with the id <{}> edited a project called \"{}\"", userID, projectData.projectName);
+        _context?.projects?.Add(project);
+        _context?.SaveChanges();
+        UpdateProjectsInCache();
+        return Redirect("Index");
+    }
 
     [HttpPost("/project/apply")]
     public ActionResult Apply([FromForm] ProjectApplyData data)
