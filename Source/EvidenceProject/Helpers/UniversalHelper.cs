@@ -1,4 +1,5 @@
 ﻿using EvidenceProject.Data.DataModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System.Drawing;
@@ -35,11 +36,22 @@ public class UniversalHelper
     /// <summary>
     ///     Zjistíme, zda je přihlášen uživatel
     /// </summary>
-    public static bool GetLoggedUser(HttpContext context, out string? userID)
+    public static bool GetLoggedUser(HttpContext context, out int? userID)
     {
-        //TODO Session.GetInt32() 
-        userID = context.Session.GetString(LoggedInKey);
+        userID = context.Session.GetInt32(LoggedInKey);
         return userID != null;
+    }
+
+    public static bool AuthentifyAdmin(HttpContext context, ProjectContext db)
+    {
+        var userID = context.Session.GetInt32(LoggedInKey);
+
+        var user = db.globalUsers?.FirstOrDefault(u => u.id == userID);
+
+        if (user == null || user.id_key != LoggedInKey)
+            return false;
+
+        return user.globalAdmin == true;
     }
 
     /// <summary>
@@ -53,6 +65,7 @@ public class UniversalHelper
             .Include(x => x.projectType)
             .Include(x => x.projectState)
             .Include(x => x.files)
+            .Include(x => x.projectAchievements)
             .ToList();
 
         return projects;

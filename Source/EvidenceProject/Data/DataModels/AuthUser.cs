@@ -41,49 +41,6 @@ public class User
 
 public class AuthUser : User
 {
-    /// <summary>
-    ///     Konstruktor - vytvoří a zkontroluje ID_Key podle <paramref name="context" />.
-    /// </summary>
-    /// <param name="context">DBContext, pakliže je null hodnota ID_key se nekontroluje.</param>
-    public AuthUser(ProjectContext? context = null)
-    {
-        GenerateIdKey(context);
-    }
-
-    /// <summary>
-    ///     Konstruktor - Nastaví Obj. dle vložených parametrů, automaticky hashuje heslo (bcrypt).
-    /// </summary>
-    /// <param name="login">Username ověřeného uživatele.</param>
-    /// <param name="pass">Heslo - Hashuje se automaticky.</param>
-    /// <param name="fullname">Celé jméno.</param>
-    /// <param name="studyfield">Studijní obor.</param>
-    /// <param name="contact">Kontaktní údaje.</param>
-    /// <param name="admin">Je global admin?</param>
-    /// <param name="context">DB context - pro kontrolu unikátnosti ID_Key v rámci Db.</param>
-    public AuthUser(string login, string pass, string fullname = "", string studyfield = "", string contact = "", byte year =0,
-        bool admin = false, ProjectContext? context = null)
-    {
-        username = login;
-        password = pass;
-        GenerateIdKey(context);
-
-        fullName = fullname;
-        studyField = studyfield;
-        contactDetails = contact;
-
-        schoolYear = year;
-        globalAdmin = admin;
-    }
-
-    /// <summary>
-    ///     Získání uživatele dle ID - najde uživatele v dodaném <paramref name="context" />, pokud uživatel s daným id neexistuje vrátí null.
-    /// </summary>
-    /// <param name="context">DBContext/param>
-    /// <param name="user_id">ID uživatele kterého hledáme</param>
-    static public AuthUser? FindUser(ProjectContext context, int user_id)
-    {
-        return context?.globalUsers?.FirstOrDefault(user => user.id == user_id);
-    }
 
     /// <summary>
     ///     Login ověřeného uživatele - je unikátní
@@ -107,6 +64,70 @@ public class AuthUser : User
     /// </summary>
     [Required]
     public string? id_key { get; private set; }
+
+    /// <summary>
+    ///     Konstruktor - vytvoří a zkontroluje ID_Key podle <paramref name="context" />.
+    /// </summary>
+    /// <param name="context">DBContext, pakliže je null hodnota ID_key se nekontroluje.</param>
+    public AuthUser(ProjectContext? context = null)
+    {
+        GenerateIdKey(context);
+    }
+
+    /// <summary>
+    ///     Konstruktor - Nastaví Obj. dle vložených parametrů, automaticky hashuje heslo (bcrypt).
+    /// </summary>
+    /// <param name="login">Username ověřeného uživatele.</param>
+    /// <param name="pass">Heslo - Hashuje se automaticky.</param>
+    /// <param name="fullname">Celé jméno.</param>
+    /// <param name="studyfield">Studijní obor.</param>
+    /// <param name="contact">Kontaktní údaje.</param>
+    /// <param name="admin">Je global admin?</param>
+    /// <param name="context">DB context - pro kontrolu unikátnosti ID_Key v rámci Db.</param>
+    public AuthUser(string login, string pass, string fullname = "", string studyfield = "", string contact = "", byte year = 0,
+        bool admin = false, ProjectContext? context = null)
+    {
+        username = login;
+        password = pass;
+        GenerateIdKey(context);
+
+        fullName = fullname;
+        studyField = studyfield;
+        contactDetails = contact;
+
+        schoolYear = year;
+        globalAdmin = admin;
+    }
+
+    /// <summary>
+    ///     Knstruktor Admina !!!
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    /// <param name="context"></param>
+    public AuthUser(string username, string password, ProjectContext context = null)
+    {
+        this.username = username;
+        this.password = bcrypt.HashPassword(password);
+        this.GenerateIdKey(context);
+        this.globalAdmin = true;
+
+        fullName = "Admin";
+        studyField = "Admin";
+        contactDetails = "Admin";
+
+        schoolYear = 0;
+    }
+
+    /// <summary>
+    ///     Získání uživatele dle ID - najde uživatele v dodaném <paramref name="context" />, pokud uživatel s daným id neexistuje vrátí null.
+    /// </summary>
+    /// <param name="context">DBContext/param>
+    /// <param name="user_id">ID uživatele kterého hledáme</param>
+    static public AuthUser? FindUser(ProjectContext context, int user_id)
+    {
+        return context?.globalUsers?.FirstOrDefault(user => user.id == user_id);
+    }
 
     /// <summary>
     ///     Metoda nastaví obj. vygenerovaný a ověřený <see cref="id_key" />
