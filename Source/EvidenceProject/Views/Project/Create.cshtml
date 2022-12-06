@@ -34,7 +34,7 @@
         @{
             if (Model.DialInfos == null) return;
             foreach(var dialInfo in Model.DialInfos){
-                <option id="@dialInfo.name">@dialInfo.name</option>
+                <option id="tag-@dialInfo.name">@dialInfo.name</option>
             }
         }
     </datalist>
@@ -44,7 +44,7 @@
             if (Model.DialCodes == null) return;
             foreach (var dialcode in Model.DialCodes)
             {
-                <option class="@dialcode.name">@dialcode.name</option>
+                <option class="@dialcode.dialInfo.name">@dialcode.name</option>
             }
         }
     </datalist>

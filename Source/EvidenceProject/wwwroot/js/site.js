@@ -168,41 +168,42 @@ let jedna = 0;
 let array = [];
 let iii = 0;
 
-function veci(e, cojeto) {
+function veci(e, data) {
     let value = e.target.value;
     let tech = document.getElementsByClassName(value);
     let more = "";
     let vole = "";
-    if (!array.includes(cojeto)) {
+    if (data == "tech" && array.includes(value)) {
+    document.getElementById("technology").value = "";
+    return;
+    }
     try {
-        vole = Array.from(document.getElementById(cojeto).getElementsByTagName("option")).map(e=> e.innerText);
-        console.log(vole);
+        vole = Array.from(document.getElementById(data).getElementsByTagName("option")).map(e=> e.innerText);
     }
     catch {}
     try {
-        document.getElementById(cojeto).remove();
+        document.getElementById(data).remove();
     }
     catch {}
-    if (cojeto == "tech") {
-        more += '<select name = "' + cojeto + '"' + 'id = "' + cojeto +  '" multiple size = ' + tech.length + ">";
+    if (data == "tech") {
+        more += '<select name = "' + data + '"' + 'id = "' + data +  '" multiple size = ' + tech.length + ">";
         if (jedna != 0) {
             for (let i = 0; i < vole.length; i ++) {    
                 more += '<option value = "' + vole[i] + '">' + vole[i] +'</option>'
-                console.log(vole[i] + "jjjjj");
             }
         }
         jedna += 1;
-        document.getElementById("technology").value = "";
     }
     else {
-        more += '<select name = "' + cojeto + '"' + 'id = "' + cojeto + '">';
+        more += '<select name = "' + data + '"' + 'id = "' + data + '">';
     }
     for(let i = 0; i < tech.length; i++ ) {
         more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>';
     }
     more += '</select>';
     $( e.target ).after( more );
-    array[i] = cojeto;
+    array[iii] = value;
     iii++;
-    }
+    
+    document.getElementById("technology").value = "";
 }
