@@ -11,7 +11,6 @@ public class ProjectController : Controller
     private readonly IMemoryCache _cache;
     private readonly ProjectContext _context;
     private readonly ILogger<ProjectController> _logger;
-    HashSet<string> fileExtensions = new HashSet<string>() { ".jpg" , ".jpeg" , ".jfif", ".png", ".webp" };
 
     public ProjectController(ProjectContext context, IMemoryCache cache, ILogger<ProjectController> logger)
     {
@@ -47,8 +46,7 @@ public class ProjectController : Controller
         List<DbFile> files = new();
         foreach (var file in projectData?.photos)
         {
-            var extension = Path.GetExtension(file.FileName);
-            if(!fileExtensions.Contains(extension)) return View(GETProject);
+            var extension = Path.GetExtension(file.FileName);            
             var dbFile = new DbFile();
             dbFile.WriteFile(file);
             files.Add(dbFile);
@@ -183,7 +181,6 @@ public class ProjectController : Controller
         foreach (var file in projectData?.photos)
         {
             var extension = Path.GetExtension(file.FileName);
-            if (!fileExtensions.Contains(extension)) return View(GETProject);
             var dbFile = new DbFile();
             dbFile.WriteFile(file);
             files.Add(dbFile);
