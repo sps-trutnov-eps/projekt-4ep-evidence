@@ -35,10 +35,10 @@ public class UniversalHelper
     /// <summary>
     ///     Zjistíme, zda je přihlášen uživatel
     /// </summary>
-    public static bool GetLoggedUser(HttpContext context, out string? userID)
+    public static bool GetLoggedUser(HttpContext context, out int? userID)
     {
         //TODO Session.GetInt32() 
-        userID = context.Session.GetString(LoggedInKey);
+        userID = context.Session.GetInt32(LoggedInKey);
         return userID != null;
     }
 

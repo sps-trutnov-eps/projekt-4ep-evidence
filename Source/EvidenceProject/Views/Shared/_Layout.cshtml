@@ -1,5 +1,5 @@
 ﻿@{
-    UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out string? userId);
+    UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out var userId);
 }
 
 <!DOCTYPE html>
@@ -28,7 +28,7 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        @if (userId == "1")
+                        @if (userId == 1)
                         {
                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
                         }

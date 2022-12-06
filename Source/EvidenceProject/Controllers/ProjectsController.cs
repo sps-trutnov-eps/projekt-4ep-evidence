@@ -26,7 +26,7 @@ public class ProjectController : Controller
     [HttpGet("project")]
     public ActionResult Index()
     {
-        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != 1) return Redirect("/");
         return Redirect("project/create");
     }
 
@@ -36,8 +36,9 @@ public class ProjectController : Controller
     [HttpPost("project/create")]
     public ActionResult Create([FromForm] ProjectCreateData projectData, bool test = false)
     {
-        var userID = string.Empty;
-        if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != "1") return Json("ERR");
+        int? userID = 0;
+
+        if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != 1) return Json("ERR");
 
         var GETProject = GetProjectCreateData();
         if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject);
@@ -89,7 +90,7 @@ public class ProjectController : Controller
     [HttpGet("project/create")]
     public ActionResult Create()
     {
-        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Redirect("/");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != 1) return Redirect("/");
         var data = GetProjectCreateData();
         return View(data);
 
@@ -101,7 +102,7 @@ public class ProjectController : Controller
     [HttpPost("project/{id}")]
     public JsonResult Delete(int id)
     {
-        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != "1") return Json("Nejsi admin/přihlášen");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != 1) return Json("Nejsi admin/přihlášen");
         var project = UniversalHelper.GetProject(_context, id);
         if (project == null) return Json("Takový projekt neexistuje");
         _logger.LogInformation("User with the id <{}> deleted a project", userID);
@@ -142,7 +143,7 @@ public class ProjectController : Controller
             return Redirect("/user/profile/");
         var project = UniversalHelper.GetProject(_context, id);
         if (project == null) return Redirect("/user/profile/");
-        if(project.projectManager?.id != int.Parse(userID) && userID != "1") return Redirect("/user/profile/");
+        if(project.projectManager?.id != userID && userID != 1) return Redirect("/user/profile/");
 
         GETProjectEdit data = new();
         var GETProjectData = GetProjectCreateData();

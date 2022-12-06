@@ -28,6 +28,8 @@ public class UserController : Controller
     [HttpPost("users/login")]
     public ActionResult LoginPost([FromForm] LoginData data, bool testing = false)
     {
+        if (_context.globalUsers?.Count() == 0) { _context.globalUsers.Add(new AuthUser("admin", "heslo", _context)); _context.SaveChanges();}
+
         AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.username);
         if (user == null) return View("Login", messageResponse);
 
@@ -37,7 +39,7 @@ public class UserController : Controller
 
         _logger.LogInformation("{0} logged in.", data.username);
         if (testing) return Redirect("/");
-        HttpContext.Session.SetString(UniversalHelper.LoggedInKey, user.id.ToString());
+        HttpContext.Session.SetInt32(UniversalHelper.LoggedInKey, user.id);
         return Redirect("/");
     }
 
@@ -98,9 +100,9 @@ public class UserController : Controller
     public ActionResult UpdatePasswordPost([FromForm] LoginDataUpdate data)
     {
         if(!UniversalHelper.CheckAllParams(data)) return View("PasswordUpdate", messageResponse);
-        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != null && userID != "1") return View("PasswordUpdate", messageResponse);
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != null && userID != 1) return View("PasswordUpdate", messageResponse);
 
-        AuthUser? user = AuthUser.FindUser(_context, int.Parse(userID));
+        AuthUser? user = AuthUser.FindUser(_context, (int)userID);
 
         if (user == null) return View("PasswordUpdate", messageResponse);
 
@@ -114,9 +116,9 @@ public class UserController : Controller
     [HttpGet("user/profile")]
     public ActionResult Profile()
     {
-        if(!UniversalHelper.GetLoggedUser(HttpContext, out string id)) return Redirect("/");
+        if(!UniversalHelper.GetLoggedUser(HttpContext, out var id)) return Redirect("/");
         ProfileData profileData = new();
-        var userId = int.Parse(id);
+        var userId = (int)id;
 
         profileData.AuthUser= _context.globalUsers.FirstOrDefault(x => x.id == userId);
         bool isAdmin = profileData.AuthUser.globalAdmin.Value;
