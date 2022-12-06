@@ -45,6 +45,61 @@ form {
     margin-left: 0.55rem;
 }
 
+/* CREATE */
+div#create {
+    width: 500px;
+    margin: 0 auto;
+    background-color: var(--sps-cyan);
+    border: 10px solid var(--secondary);
+    border-radius: 4px;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+    div#create h2, h3 {
+        border: 2px solid var(--secondary);
+        height: 80px;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+div.projectCreateItem {
+    text-align: left;
+}
+
+.projectCreateItem form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.projectCreateItem input, textarea {
+}
+
+div#create input[type=submit] {
+    background: #2ecc71;
+    width: 50%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: white;
+    border-radius: 2px;
+    border: #27ae60 1px solid;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: 800;
+    font-size: 0.8em;
+}
+
+.projectCreateItem label {
+    display: block;
+    font-weight: bold;
+    color: white;
+}
+
+/* NAVBAR */
 .navbar-toggler {
     border: none !important;
     width: 30px;
@@ -97,52 +152,8 @@ footer {
 body {
     margin-bottom: 60px;
 }
-div#create {
-    width: 1300px;
-    height: 1350px;
-    background-color: var(--secondary);
-    border: 8px solid var(--sps-cyan);
-    border-radius: 4px;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    padding: 1rem;
-}
 
-    div#create form {
-        display: grid;
-        justify-content: center;
-        grid-template-rows: 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px 60px;
-        align-items: baseline;
-        justify-items: center;
-        align-content: space-evenly;
-        padding: 1rem;
-    }
-
-    div#create input[type=submit] {
-        background: #2ecc71;
-        width: 90%;
-        padding-top: 2px;
-        padding-bottom: 2px;
-        color: white;
-        border-radius: 2px;
-        border: #27ae60 1px solid;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-left: 23px;
-        font-weight: 800;
-        font-size: 0.8em;
-    }
-
-    div#create form label {
-        color: white;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-
-    div#create form input {
-        height: 35px;
-    }
-
+/* REGISTER */
 #register{
     margin: 0 auto;
     align-items: center;
@@ -195,6 +206,7 @@ div#create {
         font-size: 0.8em;
     }
 
+    /* LOGIN */
 #login {
     margin: 0 auto;
     align-items: center;
@@ -427,6 +439,63 @@ div#create {
 /*DS*/
 
 @media all and (min-width: 1024px) {
+    div#create {
+        width: 1000px;
+        margin: 0 auto;
+        background-color: var(--sps-cyan);
+        border: 10px solid var(--secondary);
+        border-radius: 4px;
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: auto auto auto;
+    }
+
+        div#create h2, h3 {
+            border: 2px solid var(--secondary);
+            height: 80px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+    div.projectCreateItem {
+        text-align: left;
+    }
+
+    .projectCreateItem form {
+        margin: 1rem;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .projectCreateItem input, textarea {
+        width: 75%;
+        height: 2.5rem;
+    }
+
+    div#create input[type=submit] {
+        background: #2ecc71;
+        width: 50%;
+        height: 3rem;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        color: white;
+        border-radius: 2px;
+        border: #27ae60 1px solid;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-weight: 800;
+        font-size: 0.8em;
+    }
+
+    .projectCreateItem label {
+        padding: 0.5rem;
+        display: block;
+        font-weight: bold;
+        color: white;
+    }
     .navbar-nav {
         display: flex;
         flex-direction: row;
