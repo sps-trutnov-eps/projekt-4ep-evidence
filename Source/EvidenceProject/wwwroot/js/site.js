@@ -164,13 +164,16 @@ async function login() {
     })
     let data = await res.json();
 }
-let jedna = 0
+let jedna = 0;
+let array = [];
+let iii = 0;
 
 function veci(e, cojeto) {
     let value = e.target.value;
     let tech = document.getElementsByClassName(value);
     let more = "";
     let vole = "";
+    if (!array.includes(cojeto)) {
     try {
         vole = Array.from(document.getElementById(cojeto).getElementsByTagName("option")).map(e=> e.innerText);
         console.log(vole);
@@ -195,8 +198,11 @@ function veci(e, cojeto) {
         more += '<select name = "' + cojeto + '"' + 'id = "' + cojeto + '">';
     }
     for(let i = 0; i < tech.length; i++ ) {
-        more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>'
+        more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>';
     }
-    more += '</select>'
+    more += '</select>';
     $( e.target ).after( more );
+    array[i] = cojeto;
+    iii++;
+    }
 }
