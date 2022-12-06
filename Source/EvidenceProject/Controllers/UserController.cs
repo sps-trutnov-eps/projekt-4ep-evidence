@@ -123,7 +123,7 @@ public class UserController : Controller
         profileData.AuthUser= _context.globalUsers.FirstOrDefault(x => x.id == userId);
         bool isAdmin = profileData.AuthUser.globalAdmin.Value;
         profileData.Users = isAdmin ? _context.globalUsers.ToList() : null;
-        profileData.Categories = isAdmin ? _context.dialInfos.ToList() : null;
+        profileData.Categories = isAdmin ? _context.dialInfos.Include(x => x.dialCodes).ToList() : null;
         profileData.Projects = isAdmin ? UniversalHelper.GetProjectsWithIncludes(_context) : UniversalHelper.GetProjectsWithIncludes(_context).Where(x => x.assignees.Any(x=> x.id == userId) || x.projectManager.id == userId).ToList();
         return View(profileData);
     }
