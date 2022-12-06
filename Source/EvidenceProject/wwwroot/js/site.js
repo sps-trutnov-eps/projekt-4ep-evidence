@@ -4,29 +4,37 @@ $(document).ready(function () {
     spustitScript();
 })
 
-function plynulyPrechodMeziStrankami(){
-    history.replaceState({"html":$("html").prop("outerHTML")}, "", $(location).attr("pathname"));
+const xhr = new XMLHttpRequest();
+const domp = new DOMParser();
+const xmls = new XMLSerializer();
 
+function plynulyPrechodMeziStrankami(){
+    history.replaceState({"html":xmls.serializeToString(document)}, "", location.href);
+    
     $(document).on("click", ".odkaz", function () {
         let link = $(this).attr('href');
-        $("main").empty();
-        $("main").html("<div>načítám data...</div>");
-        $.ajax({
-            type : "GET",
-            url : link,
-            dataType: "html",
-            success : function(html){
-                let stranka = $($.parseHTML(html));
-                $("header").replaceWith(stranka.filter("header"));
-                $("main").replaceWith(stranka.filter("main"));
-                $("title").replaceWith(stranka.filter("title"));
-                history.pushState({"html":html}, "", link);
+
+        $("main").html(`<div>Načítám data...</div>`);
+
+        xhr.open('GET', link, true);
+        xhr.responseType = "text";
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                const text = xhr.responseText
+                const doc = domp.parseFromString(text, "text/html")
+
+                document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
+                document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
+
+                history.pushState({"html": text }, "", xhr.responseURL);
+
                 spustitScript();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
+            } else {
+                // errror
+                $("main").html(`<div>Chyba: ${xhr.status} ${xhr.statusText}</div>`);
             }
-        });
+        };
+        xhr.send();
 
         return false;
     }); 
@@ -34,9 +42,12 @@ function plynulyPrechodMeziStrankami(){
 
 window.onpopstate = function(e){
     if (e.state == null) return;
-    let stranka = $($.parseHTML(e.state.html));
-    $("main").replaceWith(stranka.filter("main"));
-    $("title").replaceWith(stranka.filter("title"));
+    const text = e.state.html
+    const doc = domp.parseFromString(text, "text/html")
+
+    document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
+    document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
+
     spustitScript();
 }
 
@@ -48,9 +59,9 @@ function spustitScript(){
     if (lokace == "/project/create") {
         nazvySouboru();
     } else if (lokace == "/users/login") {
-        prihlaseniRegistraceText("#login form","/",'Přihlašování ...');
+        prihlaseniRegistraceFormular("#login form",'Přihlašování ...');
     } else if (lokace == "/users/register") {
-        prihlaseniRegistraceText("#register form", "/users/login", 'Registrování ...');
+        prihlaseniRegistraceFormular("#register form", 'Registrování ...');
     }
 }
 
@@ -67,31 +78,35 @@ function nazvySouboru(){
     });
 }
 
-function prihlaseniRegistraceText(selektor, presmerovani, text) {
+function prihlaseniRegistraceFormular(selektor, text) {
     $(selektor).submit(function(event) {
         event.preventDefault();
+
         let formular = $(this);
-        $('#hlaska').remove();
-        $(selektor).after(`<p id="hlaska">${text}</p>`);
-        $.ajax({
-            type: formular.attr("method"),
-            url: formular.attr("action"),
-            data: formular.serialize(),
-            success: function(data)
-            {
-                if(!data.includes("<!DOCTYPE html>")){
-                    $('#hlaska').remove();
-                    $(selektor).after(`<p id="hlaska">${data}</p>`);
-                } else {
-                    let stranka = $($.parseHTML(data));
-                    $("header").replaceWith(stranka.filter("header"));
-                    $("main").replaceWith(stranka.filter("main"));
-                    $("title").replaceWith(stranka.filter("title"));
-                    history.pushState({"html":data}, "", presmerovani);
-                    spustitScript();
+
+        $("main").html(`<div>${text}</div>`);
+
+        xhr.open("POST", formular.attr("action"), true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.responseType = "text";
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                const text = xhr.responseText
+                const doc = domp.parseFromString(text, "text/html")
+
+                document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
+                document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
+
+                if (xhr.responseURL != location.href){
+                    history.pushState({"html": text }, "", xhr.responseURL);
                 }
+                spustitScript();
+            } else {
+                // errror
+                $("main").html(`<div>Chyba: ${xhr.status} ${xhr.statusText}</div>`);
             }
-        });
+        };
+        xhr.send(formular.serialize());
     });
 }
 
@@ -104,11 +119,11 @@ $(document).on("click", ".mode", function(event){
 function nastaveniStylu() {
     let style = localStorage.getItem("mode")
     if (style == null) {
-        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
+        document.getElementsByTagName('head')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';
     }
     else {
         /*document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />';*/
-        document.getElementsByTagName('body')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
+        document.getElementsByTagName('head')[0].innerHTML += '<link rel="stylesheet" href="/css/' + style + '.css" asp-append-version="true" />';
     }
 }
 
@@ -149,39 +164,46 @@ async function login() {
     })
     let data = await res.json();
 }
-let jedna = 0
+let jedna = 0;
+let array = [];
+let iii = 0;
 
-function veci(e, cojeto) {
+function veci(e, data) {
     let value = e.target.value;
     let tech = document.getElementsByClassName(value);
     let more = "";
     let vole = "";
+    if (data == "tech" && array.includes(value)) {
+    document.getElementById("technology").value = "";
+    return;
+    }
     try {
-        vole = Array.from(document.getElementById(cojeto).getElementsByTagName("option")).map(e=> e.innerText);
-        console.log(vole);
+        vole = Array.from(document.getElementById(data).getElementsByTagName("option")).map(e=> e.innerText);
     }
     catch {}
     try {
-        document.getElementById(cojeto).remove();
+        document.getElementById(data).remove();
     }
     catch {}
-    if (cojeto == "tech") {
-        more += '<select name = "' + cojeto + '"' + 'id = "' + cojeto +  '" multiple size = ' + tech.length + ">";
+    if (data == "tech") {
+        more += '<select name = "' + data + '"' + 'id = "' + data +  '" multiple size = ' + tech.length + ">";
         if (jedna != 0) {
             for (let i = 0; i < vole.length; i ++) {    
                 more += '<option value = "' + vole[i] + '">' + vole[i] +'</option>'
-                console.log(vole[i] + "jjjjj");
             }
         }
         jedna += 1;
-        document.getElementById("technology").value = "";
     }
     else {
-        more += '<select name = "' + cojeto + '"' + 'id = "' + cojeto + '">';
+        more += '<select name = "' + data + '"' + 'id = "' + data + '">';
     }
     for(let i = 0; i < tech.length; i++ ) {
-        more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>'
+        more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>';
     }
-    more += '</select>'
+    more += '</select>';
     $( e.target ).after( more );
+    array[iii] = value;
+    iii++;
+    
+    document.getElementById("technology").value = "";
 }

@@ -7,9 +7,9 @@
 
 <form action="/users/login" method="post">
     <label for="username">Uživatelské jméno:</label>
-    <input type="text" name="username">
+    <input type="text" name="username" required>
     <label for="password">Heslo:</label>
-    <input type="password" name="password">
+    <input type="password" name="password" required>
     <input type="submit" value="Přihlásit se">
     <p style="color: red">@Model.Response</p>
     <br />
