@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EvidenceProject.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20221205181256_schoolAuthUserByteYear")]
-    partial class schoolAuthUserByteYear
+    [Migration("20221208151400_dbFileEdit")]
+    partial class dbFileEdit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,11 +68,15 @@ namespace EvidenceProject.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("fileName")
+                    b.Property<string>("generatedFileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("mimeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("originalFileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -34,6 +34,16 @@ public class UniversalHelper
     public static string GlobalUsersCacheKey => "globalUsers";
 
     /// <summary>
+    ///     Tyto parametry nebudeme kontrolovat u projektu
+    /// </summary>
+    public readonly static string[] NoCheckParamsProject = { "slack", "github", "assignees", "achievements" };
+
+    /// <summary>
+    ///     Tyto parametry nebudeme kontrolovat u projektu
+    /// </summary>
+    public readonly static string[] NoCheckUserDataParams = { "Response" };
+
+    /// <summary>
     ///     Zjistíme, zda je přihlášen uživatel
     /// </summary>
     public static bool GetLoggedUser(HttpContext context, out int? userID)
@@ -83,8 +93,9 @@ public class UniversalHelper
     /// Pokud něco bude prázdné v objektu, vrátí null
     /// </summary>
     /// <param name="obj">Object</param>
+    /// <param name="toDontCheck">Které params nemáme kontrolovat</param>
 
-    public static bool CheckAllParams(object obj)
+    public static bool CheckAllParams(object obj, string[]? toDontCheck = null)
     {
         var type = obj.GetType();
         var props = type.GetProperties(BindingFlags.Instance|System.Reflection.BindingFlags.Public)
@@ -93,6 +104,8 @@ public class UniversalHelper
         .Where(w => w.GetSetMethod(true).IsPublic);
         foreach (var prop in props)
         {
+            if(toDontCheck != null) if ((bool)toDontCheck?.Any(x => x.Equals(prop.Name))) continue;
+            
             var propValue = (type.GetProperty(prop.Name).GetValue(obj, null) ?? string.Empty).ToString();
             if (string.IsNullOrEmpty(propValue)) return false;
         }

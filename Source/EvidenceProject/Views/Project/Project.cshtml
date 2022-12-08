@@ -27,14 +27,16 @@
 }
 
 <p>Obrázky</p>
+@foreach(var item in Model.files?.Where(f => f.mimeType.Contains("image")))
+{    
+    <img src="/file/@item.generatedFileName"/>
+}
 
-@foreach(var item in Model.files)
+<p>Ostatní soubory</p>
+@foreach (var item in Model.files?.Where(f => !f.mimeType.Contains("image")))
 {
-    //var memoryStreamBytes = item.ReadFile().ToArray();
-    //var output = Convert.ToBase64String(memoryStreamBytes);
-    <!--TODO-->
-}    
-
+    <a href="/file/@item.generatedFileName">@item.originalFileName</a>
+}
 
 
 <p>Projevit zájem</p>

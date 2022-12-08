@@ -11,10 +11,10 @@
         @{
             if (splittedName.Length >= 2)
             {
-                                        <input type="text" name="lastname" value="@splittedName[1]" required>
+                <input type="text" name="lastname" value="@splittedName[1]" required>
             }
             else{
-                                        <input type="text" name="lastname" required>
+                    <input type="text" name="lastname" required>
             }
         }
         <label for="contact">Kontakt(email, github,..):</label>
@@ -28,7 +28,7 @@
     </form>
 }
 
-@if(Model.Projects != null)
+@if(Model.Projects != null || Model.Projects?.Count > 0)
 {
     <div id="projects">
     <h2>Projekty</h2>

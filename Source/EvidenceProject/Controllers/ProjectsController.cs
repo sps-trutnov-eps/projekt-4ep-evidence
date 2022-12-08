@@ -41,13 +41,12 @@ public class ProjectController : Controller
         if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != 1) return Json("ERR");
 
         var GETProject = GetProjectCreateData();
-        if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject);
+        if (!UniversalHelper.CheckAllParams(projectData, UniversalHelper.NoCheckParamsProject)) return View(GETProject);
 
 
         List<DbFile> files = new();
         foreach (var file in projectData?.photos)
         {
-            var extension = Path.GetExtension(file.FileName);            
             var dbFile = new DbFile();
             dbFile.WriteFile(file);
             files.Add(dbFile);
@@ -83,14 +82,16 @@ public class ProjectController : Controller
             projectDescription = projectData.description,
             projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager)
         };
-        foreach (var item in splittedAchievements?.ToList())
-        {
-            achivements.Add(new Achievement()
+
+        if(splittedAchievements != null)
+            foreach (var item in splittedAchievements)
             {
-                name = item,
-                project = project,
-            });
-        }
+                achivements.Add(new Achievement()
+                {
+                    name = item,
+                    project = project,
+                });
+            }
         project.projectAchievements = achivements;
 
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);

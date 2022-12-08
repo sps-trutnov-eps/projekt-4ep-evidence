@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EvidenceProject.Migrations
 {
     /// <inheritdoc />
-    public partial class schoolAuthUserByteYear : Migration
+    public partial class dbFileEdit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -154,7 +154,8 @@ namespace EvidenceProject.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    fileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    originalFileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    generatedFileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     fileData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     mimeType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Projectid = table.Column<int>(type: "int", nullable: true)

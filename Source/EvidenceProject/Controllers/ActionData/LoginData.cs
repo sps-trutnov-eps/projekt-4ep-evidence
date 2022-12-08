@@ -1,8 +1,10 @@
+using EvidenceProject.Controllers.ActionData;
+
 namespace EvidenceProject.Controllers.RequestClasses;
 
-public class LoginData
+public class LoginData : ModelBase
 {
-    public string? username { get; set; }
-    public string? password { get; set; }
+    public string? Username { get; set; }
+    public string? Password { get; set; }
 
 }

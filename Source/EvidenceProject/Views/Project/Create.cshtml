@@ -11,9 +11,9 @@
     <label for="description">Popis projektu</label>
     <textarea name="description"></textarea>
     <label for="users">Vedoucí: </label>
-    <input name="projectManager" type="text" placeholder="..." id="assignees" list="users" required/>
+    <input name="projectManager" type="text" placeholder="..." list="users" required/>
     <label for="assignees">Lidi: </label>
-    <input name="assignees" type="text" placeholder="..." id="assignees" required/>
+    <input name="assignees" type="text" placeholder="..." id="assignees" />
     <label for="state">Stav: </label>
     <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" required />
     <label for="type">Typ: </label>
@@ -23,11 +23,11 @@
     <label for="photos">Fotografie: </label>
     <input name="photos" type="file" multiple="multiple" required/>
     <label for="achievements">Úspěchy: </label>
-    <input name="achievements" type="text" id="achievements" required />
+    <input name="achievements" type="text" id="achievements" />
     <label for="slack">Slack: </label>
-    <input name="slack" type="text" id="slack" required />
+    <input name="slack" type="text" id="slack"  />
     <label for="github">Github: </label>
-    <input name="github" type="text" id="github" required/>
+    <input name="github" type="text" id="github" />
     <input type="submit"/>
     @if (Model == null) return;
     <datalist id="stavy">
