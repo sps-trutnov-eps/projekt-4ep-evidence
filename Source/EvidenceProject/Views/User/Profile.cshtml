@@ -11,10 +11,10 @@
         @{
             if (splittedName.Length >= 2)
             {
-                    <input type="text" name="lastname" value="@splittedName[1]" required>
+                        <input type="text" name="lastname" value="@splittedName[1]" required>
             }
             else{
-                        <input type="text" name="lastname" required>
+                            <input type="text" name="lastname" required>
             }
         }
         <label for="contact">Kontakt(email, github,..):</label>
@@ -48,31 +48,31 @@
     <h2>Všichni ověření uživatelé</h2>
     @foreach (var user in Model.Users)
     {
-        splittedName = Model.AuthUser.fullName?.Split(" ");
+        splittedName = user.fullName?.Split(" ");
         <p>Uživatel: @user.fullName</p>
         <form method="post" action="/user/edit/@user.id">
             <label for="firstname">Jméno:</label>
                 <input type="text" name="firstname" value="@splittedName[0]" required>
             <label for="lastname">Příjmení:</label>
             @{
-
                 if (splittedName.Length >= 2)
                 {
-                            <input type="text" name="lastname" value="@splittedName[1]" required>
+                    <input type="text" name="lastname" value="@splittedName[1]" required>
                 }
                 else{
-                            <input type="text" name="lastname" required>
+                    <input type="text" name="lastname" required>
                 }
             }
             <label for="contact">Kontakt(email, github,..):</label>
             <input type="text" name="contact" value="@user.contactDetails" required>
-            @await Html.PartialAsync("../Shared/DatalistsPV", Model.AuthUser)
+            @await Html.PartialAsync("../Shared/DatalistsPV", user)
             <label for="username">Uživatelské jméno:</label>
             <input type="text" name="username" value="@user.username" required>
             <label for="password">Heslo:</label>
             <input type="password" name="password" required>
             <input type="submit" value="Změnit">
         </form>
+        <a href="/user/delete/@user.id" style="color: red;">Odstranit</a>
     }
     </div>
 }
@@ -87,7 +87,9 @@
         if(item.Projects.Count > 0)
         {
                 <p>@item.fullName</p>
-                // Todo promote user to authUser
+                // Todo promote user to authUser -> normal Registration
+                <form method="post" action="/user/promote/@item.id">
+                </form>
                 continue;
         }
         var projects = @Model.Projects?.Where(x => x.applicants.Any(x => x.id == item.id));
@@ -115,7 +117,7 @@
     @foreach (var category in Model.Categories)
     {
         <p>Název kategorie: @category.name</p>
-            <form action="/dialinfo/edit/@category.id">
+            <form method="post" action="/dialinfo/edit/@category.id">
             <label for="name">Název kategorie:</label>
             <input name="name" type="text" placeholder="..." id="name" value="@category.name"/>
             <label for="description">Popis:</label>
@@ -125,7 +127,7 @@
         
         @foreach(var categoryItem in category?.dialCodes?.ToList()){
             <p>@category.name -> @categoryItem.name</p>
-            <form action="/dialcode/edit/@categoryItem.id">
+                <form method="post" action="/dialcode/edit/@categoryItem.id">
                 <label for="name">Název:</label>
                 <input name="name" type="text" placeholder="..." id="name" value="@categoryItem.name" />
                 <label for="description">Popis:</label>

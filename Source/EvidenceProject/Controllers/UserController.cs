@@ -152,7 +152,7 @@ public class UserController : Controller
     [HttpPost("user/edit/{id}")]
     public ActionResult ChangeUser(int id, RegisterData data)
     {
-        if (!UniversalHelper.CheckAllParams(data)) return Redirect("/user/profile");
+        if (!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return Redirect("/user/profile");
 
         if (!UniversalHelper.GetLoggedUser(HttpContext, out int? Uid)) return Redirect("/");
 
@@ -175,6 +175,18 @@ public class UserController : Controller
         _context.globalUsers.Update(user);
         _context.SaveChanges();
 
+        return Redirect("/user/profile");
+    }
+
+    [HttpGet("user/delete/{id}")]
+    public ActionResult DeleteUser(int id)
+    {
+        // Todo dodělat kontrolu admina
+        var user = _context.globalUsers.FirstOrDefault(u => u.id == id);
+        if(user == null) Redirect("/user/profile");
+
+        _context.globalUsers.Remove(user);
+        _context.SaveChanges();
         return Redirect("/user/profile");
     }
 }
