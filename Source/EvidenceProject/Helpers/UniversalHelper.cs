@@ -14,6 +14,11 @@ public class UniversalHelper
     public static string LoggedInKey => "loggedin";
 
     /// <summary>
+    ///     Jméno cookie
+    /// </summary>
+    public static string IsAdmin => "_IsAdmin_";
+
+    /// <summary>
     ///     Json hláška při chybě
     /// </summary>
     public static string SomethingWentWrongMessage => "Něco se pokazilo";
@@ -52,14 +57,42 @@ public class UniversalHelper
         return userID != null;
     }
 
+    /// <summary>
+    ///     Zjistí, zda je přihlášený uživatel Admin.
+    /// </summary>
+    /// <param name="context">Cookies</param>
+    /// <param name="db">Database</param>
+    /// <returns></returns>
     public static bool AuthentifyAdmin(HttpContext context, ProjectContext db)
     {
         var userID = context.Session.GetInt32(LoggedInKey);
 
         var user = db.globalUsers?.FirstOrDefault(u => u.id == userID);
 
-        if (user == null || user.id_key != LoggedInKey)
+        if (user == null) //|| user.id_key != LoggedInKey)
             return false;
+
+        return user.globalAdmin == true;
+    }
+
+    /// <summary>
+    ///     Zjistí, zda je přihlášený uživatel Admin a vrátí jeho ID.
+    /// </summary>
+    /// <param name="context">Cookies</param>
+    /// <param name="db">Database</param>
+    /// <returns></returns>
+    public static bool AuthentifyAdmin(HttpContext context, ProjectContext db, out int? ID)
+    {
+        var userID = context.Session.GetInt32(LoggedInKey);
+
+        var user = db.globalUsers?.FirstOrDefault(u => u.id == userID);
+
+        ID = 0;
+
+        if (user == null) //|| user.id_key != LoggedInKey)
+            return false;
+
+        ID = user.id;
 
         return user.globalAdmin == true;
     }
