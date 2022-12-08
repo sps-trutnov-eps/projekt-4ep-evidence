@@ -147,5 +147,22 @@ public class UniversalHelper
         foreach (var item in achievements) achievementString += $"{item.name}{parser}";
         return achievementString;
     }
-    
+
+
+    public static string GetDataFromWWWRoot(string fileName, bool css = true)
+    {
+        // Pro případnou editaci js ze stránky
+        var toCss = css == true ? "css" : "js";
+        string path = $"./wwwroot/{toCss}/{fileName}";
+        string text = string.Empty;
+        try
+        {
+            text = File.ReadAllText(path);
+        }
+        catch
+        {
+            text = $"Nebyl nalezen {fileName} v cestě {path}";
+        }
+        return text;
+    }
 }

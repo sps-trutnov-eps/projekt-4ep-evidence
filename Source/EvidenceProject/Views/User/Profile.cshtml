@@ -11,10 +11,10 @@
         @{
             if (splittedName.Length >= 2)
             {
-                <input type="text" name="lastname" value="@splittedName[1]" required>
+                    <input type="text" name="lastname" value="@splittedName[1]" required>
             }
             else{
-                    <input type="text" name="lastname" required>
+                        <input type="text" name="lastname" required>
             }
         }
         <label for="contact">Kontakt(email, github,..):</label>
@@ -58,10 +58,10 @@
 
                 if (splittedName.Length >= 2)
                 {
-                        <input type="text" name="lastname" value="@splittedName[1]" required>
+                            <input type="text" name="lastname" value="@splittedName[1]" required>
                 }
                 else{
-                        <input type="text" name="lastname" required>
+                            <input type="text" name="lastname" required>
                 }
             }
             <label for="contact">Kontakt(email, github,..):</label>
@@ -98,11 +98,11 @@
             <p>@item.fullName žádá o přiřazení k projektu: @project.name </p> 
             <form method="post" action="/project/addUser/@item.id">
                 <input type="hidden" value="@project.id" name="projectId">
-                <input type="submit" placeholder="Přijmout">
+                <input type="submit" value="Přijmout">
             </form>
             <form method="post" action="/project/deleteUser/@item.id">
-                    <input type="hidden" value="@project.id" name="projectId">
-                <input type="submit" placeholder="Odmítnout">
+                <input type="hidden" value="@project.id" name="projectId">
+                <input type="submit" value="Odmítnout">
             </form>
         }
     }
@@ -141,6 +141,12 @@
     </div>
 }
 
-   
-
-
+@if(Model.AuthUser.globalAdmin.Value){
+    <p>Editace CSS</p>
+    <form method="post" action="/file/edit/css/override.css">
+    <textarea name="fileData">
+        @UniversalHelper.GetDataFromWWWRoot("override.css")
+    </textarea>
+    <input type="submit" value="Editovat override.css">
+    </form>
+}

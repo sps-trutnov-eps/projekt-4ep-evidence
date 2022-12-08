@@ -6,6 +6,21 @@ public class FileController : Controller
 
     public FileController(ProjectContext context) => _context = context;
 
+
+    [HttpPost("/file/edit/{folder}/{filename}")]
+    public ActionResult Edit(string folder, string filename, string fileData)
+    {
+        string path = $"./wwwroot/{folder}/{filename}";
+
+        try
+        {
+            System.IO.File.WriteAllText(path, fileData);
+        }
+        catch { }
+
+        return Redirect("/user/profile");
+    }
+
     [HttpGet("/file/{generatedFileName}")]
     public ActionResult GetFile(string generatedFileName)
     {
