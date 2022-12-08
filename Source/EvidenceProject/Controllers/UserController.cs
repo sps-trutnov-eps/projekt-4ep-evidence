@@ -41,6 +41,7 @@ public class UserController : Controller
         _logger.LogInformation("{0} logged in.", data.Username);
         if (testing) return Redirect("/");
         HttpContext.Session.SetInt32(UniversalHelper.LoggedInKey, user.id);
+        HttpContext.Session.SetInt32(UniversalHelper.IsAdmin, ((bool)user.globalAdmin ? 1 : 0));
         return Redirect("/");
     }
 
@@ -101,7 +102,7 @@ public class UserController : Controller
     public ActionResult UpdatePasswordPost([FromForm] LoginDataUpdate data)
     {
         if(!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return View("PasswordUpdate", data.SetError());
-        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID) && userID != null && userID != 1) return View("PasswordUpdate", data.SetError());
+        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context, out var userID)) return View("PasswordUpdate", data.SetError());
 
         AuthUser? user = AuthUser.FindUser(_context, (int)userID);
 
@@ -145,6 +146,7 @@ public class UserController : Controller
     public ActionResult Logout()
     {
         HttpContext.Session.Remove(UniversalHelper.LoggedInKey);
+        HttpContext.Session.Remove(UniversalHelper.IsAdmin);
         return RedirectToAction("Index", controllerName: "Home");
     }
 
