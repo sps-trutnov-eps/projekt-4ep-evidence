@@ -54,4 +54,45 @@ public class DialStuffController : Controller
         _cache.Set(UniversalHelper.DialInfoCacheKey, _context.dialInfos.ToList());
         return Redirect("/project/create");
     }
+
+
+    [HttpPost("dialinfo/add/{id}")]
+    public ActionResult UpdateDialInfo(int id, [FromForm] DialInfoData? data)
+    {
+        if (!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
+
+        var dialInfo = _context.dialInfos?.FirstOrDefault(x => x.id == id);
+
+        dialInfo.desc = data.description;
+        dialInfo.name = data.name;
+        
+        _context.dialInfos.Update(dialInfo);
+        _context.SaveChanges();
+        _cache.Set(UniversalHelper.DialInfoCacheKey, _context.dialInfos.ToList());
+        return Redirect("/profile");
+    }
+
+    [HttpPost("dialcode/edit/{id}")]
+    public ActionResult UpdateDialCode(int id, [FromForm] DialCodeData? data)
+    {
+        if (!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
+
+        var dialCode = _context.dialCodes?.FirstOrDefault(x => x.id == id);
+
+        var color = ColorTranslator.FromHtml(data?.Color);
+
+        var dialInfo = _context.dialInfos.FirstOrDefault(x => x.name == data.DialInfoName);
+        if (dialInfo == null) return Json("Není taková kategorie");
+
+        dialCode.description = data.Description;
+        dialCode.color = color;
+        dialCode.name = data.Name;
+        dialCode.dialInfo = dialInfo;
+
+        _context.dialCodes.Update(dialCode);
+        _context.SaveChanges();
+
+        _cache.Set(UniversalHelper.DialCodeCacheKey, _context.dialCodes.ToList());
+        return Redirect("/profile");
+    }
 }

@@ -1,9 +1,9 @@
 ﻿namespace EvidenceProject.Controllers.ActionData;
 public class RegisterData: LoginData
 {
-    public string? firstname { get; set; }
-    public string? lastname { get; set; }
-    public string? contact { get; set; }
-    public string? schoolYear { get; set; }
-    public string? studyField { get; set; }
+    public string? Firstname { get; set; }
+    public string? Lastname { get; set; }
+    public string? Contact { get; set; }
+    public string? SchoolYear { get; set; }
+    public string? StudyField { get; set; }
 }

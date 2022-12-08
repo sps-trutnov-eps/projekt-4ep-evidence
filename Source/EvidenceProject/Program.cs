@@ -31,6 +31,14 @@ public class Program
 
         builder.Services.AddControllersWithViews();
         var app = builder.Build();
+
+
+
+        var message = "\n   _________ __                 __   \n /   _____//  |______ ________/  |_ \n \\_____  \\\\   __\\__  \\\\_  __ \\   __\\\n /        \\|  |  / __ \\|  | \\/|  |  \n/_______  /|__| (____  /__|   |__|  \n        \\/           \\/             \n";
+
+
+        app.Logger.LogInformation(message);
+
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
