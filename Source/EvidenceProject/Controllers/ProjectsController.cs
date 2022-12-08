@@ -216,7 +216,7 @@ public class ProjectController : Controller
         project.name = projectData.projectName;
         project.projectTechnology = tech;
         project.projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.typy);
-        project.assignees = null;
+        project.assignees = new List<User>();
         project.github = projectData.github;
         project.slack = projectData.slack;
         project.projectAchievements = achivements;
@@ -253,6 +253,38 @@ public class ProjectController : Controller
         _context.SaveChanges();
         UpdateProjectsInCache();
         return Redirect($"/project/{id}");
+    }
+
+
+    [HttpPost("/project/addUser/{id}")]
+    public ActionResult AddUser(int projectId, int id)
+    {
+        DoSometingWithUser(projectId, id);
+        return Redirect("/user/profile");
+    }
+
+    [HttpPost("/project/deleteUser/{id}")]
+    public ActionResult DeleteUserAction(int projectId, int id)
+    {
+        DoSometingWithUser(projectId, id, false);
+        return Redirect("/user/profile");
+    }
+
+    /// <summary>
+    /// TODO UKLIDIT!
+    /// </summary>
+    private void DoSometingWithUser(int projectId, int id, bool add = true)
+    {
+        var project = UniversalHelper.GetProject(_context, projectId);
+        if (project == null) return;
+
+        var applicant = project.applicants?.FirstOrDefault(a => a.id == id);
+        if (applicant == null) return;
+
+        if(add) project.assignees?.Add(applicant);
+        project.applicants?.Remove(applicant);
+        UpdateProjectsInCache();
+        _context.SaveChanges();
     }
 
     private void UpdateProjectsInCache()

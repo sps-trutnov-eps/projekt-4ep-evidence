@@ -28,7 +28,7 @@
     </form>
 }
 
-@if(Model.Projects != null || Model.Projects?.Count > 0)
+@if(Model.Projects != null && Model.Projects?.Count > 0)
 {
     <div id="projects">
     <h2>Projekty</h2>
@@ -42,7 +42,8 @@
     }
     </div>
 }
-@if(Model.Users != null){
+@if (Model.Users != null && Model.Users.Count > 0)
+{
     <div id="user">
     <h2>Všichni ověření uživatelé</h2>
     @foreach (var user in Model.Users)
@@ -76,21 +77,39 @@
     </div>
 }
 
-@if(Model.NonAuthUsers != null)
+@if(Model.NonAuthUsers != null && Model.NonAuthUsers.Count > 0)
 {
     <br />
     <div id="nonuser">
-    <h2>Žádosti o přiřazení k projektu</h2>
+    <h2>Žádosti o přiřazení k projektu + nonAuthUsers</h2>
     @foreach (var item in Model.NonAuthUsers)
     {
-        <p>@item.fullName žádá o přiřazení k projektu: @Model.Projects.FirstOrDefault(x => x.applicants.Any(x => x.id == item.id)).name </p> 
-        <a style="color: darkgreen" href="/project/addUser/@item.id">Přijmout</a>
-        <a style="color: darkred" href="/project/deleteUser/@item.id">Odmítnout</a>
+        if(item.Projects.Count > 0)
+        {
+                <p>@item.fullName</p>
+                // Todo promote user to authUser
+                continue;
+        }
+        var projects = @Model.Projects?.Where(x => x.applicants.Any(x => x.id == item.id));
+        if (projects == null) continue;
+
+        foreach(var project in projects)
+        {
+            <p>@item.fullName žádá o přiřazení k projektu: @project.name </p> 
+            <form method="post" action="/project/addUser/@item.id">
+                <input type="hidden" value="@project.id" name="projectId">
+                <input type="submit" placeholder="Přijmout">
+            </form>
+            <form method="post" action="/project/deleteUser/@item.id">
+                    <input type="hidden" value="@project.id" name="projectId">
+                <input type="submit" placeholder="Odmítnout">
+            </form>
+        }
     }
     </div>
 }
 
-@if(Model.Categories != null){
+@if(Model.Categories != null && Model.Categories.Count > 0){
     <div id="categories">
     <h2>Úprava kategorií</h2>
     @foreach (var category in Model.Categories)
