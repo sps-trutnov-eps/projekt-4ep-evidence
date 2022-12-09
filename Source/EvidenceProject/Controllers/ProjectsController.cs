@@ -1,4 +1,5 @@
 ﻿using EvidenceProject.Controllers.ActionData;
+using EvidenceProject.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
@@ -40,13 +41,12 @@ public class ProjectController : Controller
         if (!test) if (!UniversalHelper.GetLoggedUser(HttpContext, out userID) && userID != 1) return Json("ERR");
 
         var GETProject = GetProjectCreateData();
-        if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject);
+        if (!UniversalHelper.CheckAllParams(projectData, UniversalHelper.NoCheckParamsProject)) return View(GETProject);
 
 
         List<DbFile> files = new();
         foreach (var file in projectData?.photos)
         {
-            var extension = Path.GetExtension(file.FileName);            
             var dbFile = new DbFile();
             dbFile.WriteFile(file);
             files.Add(dbFile);
@@ -62,7 +62,7 @@ public class ProjectController : Controller
 
         List<Achievement> achivements = new();
 
-        achivements.Add(new Achievement() { name = projectData.achievements });
+        var splittedAchievements = projectData?.achievements?.Split(";");
 
         // Správný způsob načítání achivementů
         //foreach (string achiv in projectData.achievements ?? new List<string>() { string.Empty })
@@ -76,13 +76,24 @@ public class ProjectController : Controller
             assignees = null,
             github = projectData.github,
             slack = projectData.slack,
-            projectAchievements = achivements,
+            projectAchievements = null,
             files = files,
             projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit),
             projectDescription = projectData.description,
             projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager)
         };
-        
+
+        if(splittedAchievements != null)
+            foreach (var item in splittedAchievements)
+            {
+                achivements.Add(new Achievement()
+                {
+                    name = item,
+                    project = project,
+                });
+            }
+        project.projectAchievements = achivements;
+
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);
         _context?.SaveChanges();
@@ -205,7 +216,7 @@ public class ProjectController : Controller
         project.name = projectData.projectName;
         project.projectTechnology = tech;
         project.projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.typy);
-        project.assignees = null;
+        project.assignees = new List<User>();
         project.github = projectData.github;
         project.slack = projectData.slack;
         project.projectAchievements = achivements;
@@ -221,13 +232,12 @@ public class ProjectController : Controller
         return Redirect("Index");
     }
 
-    [HttpPost("/project/apply")]
-    public ActionResult Apply([FromForm] ProjectApplyData data)
+    [HttpPost("/project/apply/{id}")]
+    public ActionResult Apply(int id,[FromForm] ProjectApplyData data)
     {
-        int ProjectIdNum = int.Parse(data.ProjectId);
-        if (!UniversalHelper.CheckAllParams(data)) return Redirect($"/project/{data.ProjectId}");
+        if (!UniversalHelper.CheckAllParams(data)) return Redirect($"/project/{id}");
 
-        var project = UniversalHelper.GetProjectsWithIncludes(_context).FirstOrDefault(x => x.id == ProjectIdNum);
+        var project = _context.projects.FirstOrDefault(x => x.id == id);
 
         if (project?.applicants == null) project.applicants = new List<User>();
 
@@ -241,7 +251,40 @@ public class ProjectController : Controller
 
         _context.projects?.Update(project);
         _context.SaveChanges();
-        return Redirect($"/project/{data.ProjectId}");
+        UpdateProjectsInCache();
+        return Redirect($"/project/{id}");
+    }
+
+
+    [HttpPost("/project/addUser/{id}")]
+    public ActionResult AddUser(int projectId, int id)
+    {
+        DoSometingWithUser(projectId, id);
+        return Redirect("/user/profile");
+    }
+
+    [HttpPost("/project/deleteUser/{id}")]
+    public ActionResult DeleteUserAction(int projectId, int id)
+    {
+        DoSometingWithUser(projectId, id, false);
+        return Redirect("/user/profile");
+    }
+
+    /// <summary>
+    /// TODO UKLIDIT!
+    /// </summary>
+    private void DoSometingWithUser(int projectId, int id, bool add = true)
+    {
+        var project = UniversalHelper.GetProject(_context, projectId);
+        if (project == null) return;
+
+        var applicant = project.applicants?.FirstOrDefault(a => a.id == id);
+        if (applicant == null) return;
+
+        if(add) project.assignees?.Add(applicant);
+        project.applicants?.Remove(applicant);
+        UpdateProjectsInCache();
+        _context.SaveChanges();
     }
 
     private void UpdateProjectsInCache()

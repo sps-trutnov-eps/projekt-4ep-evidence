@@ -3,13 +3,13 @@
     ViewData["Title"] = "Login";
     ViewData["Page"] = "login";
 }
-@model CustomMessageResponse
+@model LoginData
 
 <form action="/users/login" method="post">
     <label for="username">Uživatelské jméno:</label>
-    <input type="text" name="username">
+    <input type="text" name="username" value="@Model.Username" required>
     <label for="password">Heslo:</label>
-    <input type="password" name="password">
+    <input type="password" name="password" value="@Model.Password" required>
     <input type="submit" value="Přihlásit se">
     <p style="color: red">@Model.Response</p>
     <br />

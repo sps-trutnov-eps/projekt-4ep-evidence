@@ -25,7 +25,7 @@ public class ProjectContext : DbContext
 
         builder.Entity<Project>().HasMany(p => p.files).WithOne();
 
-        builder.Entity<Project>().HasMany(p => p.projectAchievements).WithOne(a => a.project);
+        //builder.Entity<Project>().HasMany(p => p.projectAchievements).WithOne(a => a.project);
 
         builder.Entity<DialCode>().HasOne(d => d.dialInfo).WithMany(d => d.dialCodes);
 

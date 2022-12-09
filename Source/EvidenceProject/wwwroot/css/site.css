@@ -1,3 +1,11 @@
+#register select {
+    margin-top: 10%;
+    height: 50px;
+    width: 90%;
+    margin-left: 5%;
+    grid-column: 1/ span 2;
+}
+
 html {
     font-size: 30px;
     position: relative;
@@ -460,3 +468,6 @@ div#create {
         margin: 0 auto;
     }
 }
+
+
+

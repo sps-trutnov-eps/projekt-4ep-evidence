@@ -7,25 +7,25 @@
 <h2>Vytvoření projektu</h2>
 <form action="/project/create" method="post" enctype="multipart/form-data">
     <label for="projectName">Název projektu: </label>
-    <input name="projectName" type="text" placeholder="..." id="name" />
+    <input name="projectName" type="text" placeholder="..." id="name" required/>
     <label for="description">Popis projektu</label>
     <textarea name="description"></textarea>
     <label for="users">Vedoucí: </label>
-    <input name="projectManager" type="text" placeholder="..." id="assignees" list="users" />
+    <input name="projectManager" type="text" placeholder="..." list="users" required/>
     <label for="assignees">Lidi: </label>
     <input name="assignees" type="text" placeholder="..." id="assignees" />
     <label for="state">Stav: </label>
-    <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" />
+    <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" required />
     <label for="type">Typ: </label>
-    <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" />
+    <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" required/>
     <label for="technology">Technologie: </label>
     <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
     <label for="photos">Fotografie: </label>
-    <input name="photos" type="file" multiple="multiple" />
+    <input name="photos" type="file" multiple="multiple" required/>
     <label for="achievements">Úspěchy: </label>
     <input name="achievements" type="text" id="achievements" />
     <label for="slack">Slack: </label>
-    <input name="slack" type="text" id="slack" />
+    <input name="slack" type="text" id="slack"  />
     <label for="github">Github: </label>
     <input name="github" type="text" id="github" />
     <input type="submit"/>

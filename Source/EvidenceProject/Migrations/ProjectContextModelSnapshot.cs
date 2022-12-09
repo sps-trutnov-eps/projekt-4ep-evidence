@@ -65,11 +65,15 @@ namespace EvidenceProject.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("fileName")
+                    b.Property<string>("generatedFileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("mimeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("originalFileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
