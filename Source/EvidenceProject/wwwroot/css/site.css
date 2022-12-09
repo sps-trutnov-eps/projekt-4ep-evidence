@@ -10,6 +10,12 @@ html {
     --secondary: #3ea0ad;
 }
 
+.odkaz{
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    grid-column: 1 / span 2;
+}
 nav {
     display: flex;
     background-color: var(--secondary);
@@ -440,6 +446,7 @@ body {
 
 @media all and (min-width: 1024px) {
     div#create {
+        height: 105%;
         width: 1000px;
         margin: 0 auto;
         background-color: var(--sps-cyan);
