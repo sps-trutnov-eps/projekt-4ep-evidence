@@ -7,17 +7,5 @@
 @model RegisterData
 
 <form action="/users/register" method="post">
-    <label for="firstname">Jméno:</label>
-    <input type="text" name="firstname" value="@Model.Firstname" required>
-    <label for="lastname">Pøíjmení:</label>
-    <input type="text" name="lastname" value="@Model.Lastname" required>
-    <label for="contact">Kontakt(email, github,..):</label>
-    <input type="text" name="contact" value="@Model.Contact" required>
-    @await Html.PartialAsync("../Shared/DatalistsPV", model: null)
-    <label for="username">Uživatelské jméno:</label>
-    <input type="text" name="username" value="@Model.Username" required>
-    <label for="password">Heslo:</label>
-    <input type="password" name="password" value="@Model.Password" required>
-    <p style="color: red">@Model.Response</p>
-    <input type="submit" value="Registrovat se">
+    @await Html.PartialAsync("../Shared/RegisterInputsPV", model: Model)
 </form>
