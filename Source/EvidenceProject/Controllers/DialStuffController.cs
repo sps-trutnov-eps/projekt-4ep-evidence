@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using EvidenceProject.Controllers.ActionData;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -59,7 +59,7 @@ public class DialStuffController : Controller
     [HttpPost("dialinfo/add/{id}")]
     public ActionResult UpdateDialInfo(int id, [FromForm] DialInfoData? data)
     {
-        if (!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
+        if (!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return Json("ERR");
 
         var dialInfo = _context.dialInfos?.FirstOrDefault(x => x.id == id);
 

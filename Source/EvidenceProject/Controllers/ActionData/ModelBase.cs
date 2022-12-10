@@ -5,7 +5,7 @@ public class ModelBase
 
     public ModelBase SetError(string? error = null)
     {
-        Response = error == null ? UniversalHelper.SomethingWentWrongMessage : null;
+        Response = error == null ? UniversalHelper.SomethingWentWrongMessage : error;
         return this;
     }
 }

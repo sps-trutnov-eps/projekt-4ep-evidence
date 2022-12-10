@@ -223,3 +223,11 @@ function veci(e, data) {
     
     document.getElementById("technology").value = "";
 }
+
+
+function removeFile(fileInput) {
+    const elements = document.getElementsByClassName(fileInput);
+    while (elements.length > 0) {
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+}

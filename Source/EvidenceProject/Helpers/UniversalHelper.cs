@@ -41,10 +41,15 @@ public class UniversalHelper
     /// <summary>
     ///     Tyto parametry nebudeme kontrolovat u projektu
     /// </summary>
-    public readonly static string[] NoCheckParamsProject = { "slack", "github", "assignees", "achievements" };
+    public readonly static string[] NoCheckParamsProject = { "slack", "github", "assignees", "achievements", "Response" };
 
     /// <summary>
-    ///     Tyto parametry nebudeme kontrolovat u projektu
+    ///     Tyto parametry nebudeme kontrolovat u editace projektu
+    /// </summary>
+    public readonly static string[] NoCheckParamsProjectUpdate = { "slack", "github", "assignees", "achievements", "Response" , "oldFile", "oldTech", "photos" };
+
+    /// <summary>
+    ///     Tyto parametry nebudeme kontrolovat
     /// </summary>
     public readonly static string[] NoCheckUserDataParams = { "Response" };
 

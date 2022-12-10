@@ -6,7 +6,7 @@
 <a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
 @if (Model == null) return;
 
-<p><b>@Model.name?</b></p>
+<p><b>@Model.name</b></p>
 @if (Model.projectTechnology != null){
     @foreach (var item in Model?.projectTechnology)
     {

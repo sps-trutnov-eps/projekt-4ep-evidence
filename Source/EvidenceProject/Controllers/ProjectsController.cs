@@ -41,7 +41,7 @@ public class ProjectController : Controller
         if (!test) if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Json("ERR");
 
         var GETProject = GetProjectCreateData();
-        if (!UniversalHelper.CheckAllParams(projectData, UniversalHelper.NoCheckParamsProject)) return View(GETProject);
+        if (!UniversalHelper.CheckAllParams(projectData, UniversalHelper.NoCheckParamsProject)) return View(GETProject.SetError("Něco nebylo vyplněno"));
 
 
         List<DbFile> files = new();
@@ -63,10 +63,6 @@ public class ProjectController : Controller
         List<Achievement> achivements = new();
 
         var splittedAchievements = projectData?.achievements?.Split(";");
-
-        // Správný způsob načítání achivementů
-        //foreach (string achiv in projectData.achievements ?? new List<string>() { string.Empty })
-        //    achivements.Add(new Achievement() { name = achiv });
 
         Project project = new()
         {
@@ -160,11 +156,11 @@ public class ProjectController : Controller
             return Redirect("/user/profile/");
         var project = UniversalHelper.GetProject(_context, id);
         if (project == null) return Redirect("/user/profile/");
-        if(project.projectManager?.id != userID && _context.globalUsers?.FirstOrDefault(u=>u.id == userID)?.globalAdmin != false) return Redirect("/user/profile/");
+        if(project.projectManager?.id != userID && _context.globalUsers?.FirstOrDefault(u=>u.id == userID)?.globalAdmin.Value != true) return Redirect("/user/profile/");
 
-        GETProjectEdit data = new();
+        GETProjectCreate data = new();
         var GETProjectData = GetProjectCreateData();
-        data.CurrentData = project;
+        data.CurrentProject = project;
         data.Users = GETProjectData.Users;
         data.DialInfos = GETProjectData.DialInfos;
         data.DialCodes = GETProjectData.DialCodes;
@@ -174,56 +170,75 @@ public class ProjectController : Controller
     }
 
     [HttpPost("project/edit/{id}")]
-    public ActionResult Edit(int id, [FromForm] ProjectCreateData projectData, bool test = false)
+    public ActionResult Edit(int id, [FromForm] ProjectEditData projectData, bool test = false)
     {
         int? userID = 0;
 
         if (!test) if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context, out userID)) return Json("ERR");
 
+        Project? project = UniversalHelper.GetProject(_context, id);
         var GETProject = GetProjectCreateData();
-        if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject);
-
-        Project? project = _context.projects?.FirstOrDefault(p => p.id == id);
-
-        if (project == null) return Redirect("index");
+        GETProject.CurrentProject = project;
+        if (!UniversalHelper.CheckAllParams(projectData, UniversalHelper.NoCheckParamsProjectUpdate)) return View(GETProject.SetError("Něco nebylo vyplněno"));
 
 
-        List<DbFile> files = new();
-        foreach (var file in projectData?.photos)
+        if (project == null) return View(GETProject.SetError("Takový projekt neexistuje"));
+
+
+        if(projectData.oldFile == null && projectData.photos == null) return View(GETProject.SetError("Nebyl nahrán žádný soubor"));
+        if (projectData.oldTech == null && projectData.tech == null) return View(GETProject.SetError("Pro editaci je potřeba min. 1 kategorie"));
+
+
+        if (projectData.oldFile != null) foreach (var item in project?.files?.ToList()) if (!projectData.oldFile.Contains(item.generatedFileName)) project.files.Remove(item);
+        
+
+        if(projectData?.photos != null)
         {
-            var extension = Path.GetExtension(file.FileName);
-            var dbFile = new DbFile();
-            dbFile.WriteFile(file);
-            files.Add(dbFile);
+            foreach (var file in projectData?.photos)
+            {
+                var extension = Path.GetExtension(file.FileName);
+                var dbFile = new DbFile();
+                dbFile.WriteFile(file);
+                project?.files?.Add(dbFile);
+            }
         }
-        List<DialCode> tech = new();
 
-        foreach (var item in projectData.tech)
+        if (projectData.oldTech != null) foreach (var item in project?.projectTechnology?.ToList()) if (projectData.oldFile.Contains(item.name)) project.projectTechnology.Remove(item);
+
+        if(projectData.tech != null)
         {
-            var dialCode = _context?.dialCodes?.FirstOrDefault(x => x.name == item);
-            if (dialCode == null) continue;
-            tech.Add(dialCode);
+            foreach (var item in projectData.tech)
+            {
+                var dialCode = _context?.dialCodes?.FirstOrDefault(x => x.name == item);
+                if (dialCode == null) continue;
+                project?.projectTechnology?.Add(dialCode);
+            }
         }
 
         List<Achievement> achivements = new();
 
-        achivements.Add(new Achievement() { name = projectData.achievements });
-
-        // Správný způsob načítání achivementů
-        //foreach (string achiv in projectData.achievements ?? new List<string>() { string.Empty })
-        //    achivements.Add(new Achievement() { name = achiv });
+        var splittedAchievements = projectData?.achievements?.Split(";");
 
         project.name = projectData.projectName;
-        project.projectTechnology = tech;
         project.projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.typy);
         project.assignees = new List<User>();
         project.github = projectData.github;
         project.slack = projectData.slack;
-        project.projectAchievements = achivements;
-        project.files = files;
         project.projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit);
         project.projectDescription = projectData.description;
         project.projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager);
+
+        if (splittedAchievements != null)
+            foreach (var item in splittedAchievements)
+            {
+                achivements.Add(new Achievement()
+                {
+                    name = item,
+                    project = project,
+                });
+            }
+        project.projectAchievements = achivements;
+
 
         _logger.LogInformation("User with the id <{}> edited a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Update(project);
