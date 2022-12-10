@@ -191,4 +191,41 @@ public class UserController : Controller
         _context.SaveChanges();
         return Redirect("/user/profile");
     }
+
+
+    [HttpPost("/user/promote/{id}")]
+    public ActionResult PromoteUser(int id, [FromForm] RegisterData data, [FromForm] string projectId)
+    {
+        if(!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return Redirect("/user/profile");
+
+        var user = UniversalHelper.GetProject(_context, int.Parse(projectId))?.assignees?.FirstOrDefault(a => a.id == id);
+        if (user == null) return Redirect("/user/profile");
+
+        AuthUser authUser = new()
+        {
+            globalAdmin = false,
+            contactDetails = data.Contact,
+            fullName = $"{data.Firstname} {data.Lastname}",
+            Projects = user.Projects,
+            password = data.Password,
+            schoolYear = byte.Parse(data.SchoolYear),
+            username = data.Username,
+            studyField = data.StudyField
+        };
+
+        foreach (var project in UniversalHelper.GetProjectsWithIncludes(_context))
+        {
+            if (project.assignees == null) continue;
+            if (project.assignees.Contains(user))
+            {
+                project.assignees.Add(authUser);
+                project.assignees.Remove(user);
+            }
+
+        }
+
+        _context.globalUsers?.Add(authUser);
+        _context.SaveChanges();
+        return Redirect("/user/profile");
+    }
 }

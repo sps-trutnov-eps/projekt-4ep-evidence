@@ -1,4 +1,4 @@
-﻿namespace EvidenceProject.Controllers.ActionData;
+namespace EvidenceProject.Controllers.ActionData;
 
 /// <summary>
 /// <see cref="DialStuffController.AddDialInfo(DialInfoData?)/>
