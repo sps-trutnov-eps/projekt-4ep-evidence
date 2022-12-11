@@ -139,21 +139,25 @@ function search() {
                 data: formular.serialize(),
                 success : function(data){
                     let projektyHtml = "";
-                    for(let projekt of data)  {
-                        let obrazek= projekt.files.find(s => s.mimeType.includes("image"))
-                        let nahled = `<img style="height: 100%;object-fit: cover;width: 100%;" src="/file/${obrazek.generatedFileName}"/>`;
-                        let nadpis = `<a href="/project/${projekt.id}" class="odkaz"><h4>${projekt.name}</h4></a>`;
-                        let spravce = `<div>Správce: ${projekt.projectManager}</div>`;
-                        let popis = `<div>Popis: ${projekt.projectDescription}</div>`;
-                        let stav = `<div style="margin-right:5px">${projekt.projectState.name}</div>`;
-                        let typ = `<div style="margin-right:5px">${projekt.projectType.name}</div>`;
-                        let technologie = "";
-                        for(let tech of projekt.projectTechnology){
-                            technologie += `<div style="margin-right:5px">${tech.name}</div>`;
+                    if(typeof(data) == Array & data.length > 1){
+                        for(let projekt of data)  {
+                            let obrazek= projekt.files.find(s => s.mimeType.includes("image"))
+                            let nahled = `<img style="height: 100%;object-fit: cover;width: 100%;" src="/file/${obrazek.generatedFileName}"/>`;
+                            let nadpis = `<a href="/project/${projekt.id}" class="odkaz"><h4>${projekt.name}</h4></a>`;
+                            let spravce = `<div>Správce: ${projekt.projectManager}</div>`;
+                            let popis = `<div>Popis: ${projekt.projectDescription}</div>`;
+                            let stav = `<div style="margin-right:5px">${projekt.projectState.name}</div>`;
+                            let typ = `<div style="margin-right:5px">${projekt.projectType.name}</div>`;
+                            let technologie = "";
+                            for(let tech of projekt.projectTechnology){
+                                technologie += `<div style="margin-right:5px">${tech.name}</div>`;
+                            }
+                            let projektHtml = `<div style="display:flex"><div style="height:100px;width:100px;margin:10px">${nahled}</div><div><div>${nadpis}${spravce}${popis}</div><div style="display:flex">${stav}${typ}${technologie}</div></div></div>`;
+                            projektyHtml += projektHtml;
                         }
-                        let projektHtml = `<div style="display:flex"><div style="height:100px;width:100px;margin:10px">${nahled}</div><div><div>${nadpis}${spravce}${popis}</div><div style="display:flex">${stav}${typ}${technologie}</div></div></div>`;
-                        projektyHtml += projektHtml;
-                    } 
+                    } else {
+                        projektyHtml = `<p>Nebyly nalezeny žádné výsledky :(</p>`;
+                    }
                     $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${hledanyVyraz}"</h2><div id="vysledky">${projektyHtml}</div></div>`);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
