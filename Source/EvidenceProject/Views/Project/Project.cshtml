@@ -6,7 +6,7 @@
 <a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
 @if (Model == null) return;
 
-<p><b>@Model.name?</b></p>
+<p><b>@Model.name</b></p>
 @if (Model.projectTechnology != null){
     @foreach (var item in Model?.projectTechnology)
     {
@@ -14,29 +14,36 @@
     }
 }
 <p>Stav: @Model?.projectState?.name</p>
-<p>Úspěchy: @Model?.projectAchievements</p>
+<p>Úspěchy: @UniversalHelper.GetAchievements(Model.projectAchievements?.ToList())</p>
 <p>Github: @Model?.github</p>
 <p>Slack: @Model?.slack</p>
 <p>Typ: @Model?.projectType?.name</p>
+<p>Zapojení lidé: </p>
+@if(Model.assignees != null){
+    @foreach (var assignee in Model.assignees?.ToList())
+    {
+        <p> @assignee.fullName</p>
+    }           
+}
+
 <p>Obrázky</p>
+@foreach(var item in Model.files?.Where(f => f.mimeType.Contains("image")))
+{    
+    <img src="/file/@item.generatedFileName"/>
+}
 
-@foreach(var item in Model.files)
+<p>Ostatní soubory</p>
+@foreach (var item in Model.files?.Where(f => !f.mimeType.Contains("image")))
 {
-    var memoryStreamBytes = item.ReadFile().ToArray();
-    var output = Convert.ToBase64String(memoryStreamBytes);
-    <img id="image" src="data:image/png;base64,@output"/>
-}    
-
+    <a href="/file/@item.generatedFileName">@item.originalFileName</a>
+}
 
 
 <p>Projevit zájem</p>
-<form method="post" action="/project/apply">
+<form method="post" action="/project/apply/@Model.id">
     <input type="text" name="firstname" placeholder="Jméno..." required />
     <input type="text" name="lastname" placeholder="Příjmení..." required />
-    <input type="text" name="studyField" placeholder="Obor..." list="obory" required />
-    <input type="text" name="schoolYear" placeholder="Ročník..." list="rocniky" required />
+    @await Html.PartialAsync("../Shared/DatalistsPV", model: null)
     <input type="text" name="contact" placeholder="Kontakt..." required />
-    <input type="hidden" name="ProjectId" value="@Model.id"/>
     <input type="submit" value="Mám zájem"/>
-    @await Html.PartialAsync("../Shared/DatalistsPV")
 </form>

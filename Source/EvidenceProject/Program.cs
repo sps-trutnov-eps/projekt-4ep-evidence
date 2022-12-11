@@ -21,12 +21,24 @@ public class Program
             options.Cookie.MaxAge = TimeSpan.FromDays(8);
         });
         // Stavitel
-        builder.Services.AddDbContext<ProjectContext>(opt =>
-            opt.UseSqlServer(
-                builder.Configuration["DatabaseConnection"]));
+        builder.Services.AddDbContext<ProjectContext>(opt => {
+
+        if (builder.Configuration.GetValue<bool>("UsePostgres"))
+            opt.UseNpgsql(builder.Configuration["DatabaseConnection"]);
+        else
+            opt.UseSqlServer(builder.Configuration["DatabaseConnection"]);
+        });
 
         builder.Services.AddControllersWithViews();
         var app = builder.Build();
+
+
+
+        var message = "\n   _________ __                 __   \n /   _____//  |______ ________/  |_ \n \\_____  \\\\   __\\__  \\\\_  __ \\   __\\\n /        \\|  |  / __ \\|  | \\/|  |  \n/_______  /|__| (____  /__|   |__|  \n        \\/           \\/             \n";
+
+
+        app.Logger.LogInformation(message);
+
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");

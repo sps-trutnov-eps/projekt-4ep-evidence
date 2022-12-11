@@ -1,5 +1,5 @@
 ﻿@{
-    UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out string? userId);
+    UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out var userId);
 }
 
 <!DOCTYPE html>
@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/override.css" /> 
     <link rel="stylesheet" href="~/EvidenceProject.styles.css" asp-append-version="true"/>
 </head>
 <body>
@@ -28,7 +28,7 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        @if (userId == "1")
+                        @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1)
                         {
                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
                         }

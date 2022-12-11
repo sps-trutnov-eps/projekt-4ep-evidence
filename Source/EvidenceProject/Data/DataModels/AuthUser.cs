@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using bcrypt = BCrypt.Net.BCrypt;
 
 namespace EvidenceProject.Data.DataModels;
@@ -41,6 +41,30 @@ public class User
 
 public class AuthUser : User
 {
+
+    /// <summary>
+    ///     Login ověřeného uživatele - je unikátní
+    /// </summary>
+    [Required]
+    public string? username { get; set; }
+
+    /// <summary>
+    ///     Heslo ověřeného uživatele
+    /// </summary>
+    [Required]
+    public string? password { set; get; }
+
+    /// <summary>
+    ///     Pakliže je globální admin = true
+    /// </summary>
+    public bool? globalAdmin { get; init; }
+
+    /// <summary>
+    ///     Uživatelův unikátní klíč -> Je jím jednoznačně identifikován v session
+    /// </summary>
+    [Required]
+    public string? id_key { get; private set; }
+
     /// <summary>
     ///     Konstruktor - vytvoří a zkontroluje ID_Key podle <paramref name="context" />.
     /// </summary>
@@ -60,7 +84,7 @@ public class AuthUser : User
     /// <param name="contact">Kontaktní údaje.</param>
     /// <param name="admin">Je global admin?</param>
     /// <param name="context">DB context - pro kontrolu unikátnosti ID_Key v rámci Db.</param>
-    public AuthUser(string login, string pass, string fullname = "", string studyfield = "", string contact = "", byte year =0,
+    public AuthUser(string login, string pass, string fullname = "", string studyfield = "", string contact = "", byte year = 0,
         bool admin = false, ProjectContext? context = null)
     {
         username = login;
@@ -76,6 +100,26 @@ public class AuthUser : User
     }
 
     /// <summary>
+    ///     Knstruktor Admina !!!
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    /// <param name="context"></param>
+    public AuthUser(string username, string password, ProjectContext context = null)
+    {
+        this.username = username;
+        this.password = bcrypt.HashPassword(password);
+        this.GenerateIdKey(context);
+        this.globalAdmin = true;
+
+        fullName = "Admin";
+        studyField = "Admin";
+        contactDetails = "Admin";
+
+        schoolYear = 0;
+    }
+
+    /// <summary>
     ///     Získání uživatele dle ID - najde uživatele v dodaném <paramref name="context" />, pokud uživatel s daným id neexistuje vrátí null.
     /// </summary>
     /// <param name="context">DBContext/param>
@@ -84,29 +128,6 @@ public class AuthUser : User
     {
         return context?.globalUsers?.FirstOrDefault(user => user.id == user_id);
     }
-
-    /// <summary>
-    ///     Login ověřeného uživatele - je unikátní
-    /// </summary>
-    [Required]
-    public string? username { init; get; }
-
-    /// <summary>
-    ///     Heslo ověřeného uživatele
-    /// </summary>
-    [Required]
-    public string? password { set; get; }
-
-    /// <summary>
-    ///     Pakliže je globální admin = true
-    /// </summary>
-    public bool? globalAdmin { get; init; }
-
-    /// <summary>
-    ///     Uživatelův unikátní klíč -> Je jím jednoznačně identifikován v session
-    /// </summary>
-    [Required]
-    public string? id_key { get; private set; }
 
     /// <summary>
     ///     Metoda nastaví obj. vygenerovaný a ověřený <see cref="id_key" />

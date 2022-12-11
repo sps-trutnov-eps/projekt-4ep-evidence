@@ -4,25 +4,8 @@
     ViewData["Page"] = "register";
 }
 
-@model CustomMessageResponse
+@model RegisterData
 
 <form action="/users/register" method="post">
-    <label for="firstname">Jméno:</label>
-    <input type="text" name="firstname" required>
-    <label for="lastname">Pøíjmení:</label>
-    <input type="text" name="lastname" required>
-    <label for="contact">Kontakt(email, github,..):</label>
-    <input type="text" name="contact" >
-    <label for="studyField">Obor:</label>
-    <input type="text" name="studyField" list="obory">
-    <label for="schoolYear">Roèník:</label>
-    <input type="text" name="schoolYear" list="rocniky">
-    <label for="username">Uživatelské jméno:</label>
-    <input type="text" name="username" required>
-    <label for="password">Heslo:</label>
-    <input type="password" name="password" required>
-    <input type="submit" value="Registrovat se">
-
-    @await Html.PartialAsync("../Shared/DatalistsPV")
+    @await Html.PartialAsync("../Shared/RegisterInputsPV", model: Model)
 </form>
-<p  style="color: red">@Model.Response</p>

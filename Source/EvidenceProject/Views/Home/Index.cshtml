@@ -22,7 +22,7 @@
     </p>
 
     <p>Stav: @project?.projectState?.name</p>
-    <p>Úspěchy: @project?.projectAchievements</p>
+    <p>Úspěchy: @foreach(var achievement in project.projectAchievements){<span>@achievement.name</span>}</p>
     <p>Github: @project?.github</p>
     <p>Slack: @project?.slack</p>
     <p>Typ: @project?.projectType?.name</p>
@@ -30,9 +30,9 @@
 
     @foreach (var item in project.files)
     {
-        var memoryStreamBytes = item.ReadFile().ToArray();
-        var output = Convert.ToBase64String(memoryStreamBytes);
-        <img id="image" src="data:image/png;base64,@output" />
+        //var memoryStreamBytes = item.ReadFile().ToArray();
+        //var output = Convert.ToBase64String(memoryStreamBytes);
+        <!--TODO-->
     }    
     <a href="/project/@project.id">Detail</a>
     </div>

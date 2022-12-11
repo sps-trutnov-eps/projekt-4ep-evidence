@@ -138,7 +138,23 @@ function search() {
                 url: formular.attr("action"),
                 data: formular.serialize(),
                 success : function(data){
-                    $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${hledanyVyraz}"</h2><div id="vysledky">${data}</div></div>`);
+                    let projektyHtml = "";
+                    for(let projekt of data)  {
+                        let obrazek= projekt.files.find(s => s.mimeType.includes("image"))
+                        let nahled = `<img style="height: 100%;object-fit: cover;width: 100%;" src="/file/${obrazek.generatedFileName}"/>`;
+                        let nadpis = `<a href="/project/${projekt.id}" class="odkaz"><h4>${projekt.name}</h4></a>`;
+                        let spravce = `<div>Správce: ${projekt.projectManager}</div>`;
+                        let popis = `<div>Popis: ${projekt.projectDescription}</div>`;
+                        let stav = `<div style="margin-right:5px">${projekt.projectState.name}</div>`;
+                        let typ = `<div style="margin-right:5px">${projekt.projectType.name}</div>`;
+                        let technologie = "";
+                        for(let tech of projekt.projectTechnology){
+                            technologie += `<div style="margin-right:5px">${tech.name}</div>`;
+                        }
+                        let projektHtml = `<div style="display:flex"><div style="height:100px;width:100px;margin:10px">${nahled}</div><div><div>${nadpis}${spravce}${popis}</div><div style="display:flex">${stav}${typ}${technologie}</div></div></div>`;
+                        projektyHtml += projektHtml;
+                    } 
+                    $("main").html(`<div><h2>Výsledky vyhledávání pro hledaný výraz: "${hledanyVyraz}"</h2><div id="vysledky">${projektyHtml}</div></div>`);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     $("main").html(`<div>${jqXHR.status} ${errorThrown}</div>`);
@@ -164,39 +180,54 @@ async function login() {
     })
     let data = await res.json();
 }
-let jedna = 0
+let jedna = 0;
+let array = [];
+let iii = 0;
 
-function veci(e, cojeto) {
+function veci(e, data) {
     let value = e.target.value;
     let tech = document.getElementsByClassName(value);
     let more = "";
     let vole = "";
+    if (data == "tech" && array.includes(value)) {
+    document.getElementById("technology").value = "";
+    return;
+    }
     try {
-        vole = Array.from(document.getElementById(cojeto).getElementsByTagName("option")).map(e=> e.innerText);
-        console.log(vole);
+        vole = Array.from(document.getElementById(data).getElementsByTagName("option")).map(e=> e.innerText);
     }
     catch {}
     try {
-        document.getElementById(cojeto).remove();
+        document.getElementById(data).remove();
     }
     catch {}
-    if (cojeto == "tech") {
-        more += '<select name = "' + cojeto + '"' + 'id = "' + cojeto +  '" multiple size = ' + tech.length + ">";
+    if (data == "tech") {
+        more += '<select name = "' + data + '"' + 'id = "' + data +  '" multiple size = ' + tech.length + ">";
         if (jedna != 0) {
             for (let i = 0; i < vole.length; i ++) {    
                 more += '<option value = "' + vole[i] + '">' + vole[i] +'</option>'
-                console.log(vole[i] + "jjjjj");
             }
         }
         jedna += 1;
-        document.getElementById("technology").value = "";
     }
     else {
-        more += '<select name = "' + cojeto + '"' + 'id = "' + cojeto + '">';
+        more += '<select name = "' + data + '"' + 'id = "' + data + '">';
     }
     for(let i = 0; i < tech.length; i++ ) {
-        more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>'
+        more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>';
     }
-    more += '</select>'
+    more += '</select>';
     $( e.target ).after( more );
+    array[iii] = value;
+    iii++;
+    
+    document.getElementById("technology").value = "";
+}
+
+
+function removeFile(fileInput) {
+    const elements = document.getElementsByClassName(fileInput);
+    while (elements.length > 0) {
+        elements[0].parentNode.removeChild(elements[0]);
+    }
 }
