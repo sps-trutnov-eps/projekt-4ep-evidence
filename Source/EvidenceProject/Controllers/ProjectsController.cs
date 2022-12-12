@@ -252,17 +252,25 @@ public class ProjectController : Controller
     {
         if (!UniversalHelper.CheckAllParams(data)) return Redirect($"/project/{id}");
 
-        var project = _context.projects.FirstOrDefault(x => x.id == id);
+        var project = UniversalHelper.GetProject(_context, id);
+        if(project.IsNull()) return Redirect($"/project/{id}");
 
-        if (project?.applicants == null) project.applicants = new List<User>();
-
-        project?.applicants?.Add(new Data.DataModels.User()
+        if (project.applicants == null) project.applicants = new List<User>();
+        
+        var user = _context.users?.FirstOrDefault(u => u.fullName == $"{data.firstname} {data.lastname}" && u.contactDetails == data.contact && u.schoolYear == u.schoolYear);
+        if(user == null)
         {
-            fullName = $"{data.firstname} {data.lastname}",
-            schoolYear = byte.Parse(data.schoolYear),
-            studyField = data.studyField,
-            contactDetails = data.contact
-        });
+            user = new User()
+            {
+                contactDetails = data.contact,
+                fullName = $"{data.firstname} {data?.lastname}",
+                schoolYear = byte.Parse(data.schoolYear),
+                studyField = data.studyField
+            };
+            _context.users?.Add(user);
+        }
+
+        if(!project.applicants.Contains(user)) project?.applicants?.Add(user);
 
         _context.projects?.Update(project);
         _context.SaveChanges();
@@ -296,10 +304,21 @@ public class ProjectController : Controller
         var applicant = project.applicants?.FirstOrDefault(a => a.id == id);
         if (applicant == null) return;
 
-        if(add) project.assignees?.Add(applicant);
+        if (add)
+        {
+            var user = _context.users.FirstOrDefault(u => u.id == id);
+
+            if(!user.IsNull())
+            {
+                user.Projects = user.Projects ?? new List<Project>();
+                user.Projects.Add(project);
+                project.assignees?.Add(applicant);
+            }
+        }
+
         project.applicants?.Remove(applicant);
-        UpdateProjectsInCache();
         _context.SaveChanges();
+        UpdateProjectsInCache();
     }
 
     private void UpdateProjectsInCache()
