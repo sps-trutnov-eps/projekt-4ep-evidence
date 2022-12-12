@@ -1,12 +1,15 @@
 ﻿using EvidenceProject.Data.DataModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using System.Drawing;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+
 namespace EvidenceProject.Helpers;
 
-public class UniversalHelper
+public static class UniversalHelper
 {
     /// <summary>
     ///     Jméno cookie
@@ -203,4 +206,5 @@ public class UniversalHelper
         }
         return text;
     }
+    public static bool IsNull(this object? obj) => obj == null;
 }

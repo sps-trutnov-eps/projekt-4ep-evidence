@@ -1,43 +1,59 @@
-﻿@{
+﻿@model Project
+@{
     ViewData["Title"] = "Project Details";
+    List<Achievement>? achievements = Model.projectAchievements?.ToList();
+    List<DbFile>? images = Model.files?.Where(f => f.mimeType.Contains("image")).ToList();
+    List<DbFile>? otherFiles = Model.files?.Where(f => !f.mimeType.Contains("image")).ToList();
 }
-@model Project
+
 
 <a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
+
 @if (Model == null) return;
 
 <p><b>@Model.name</b></p>
 @if (Model.projectTechnology != null){
+    <p>Technologie: 
     @foreach (var item in Model?.projectTechnology)
     {
         <span style="color:@UniversalHelper.GetHtmlColor(item.color)">@item.name</span>
     }
+    </p>
 }
 <p>Stav: @Model?.projectState?.name</p>
-<p>Úspěchy: @UniversalHelper.GetAchievements(Model.projectAchievements?.ToList())</p>
-<p>Github: @Model?.github</p>
-<p>Slack: @Model?.slack</p>
 <p>Typ: @Model?.projectType?.name</p>
-<p>Zapojení lidé: </p>
-@if(Model.assignees != null){
+@if (achievements?.Count > 0)
+{
+    <p>Úspěchy: @UniversalHelper.GetAchievements(achievements)</p>
+}
+@if (!Model.github.IsNull()){<p>Github: @Model?.github</p>}
+@if (!Model.slack.IsNull()){<p>Slack: @Model?.slack</p>}
+@if (Model.assignees != null)
+{
+    <p>Zapojení lidé: </p>
     @foreach (var assignee in Model.assignees?.ToList())
     {
         <p> @assignee.fullName</p>
     }           
 }
 
-<p>Obrázky</p>
-@foreach(var item in Model.files?.Where(f => f.mimeType.Contains("image")))
-{    
-    <img src="/file/@item.generatedFileName"/>
+@if(images?.Count > 0){
+    <p>Obrázky</p>
+    @foreach (var item in images)
+    {
+        <img src="/file/@item.generatedFileName" />
+    }
 }
 
-<p>Ostatní soubory</p>
-@foreach (var item in Model.files?.Where(f => !f.mimeType.Contains("image")))
+
+@if (otherFiles?.Count > 0)
 {
-    <a href="/file/@item.generatedFileName">@item.originalFileName</a>
+    <p>Ostatní soubory</p>
+    @foreach (var item in otherFiles)
+    {
+        <a href="/file/@item.generatedFileName">@item.originalFileName</a>
+    }
 }
-
 
 <p>Projevit zájem</p>
 <form method="post" action="/project/apply/@Model.id">

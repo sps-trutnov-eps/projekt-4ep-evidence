@@ -24,7 +24,7 @@
       <label for="photos">Fotografie: </label>
       <input name="photos" type="file" multiple="multiple" required/>
       <label for="achievements">Úspěchy: </label>
-      <input name="achievements" type="text" id="achievements" />
+      <input name="achievements" type="text" id="achievements" placeholder="Úspěchy se dělí středníkem (;)" />
       <label for="slack">Slack: </label>
       <input name="slack" type="text" id="slack"  value="@Model.CurrentProject?.slack" />
       <label for="github">Github: </label>
@@ -35,7 +35,7 @@
           @{
               if (Model.DialInfos == null) return;
               foreach(var dialInfo in Model.DialInfos){
-                      <option id="@dialInfo.name">@dialInfo.name</option>
+                          <option id="@dialInfo.name">@dialInfo.name</option>
               }
           }
       </datalist>
@@ -45,7 +45,7 @@
               if (Model.DialCodes == null) return;
               foreach (var dialcode in Model.DialCodes)
               {
-                      <option class="@dialcode.dialInfo.name">@dialcode.name</option>
+                          <option class="@dialcode.dialInfo.name">@dialcode.name</option>
               }
           }
       </datalist>
@@ -54,7 +54,7 @@
               if (Model.Users == null) return;
               foreach (var user in Model.Users)
               {
-                      <option>@user.fullName</option>
+                          <option>@user.fullName</option>
               }
           }
       </datalist>

@@ -82,9 +82,10 @@
 {
     <br />
     <div id="nonuser">
-    <h2>Žádosti o přiřazení k projektu + nonAuthUsers</h2>
+    <h2>Žádosti o přiřazení k projektu</h2>
     @foreach (var item in Model.NonAuthUsers)
     {
+        if (item.GetType().Name != "User") continue;
         if(item.Projects?.Count > 0)
         {
                 var splittedFullname = item.fullName?.Split(" ");
@@ -103,7 +104,7 @@
                 </form>
                 continue;
         }
-        var projects = @Model.Projects?.Where(x => x.applicants.Any(x => x.id == item.id));
+        var projects = @Model.Projects?.Where(x => x.applicants.Any(x => x.id == item.id)).ToList();
         if (projects == null) continue;
 
         foreach(var project in projects)
