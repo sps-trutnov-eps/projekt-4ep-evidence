@@ -56,9 +56,3 @@ public class ProjectContext : DbContext
         }
     }
 }
-/*
-class PostgresContext : ProjectContext {
-    public PostgresContext(DbContextOptions<ProjectContext> options) : base(options) { }
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    => options.UseNpgsql("Server=127.0.0.1;Port=5432;Database=project;Username=postgres;Password=password;");
-}*/
