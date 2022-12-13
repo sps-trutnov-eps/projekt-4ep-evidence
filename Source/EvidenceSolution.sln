@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
+<<<<<<< HEAD
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvidenceProject", "EvidenceProject\EvidenceProject.csproj", "{CE892814-9776-4285-B2B0-27CCE8FABBCE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{E7DE6B90-CE3A-4D86-999F-DE1F77AA8ACB}"
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvidenceProject", "EvidenceProject\EvidenceProject.csproj", "{CE892814-9776-4285-B2B0-27CCE8FABBCE}"
+>>>>>>> vlasak
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +21,13 @@ Global
 		{CE892814-9776-4285-B2B0-27CCE8FABBCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE892814-9776-4285-B2B0-27CCE8FABBCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE892814-9776-4285-B2B0-27CCE8FABBCE}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{E7DE6B90-CE3A-4D86-999F-DE1F77AA8ACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E7DE6B90-CE3A-4D86-999F-DE1F77AA8ACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7DE6B90-CE3A-4D86-999F-DE1F77AA8ACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7DE6B90-CE3A-4D86-999F-DE1F77AA8ACB}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+>>>>>>> vlasak
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -28,4 +35,8 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {825EF871-BFAE-4557-A0F2-726CA203319D}
 	EndGlobalSection
+<<<<<<< HEAD
 EndGlobal
+=======
+EndGlobal
+>>>>>>> vlasak
