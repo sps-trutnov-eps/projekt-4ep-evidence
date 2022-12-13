@@ -328,9 +328,9 @@ public class ProjectController : Controller
         GETProjectCreate GETProject = new();
 
         GETProject.DialInfos = UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos");
-        GETProject.DialCodes = UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes");
+        // toto nemůžeme brát z cache, je zde include!
+        GETProject.DialCodes = _context.dialCodes.Include(x => x.dialInfo).ToList();
         GETProject.Users = UniversalHelper.GetData<AuthUser>(_context, _cache, UniversalHelper.GlobalUsersCacheKey, "globalUsers");
         return GETProject;
     }
-
 }
