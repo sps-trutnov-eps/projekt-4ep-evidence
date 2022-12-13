@@ -221,9 +221,11 @@ function veci(e, data) {
         more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>';
     }
     more += '</select>';
-    $( e.target ).after( more );
-    array[iii] = value;
-    iii++;
+    $(e.target).after(more);
+    if (data == "tech") {
+        array[iii] = value;
+        iii++;
+    }
     
     document.getElementById("technology").value = "";
 }
