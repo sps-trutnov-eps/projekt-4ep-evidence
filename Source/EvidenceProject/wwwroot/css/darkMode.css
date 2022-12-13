@@ -1,41 +1,561 @@
-/* Dark mode */
+#register select {
+  margin-top: 10%;
+  height: 50px;
+  width: 90%;
+  margin-left: 5%;
+  grid-column: 1/ span 2;
+}
 
 html {
-  font-size: 14px;
+  font-size: 30px;
   position: relative;
-  min-height: 100%;
-  background-color: white;
+  background-color: rgb(0, 0, 0);
+}
+
+:root {
+  --primary: #1f2730;
+  --sps-cyan: #1a1b1b;
+  --secondary: #610202;
+}
+
+.odkaz{
+  color: rgb(3, 126, 197);
+  font-weight: bold;
+  text-align: center;
+  grid-column: 1 / span 2;
+}
+nav {
+  display: flex;
+  background-color: var(--secondary);
+}
+
+header > div {
+  background-color: var(--sps-cyan);
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  gap: 2rem;
+  height: 2rem;
+}
+
+  header > div a {
+      font-size: 14px;
+      color: rgb(255, 255, 255);
+      text-decoration: none;
+      font-weight: bold;
+      text-transform: uppercase;
+  }
+
+.container-fluid {
+  flex-shrink: 1;
+  flex-direction: column;
+  background-color: var(--primary);
+  padding: 1rem;
+}
+
+form {
+  margin-left: 0.55rem;
+}
+
+body {
+  background-color: rgb(46, 44, 44);
+}
+
+body {
+  color: white;
 }
 
 
-h1{
+/* CREATE */
+div#create {
+  height:100%;
+  background-color: var(--sps-cyan);
+  width: 90%;
+  margin: 0 auto;
+  font-size: 18px;
+}
+
+div#create h2, h3 {
+  padding: 1rem;
+  color:rgb(255, 255, 255);
+  font-size:26px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+div.projectCreateItem {
+}
+
+.projectCreateItem form {
+  gap: 5px;
+  display:grid;
+  grid-template-columns: auto auto;
+  color: rgb(255, 255, 255);
+  font-weight:bold;
+  text-align:left;
+}
+
+.mainPart{
+  height: 1180px;
+}
+.projectCreateItem input, textarea {
+  width: 170px;
+}
+
+div#create input[type=submit] {
+  grid-column: 1/span 2 !important;
+  background: #2ecc71;
+  width: 95%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  color: rgb(255, 255, 255);
+  border-radius: 2px;
+  border: #27ae60 1px solid;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 800;
+  font-size: 0.8em;
+}
+
+.projectCreateItem label {
+}
+
+/* NAVBAR */
+.navbar-toggler {
+  border: none !important;
+  width: 30px;
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  background-color: var(--secondary);
+}
+
+
+.navbar-light .navbar-brand {
+  text-align: center;
+  margin-right: 0;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+}
+
+.navbar-collapse {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  border-top: 4px solid var(--secondary);
+  padding-left: 1rem;
+}
+
+.nav-link {
+  padding: 0.5rem 5rem;
+}
+  .nav-link:hover {
+      background-color: var(--sps-cyan);
+  }
+
+
+h1 {
   font-weight: bold;
   color: black;
 }
 
-footer{
-  padding: 1rem;
+.text-dark {
+  color: white !important;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+footer {
+  display: none;
 }
 
 body {
-  margin-bottom: 55px;
+  margin-bottom: 60px;
 }
 
-@media (max-width: 480px) {
-    html {
-        font-size: 30px;
-    }
+/* REGISTER */
+#register{
+  margin: 0 auto;
+  align-items: center;
+  align-content: center;
 }
 
-@media (min-width: 480px) and (max-width: 1024px) {
-    html {
-        font-size: 25px;
-    }
+  #register form 
+{
+  height: 100%;
+  width: 500px;
+  display: grid;
+  grid-template-columns: auto auto;
+  border: #2980b9 4px solid;
+  border-radius: 6px;
+  background-color: var(--secondary);
+  margin: 0 auto 0 auto;
+  padding: 0.25rem;
+}
+      #register form input {
+          margin-top: 10%;
+          height: 50px;
+          width: 90%;
+          margin-left: 5%;
+          grid-column: 1/ span 2;
+      }
+  #register label {
+      grid-column: 1/span 2;
+      justify-content: center;
+      align-self: center;
+      padding-top: 35px;
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      text-transform: uppercase;
+      text-align: center;
+      height: 50px;
+  }
+  #register form input[type=submit] {
+      grid-column: 1/span 2 !important;
+      background: #2ecc71;
+      width: 90%;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      color: white;
+      border-radius: 2px;
+      border: #27ae60 1px solid;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      margin-left: 23px;
+      font-weight: 800;
+      font-size: 0.8em;
+  }
+
+  /* LOGIN */
+#login {
+  margin: 0 auto;
+  align-items: center;
+  align-content: center;
+}
+
+  #login form input {
+      margin-top: 10px;
+      width: 100%;
+      grid-column: 1/span 2;
+  }
+
+  #login form {
+      position: absolute;
+      display: grid;
+      grid-template-columns: 125px 125px;
+      width: 250px;
+      border: #2980b9 4px solid;
+      border-radius: 6px;
+      background-color: white;
+      margin: 0 auto 0 auto;
+      padding: 0.25rem;
+  }
+
+      #login form input:nth-child(5) {
+          grid-column: 1/ span 2;
+          background: #2ecc71;
+          width: 90%;
+          padding-top: 2px;
+          padding-bottom: 2px;
+          color: white;
+          border-radius: 2px;
+          border: #27ae60 1px solid;
+          margin-top: 10px;
+          margin-bottom: 10px;
+          margin-left: 23px;
+          font-weight: 800;
+          font-size: 0.8em;
+      }
+
+.myLogin:hover {
+  background: #2CC06B;
+}
+
+#login > form button {
+  background: #2ecc71;
+  width: 105px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  color: white;
+  border-radius: 2px;
+  border: #27ae60 1px solid;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 4px;
+  font-weight: 800;
+  font-size: 0.8em;
+}
+
+  #login > form button:hover {
+      background: #2CC06B;
+  }
+
+#hlaska {
+  font-weight: bold;
+  position: relative;
+  top: 140px;
+}
+
+@media (min-width: 480px) {
+  header > div a{
+      font-size: 16px;
+  }
+  .login {
+      margin: 0 auto;
+  }
+
+  #login form {
+      left: calc(50% - 250px);
+      grid-template-columns: auto auto;
+  }
+
+  #login > form button {
+      background: #2ecc71;
+      width: 85%;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      color: white;
+      border-radius: 4px;
+      border: #27ae60 1px solid;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      margin-left: 16px;
+      font-weight: 800;
+      font-size: 0.8em;
+  }
+
+  input.myLogin {
+      grid-column: 1 !important;
+      background: #2ecc71;
+      width: 85%;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      color: white;
+      border-radius: 4px;
+      border: #27ae60 1px solid;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      margin-left: 16px;
+      font-weight: 800;
+      font-size: 0.8em;
+  }
+
+  #login form {
+      width: 500px;
+      background-color: rgb(61, 54, 54);
+  }
+
+      #login form input {
+          margin-top: 10%;
+          height: 50px;
+          width: 90%;
+          margin-left: 5%;
+      }
+
+          #login form input.myLogin {
+              grid-column: 1/ span 1 !important;
+          }
+
+      #login form button {
+          margin-top: 10%;
+          width: 200px;
+          height: 50px;
+      }
+
+  #login label {
+      grid-column: 1/span 2;
+      justify-content: center;
+      align-self: center;
+      padding-top: 35px;
+      color: white;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-align: center;
+      height: 50px;
+  }
+
+  #login input {
+      grid-column: 1/span 2;
+  }
+
+  html {
+      font-size: 25px;
+  }
+
+  .container-fluid {
+      flex-direction: column;
+  }
+
+  #hlaska {
+      font-weight: bold;
+      position: absolute;
+      top: 700px;
+  }
+
+  .border-bottom{
+    border: none !important;
+  }
+  
+  main {
+      height: auto;
+  }
+
+  footer.border-top {
+      display: none;
+  }
+
+  footer {
+      bottom: 0px;
+  }
 }
 
 @media (min-width: 1024px) {
-    html {
-        font-size: 16px;
-    }
+  header > div a {
+      font-size: 18px;
+  }
+  #hlaska {
+      font-weight: bold;
+      position: absolute;
+      top: 520px;
+  }
+
+  html {
+      font-size: 16px;
+  }
+
+  .container-fluid {
+      flex-direction: row;
+  }
+
+  .navbar-collapse {
+      border-top: none;
+      margin-left: 1rem;
+      border-left: 5px solid var(--secondary);
+      padding-left: 1rem;
+  }
+
+  #search {
+      position: absolute;
+      top: 10%;
+      right: 30%;
+      width: 50%;
+      max-width: 250px;
+  }
+
+  label {
+      color: var(--secondary);
+  }
+
+  .nav-item label {
+      position: absolute;
+      top: 10.5%;
+      right: 25%;
+      height: 25px;
+      width: 25px;
+      color: transparent;
+      background-image: url('../icons/lupaIcon.png');
+      background-size: cover;
+      background-repeat: none;
+  }
 }
+
+
+/*DS*/
+
+@media all and (min-width: 1024px) {
+  div#create {
+      height: 105%;
+      width: 1000px;
+      margin: 0 auto;
+      background-color: var(--sps-cyan);
+      border: 10px solid var(--secondary);
+      border-radius: 4px;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: auto auto auto;
+  }
+
+      div#create h2, h3 {
+          border: 2px solid var(--sps-cyan);
+          height: 80px;
+          text-align: center;
+          color: white;
+          font-weight: bold;
+          text-transform: uppercase;
+      }
+
+  div.projectCreateItem {
+      text-align: left;
+  }
+
+  .projectCreateItem form {
+      margin: 1rem;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+  }
+
+  .projectCreateItem input, textarea {
+      width: 75%;
+      height: 2.5rem;
+  }
+
+  div#create input[type=submit] {
+      background: #2ecc71;
+      width: 50%;
+      height: 3rem;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      color: white;
+      border-radius: 2px;
+      border: #27ae60 1px solid;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-weight: 800;
+      font-size: 0.8em;
+  }
+
+  .projectCreateItem label {
+      padding: 0.5rem;
+      display: block;
+      font-weight: bold;
+      color: white;
+  }
+  .navbar-nav {
+      display: flex;
+      flex-direction: row;
+  }
+
+  .navbar-collapse.collapse {
+      display: grid !important;
+      grid-template-columns: 70% 30%;
+      justify-content: space-between !important;
+      align-items: center;
+  }
+
+  #search {
+      position: initial !important;
+      min-width: 100%;
+  }
+
+  .nav-item {
+      display: flex;
+  }
+
+  .searchDiv {
+      display: flex;
+  }
+
+  .navbar {
+      padding: 0 !important;
+  }
+  .mainPart{
+      max-width: 1240px;
+      margin: 0 auto;
+  }
+}
+
+
 
