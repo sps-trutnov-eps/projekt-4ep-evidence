@@ -1,15 +1,23 @@
 ﻿@using EvidenceProject.Controllers.ActionData
+
+@{
+    ViewData["Title"] = "Profil";
+    ViewData["Page"] = "profile";
+}
+
+
 @model EvidenceProject.Controllers.ActionData.ProfileData
 
 
+@if(Model.IsNull()) return;
+
 @{
     List<User>? usersWithProject = Model.NonAuthUsers?.Where(x => x.Projects?.Count > 0).ToList();
-    List<User>? usersWithoutProject  = Model.NonAuthUsers?.Where(x => x.Projects?.Count == 0).ToList();
+    List<User>? usersWithoutProject  = Model.NonAuthUsers?.Where(x => x.Projects == null || x.Projects.Count ==0 ).ToList();
+    var splittedName = Model.AuthUser.fullName?.Split(" ");
 }
 
-@if(Model == null) return;
-@{var splittedName = Model.AuthUser.fullName?.Split(" ");}
-@if(Model.AuthUser != null){
+@if(!Model.AuthUser.IsNull()) {
     <h2>Profil</h2>
     <form method="post" action="/user/edit/@Model.AuthUser.id">
         <label for="firstname">Jméno:</label>
@@ -35,7 +43,7 @@
     </form>
 }
 
-@if(Model.Projects != null && Model.Projects?.Count > 0)
+@if(!Model.Projects.IsNull() && Model.Projects?.Count > 0)
 {
     <div id="projects">
     <h2>Projekty</h2>
@@ -49,7 +57,7 @@
     }
     </div>
 }
-@if (Model.Users != null && Model.Users.Count > 0)
+@if (!Model.Users.IsNull() && Model.Users.Count > 0)
 {
     <div id="user">
     <h2>Všichni ověření uživatelé</h2>
@@ -110,7 +118,7 @@
 
 <br />
 
-@if(usersWithoutProject.Count > 0) 
+@if(usersWithoutProject.Count > 0 && !usersWithoutProject.IsNull() ) 
 {
     <h2>Žádosti o přiřazení k projektu</h2>
     <div id="nonuser">
@@ -136,7 +144,7 @@
 }
 
 
-@if(Model.Categories != null && Model.Categories.Count > 0)
+@if(!Model.Categories.IsNull() && Model.Categories.Count > 0)
 {
     <div id="categories">
     <h2>Úprava kategorií</h2>
@@ -178,3 +186,5 @@
     <input type="submit" value="Editovat override.css">
     </form>
 }
+
+@await Html.PartialAsync("../Shared/CategoriesPV", model: Model.Categories)

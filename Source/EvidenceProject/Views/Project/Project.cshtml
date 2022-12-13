@@ -1,6 +1,6 @@
 ﻿@model Project
 @{
-    ViewData["Title"] = "Project Details";
+    ViewData["Title"] = $"{Model.name}";
     List<Achievement>? achievements = Model.projectAchievements?.ToList();
     List<DbFile>? images = Model.files?.Where(f => f.mimeType.Contains("image")).ToList();
     List<DbFile>? otherFiles = Model.files?.Where(f => !f.mimeType.Contains("image")).ToList();

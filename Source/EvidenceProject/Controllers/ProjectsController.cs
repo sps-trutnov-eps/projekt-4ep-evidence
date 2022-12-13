@@ -1,9 +1,6 @@
 ﻿using EvidenceProject.Controllers.ActionData;
-using EvidenceProject.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace EvidenceProject.Controllers;
 
@@ -304,10 +301,9 @@ public class ProjectController : Controller
         var applicant = project.applicants?.FirstOrDefault(a => a.id == id);
         if (applicant == null) return;
 
+        var user = _context.users.FirstOrDefault(u => u.id == id);
         if (add)
         {
-            var user = _context.users.FirstOrDefault(u => u.id == id);
-
             if(!user.IsNull())
             {
                 user.Projects = user.Projects ?? new List<Project>();
@@ -315,7 +311,7 @@ public class ProjectController : Controller
                 project.assignees?.Add(applicant);
             }
         }
-
+        else _context.users.Remove(user);
         project.applicants?.Remove(applicant);
         _context.SaveChanges();
         UpdateProjectsInCache();
