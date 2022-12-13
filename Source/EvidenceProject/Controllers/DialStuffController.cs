@@ -22,7 +22,7 @@ public class DialStuffController : Controller
     {
         if(!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
         // Todo error message
-        if (_context.dialCodes.Any(x => x.name == data.Name)) return Json("ERROR");
+        if (UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes").Any(x => x.name == data.Name)) return Json("ERROR");
 
         var color = ColorTranslator.FromHtml(data?.Color);
         var dialInfo = _context.dialInfos.FirstOrDefault(x => x.name == data.DialInfoName);
@@ -39,7 +39,7 @@ public class DialStuffController : Controller
     public ActionResult AddDialInfo([FromForm] DialInfoData? data)
     {
         // Todo error message
-        if (_context.dialInfos.Any(x => x.name == data.name)) return Json("ERROR");
+        if (UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos").Any(x => x.name == data.name)) return Json("ERROR");
         // Todo error message
         if(!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
 
@@ -56,12 +56,12 @@ public class DialStuffController : Controller
     }
 
 
-    [HttpPost("dialinfo/add/{id}")]
+    [HttpPost("dialinfo/edit/{id}")]
     public ActionResult UpdateDialInfo(int id, [FromForm] DialInfoData? data)
     {
         if (!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return Json("ERR");
 
-        var dialInfo = _context.dialInfos?.FirstOrDefault(x => x.id == id);
+        var dialInfo = UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos").FirstOrDefault(x => x.id == id);
 
         dialInfo.desc = data.description;
         dialInfo.name = data.name;
@@ -69,7 +69,7 @@ public class DialStuffController : Controller
         _context.dialInfos.Update(dialInfo);
         _context.SaveChanges();
         _cache.Set(UniversalHelper.DialInfoCacheKey, _context.dialInfos.ToList());
-        return Redirect("/profile");
+        return Redirect("/user/profile/");
     }
 
     [HttpPost("dialcode/edit/{id}")]
@@ -77,7 +77,7 @@ public class DialStuffController : Controller
     {
         if (!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
 
-        var dialCode = _context.dialCodes?.FirstOrDefault(x => x.id == id);
+        var dialCode = UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes")?.FirstOrDefault(x => x.id == id);
 
         var color = ColorTranslator.FromHtml(data?.Color);
 
@@ -93,6 +93,6 @@ public class DialStuffController : Controller
         _context.SaveChanges();
 
         _cache.Set(UniversalHelper.DialCodeCacheKey, _context.dialCodes.ToList());
-        return Redirect("/profile");
+        return Redirect("/user/profile/");
     }
 }

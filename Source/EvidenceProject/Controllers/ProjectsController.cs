@@ -1,9 +1,6 @@
 ﻿using EvidenceProject.Controllers.ActionData;
-using EvidenceProject.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace EvidenceProject.Controllers;
 
@@ -304,10 +301,9 @@ public class ProjectController : Controller
         var applicant = project.applicants?.FirstOrDefault(a => a.id == id);
         if (applicant == null) return;
 
+        var user = _context.users.FirstOrDefault(u => u.id == id);
         if (add)
         {
-            var user = _context.users.FirstOrDefault(u => u.id == id);
-
             if(!user.IsNull())
             {
                 user.Projects = user.Projects ?? new List<Project>();
@@ -315,7 +311,7 @@ public class ProjectController : Controller
                 project.assignees?.Add(applicant);
             }
         }
-
+        else _context.users.Remove(user);
         project.applicants?.Remove(applicant);
         _context.SaveChanges();
         UpdateProjectsInCache();
@@ -332,9 +328,9 @@ public class ProjectController : Controller
         GETProjectCreate GETProject = new();
 
         GETProject.DialInfos = UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos");
-        GETProject.DialCodes = UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes");
+        // toto nemůžeme brát z cache, je zde include!
+        GETProject.DialCodes = _context.dialCodes.Include(x => x.dialInfo).ToList();
         GETProject.Users = UniversalHelper.GetData<AuthUser>(_context, _cache, UniversalHelper.GlobalUsersCacheKey, "globalUsers");
         return GETProject;
     }
-
 }

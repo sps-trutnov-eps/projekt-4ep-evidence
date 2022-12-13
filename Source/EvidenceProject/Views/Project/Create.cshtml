@@ -1,6 +1,6 @@
 @using EvidenceProject.Controllers.ActionData
 @{
-    ViewData["Title"] = "Create Project";
+    ViewData["Title"] = "Vytvoření projektu";
     ViewData["Page"] = "create";
 }
 @model GETProjectCreate
@@ -31,14 +31,7 @@
       <input name="github" type="text" id="github" value="@Model.CurrentProject?.github" />
       <input type="submit"/>
       @if (Model == null) return;
-      <datalist id="stavy">
-          @{
-              if (Model.DialInfos == null) return;
-              foreach(var dialInfo in Model.DialInfos){
-                          <option id="@dialInfo.name">@dialInfo.name</option>
-              }
-          }
-      </datalist>
+          @await Html.PartialAsync("../Shared/CategoriesPV", model: Model.DialInfos)
 
       <datalist id="dialCodes">
           @{

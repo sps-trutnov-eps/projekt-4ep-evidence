@@ -454,7 +454,7 @@ body {
 
 @media all and (min-width: 1024px) {
     div#create {
-        height: 105%;
+        height: auto;
         width: 1000px;
         margin: 0 auto;
         background-color: var(--sps-cyan);
@@ -544,6 +544,8 @@ body {
         margin: 0 auto;
     }
 }
+
+
 
 
 
