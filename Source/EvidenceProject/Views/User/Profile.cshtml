@@ -1,6 +1,12 @@
 ﻿@using EvidenceProject.Controllers.ActionData
 @model EvidenceProject.Controllers.ActionData.ProfileData
 
+
+@{
+    List<User>? usersWithProject = Model.NonAuthUsers?.Where(x => x.Projects?.Count > 0).ToList();
+    List<User>? usersWithoutProject  = Model.NonAuthUsers?.Where(x => x.Projects?.Count == 0).ToList();
+}
+
 @if(Model == null) return;
 @{var splittedName = Model.AuthUser.fullName?.Split(" ");}
 @if(Model.AuthUser != null){
@@ -78,18 +84,15 @@
     </div>
 }
 
-@if(Model.NonAuthUsers != null && Model.NonAuthUsers.Count > 0)
+
+
+@if(usersWithProject.Count > 0)
 {
-    <br />
-    <div id="nonuser">
-    <h2>Žádosti o přiřazení k projektu</h2>
-    @foreach (var item in Model.NonAuthUsers)
+    <h2>Povýšit uživatele na ověřeného uživatele</h2>
+    @foreach (var item in usersWithProject)
     {
-        if (item.GetType().Name != "User") continue;
-        if(item.Projects?.Count > 0)
-        {
-                var splittedFullname = item.fullName?.Split(" ");
-                var Data = new RegisterData()
+        var splittedFullname = item.fullName?.Split(" ");
+        var Data = new RegisterData()
                     {
                         Firstname = splittedFullname[0],
                         Lastname = splittedFullname[1],
@@ -97,33 +100,44 @@
                         StudyField = item.studyField,
                         Contact = item.contactDetails
                     };
-                <p>@item.fullName</p>
-                <form method="post" action="/user/promote/@item.id">
-                    @await Html.PartialAsync("../Shared/RegisterInputsPV", model: Data)
-                    <input type="hidden" name="projectId" value="@item.Projects[0].id"/>
-                </form>
-                continue;
-        }
-        var projects = @Model.Projects?.Where(x => x.applicants.Any(x => x.id == item.id)).ToList();
-        if (projects == null) continue;
-
-        foreach(var project in projects)
-        {
-            <p>@item.fullName žádá o přiřazení k projektu: @project.name </p> 
-            <form method="post" action="/project/addUser/@item.id">
-                <input type="hidden" value="@project.id" name="projectId">
-                <input type="submit" value="Přijmout">
-            </form>
-            <form method="post" action="/project/deleteUser/@item.id">
-                <input type="hidden" value="@project.id" name="projectId">
-                <input type="submit" value="Odmítnout">
-            </form>
-        }
+        <p>@item.fullName</p>
+        <form method="post" action="/user/promote/@item.id">
+            @await Html.PartialAsync("../Shared/RegisterInputsPV", model: Data)
+            <input type="hidden" name="projectId" value="@item.Projects[0].id" />
+        </form>
     }
+}
+
+<br />
+
+@if(usersWithoutProject.Count > 0) 
+{
+    <h2>Žádosti o přiřazení k projektu</h2>
+    <div id="nonuser">
+        @foreach (var item in usersWithoutProject)
+        {
+            var projects = @Model.Projects?.Where(x => x.applicants.Any(x => x.id == item.id)).ToList();
+            if (projects == null) continue;
+
+            foreach (var project in projects)
+            {
+                <p>@item.fullName žádá o přiřazení k projektu: @project.name </p>
+                <form method="post" action="/project/addUser/@item.id">
+                    <input type="hidden" value="@project.id" name="projectId">
+                    <input type="submit" value="Přijmout">
+                </form>
+                <form method="post" action="/project/deleteUser/@item.id">
+                    <input type="hidden" value="@project.id" name="projectId">
+                    <input type="submit" value="Odmítnout">
+                </form>
+            }
+        }
     </div>
 }
 
-@if(Model.Categories != null && Model.Categories.Count > 0){
+
+@if(Model.Categories != null && Model.Categories.Count > 0)
+{
     <div id="categories">
     <h2>Úprava kategorií</h2>
     @foreach (var category in Model.Categories)
