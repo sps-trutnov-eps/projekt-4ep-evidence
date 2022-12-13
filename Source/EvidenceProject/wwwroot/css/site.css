@@ -58,6 +58,100 @@ form {
     margin-left: 0.55rem;
 }
 
+/* PROFILE */
+#profile{
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+#profile > div > h2 {
+    text-transform: uppercase;
+    text-align: center;
+    border-bottom: 2px solid var(--secondary);
+    padding: 0.5rem;
+}
+#profile > div > form {
+    padding: 1rem;
+    width: auto;
+    margin: 0 auto;
+    justify-content: center;
+    display: grid;
+    grid-template-columns: 30% 60%;
+    gap: 0.5rem;
+}
+
+#profile > div > div > form {
+    padding: 1rem;
+    width: auto;
+    margin: 0 auto;
+    justify-content: center;
+    display: grid;
+    grid-template-columns: 30% 60%;
+}
+    #profile > div > div > form > input[type=submit] {
+        grid-column: 1/span 2 !important;
+        background: #2ecc71;
+        width: 50%;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        color: white;
+        border-radius: 2px;
+        border: #27ae60 1px solid;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 25%;
+        font-weight: 800;
+        font-size: 0.8em;
+    }
+    #profile > div > form > input[type=submit] {
+        grid-column: 1/span 2 !important;
+        background: #2ecc71;
+        width: 80%;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        color: white;
+        border-radius: 2px;
+        border: #27ae60 1px solid;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 10%;
+        font-weight: 800;
+        font-size: 0.8em;
+    }
+    #profile > div > form > textarea {
+        width: 100%;
+        grid-column: 1/span 2;
+    }
+    #profile > div > p {
+        font-weight: bold;
+        text-align: center;
+        font-size: 20px;
+        text-transform: uppercase;
+        margin: 0.5rem;
+    }
+
+#user > form{
+    padding: 1rem;
+    width: auto;
+    margin: 0 auto;
+    justify-content:center;
+    display: grid;
+    grid-template-columns: 30% 60%;
+}
+#user > form > input[type=submit]{
+    grid-column: 1/span 2 !important;
+    background: #2ecc71;
+    width: 80%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: white;
+    border-radius: 2px;
+    border: #27ae60 1px solid;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10%;
+    font-weight: 800;
+    font-size: 0.8em;
+}
 /* CREATE */
 div#create {
     height:100%;
@@ -454,8 +548,8 @@ body {
 
 @media all and (min-width: 1024px) {
     div#create {
-        height: 105%;
-        width: 1000px;
+        height: auto;
+        width: auto;
         margin: 0 auto;
         background-color: var(--sps-cyan);
         border: 10px solid var(--secondary);
