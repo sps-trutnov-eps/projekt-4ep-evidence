@@ -14,7 +14,13 @@ public class DbFile
     ///     Název souboru
     /// </summary>
     [Required]
-    public string fileName { get; set; }
+    public string originalFileName { get; set; }
+
+    /// <summary>
+    ///     Unikátní název souboru
+    /// </summary>
+    [Required]
+    public string generatedFileName { get; set; }
 
     /// <summary>
     ///     Data souboru
@@ -55,5 +61,7 @@ public static class FileExtension
         formFile.CopyTo(memoryStream);
         file.fileData = memoryStream.ToArray();
         file.mimeType = formFile.ContentType;
+        file.originalFileName = formFile.FileName;
+        file.generatedFileName = Guid.NewGuid().ToString("N");
     }
 }

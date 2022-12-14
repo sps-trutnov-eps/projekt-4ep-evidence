@@ -1,8 +1,10 @@
 ﻿using EvidenceProject.Controllers;
+using EvidenceProject.Controllers.ActionData;
 using EvidenceProject.Controllers.RequestClasses;
 using EvidenceProject.Data;
 using EvidenceProject.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 #nullable disable
 
@@ -14,10 +16,13 @@ public class UserControllerTests : ControllerTestsBase
     UserController Controller { get; set; }
 
     Logger<UserController> Logger = new(ControllerTestsBase.LoggerFactory);
+
+    MemoryCacheOptions Opt = new();
     public UserControllerTests()
     {
+        MemoryCache memoryCache = new(Opt);
         DBContext = GetContext();
-        Controller = new UserController(DBContext, Logger);
+        Controller = new UserController(DBContext, Logger, memoryCache);
     }
 
     [TestCase("test","12345", false)]
@@ -26,10 +31,10 @@ public class UserControllerTests : ControllerTestsBase
     [TestCase(null,null, false)]
     public void Register(string username, string password, bool successful)
     {
-        var data = new LoginData()
+        var data = new RegisterData()
         {
-            username = username == "guid" ? Guid.NewGuid().ToString("N") : username,
-            password = password
+            Username = username == "guid" ? Guid.NewGuid().ToString("N") : username,
+            Password = password
         };
 
         if (successful)
@@ -58,8 +63,8 @@ public class UserControllerTests : ControllerTestsBase
 
         var loginData = new LoginData()
         {
-            username = username,
-            password = password
+            Username = username,
+            Password = password
         };
 
         var data = Controller.LoginPost(loginData, true);

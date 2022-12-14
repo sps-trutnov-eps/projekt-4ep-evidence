@@ -1,0 +1,80 @@
+﻿@using EvidenceProject.Controllers.ActionData
+@{
+    ViewData["Title"] = "Create Project";
+    ViewData["Page"] = "create";
+
+}
+@model GETProjectCreate
+<h2>Editace projektu</h2>
+<span style="color: red;">@Model.Response</span>
+<form action="/project/edit/@Model.CurrentProject.id" method="post" enctype="multipart/form-data">
+    <label for="projectName">Název projektu: </label>
+    <input name="projectName" type="text" placeholder="..." id="name" value="@Model.CurrentProject.name" />
+    <label for="description">Popis projektu</label>
+    <textarea name="description">@Model.CurrentProject.projectDescription</textarea>
+    <label for="users">Vedoucí: </label>
+    <input name="projectManager" type="text" placeholder="..." id="assignees" list="users" value="@Model.CurrentProject.projectManager?.fullName" />
+    <label for="state">Stav: </label>
+    <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" value="@Model.CurrentProject.projectState?.name" />
+    <label for="type">Typ: </label>
+    <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" value="@Model.CurrentProject.projectType?.name" />
+    <label for="technology">Technologie: </label>
+    <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
+    <label for="photos">Současné technologie: </label>
+    @foreach(var tech in Model.CurrentProject.projectTechnology)
+    {
+        <div class="@tech.id" style="display: flex;">
+            <input class="@tech.id" name="oldTech" type="text" value="@tech.name" readonly />
+            <span class="@tech.id" onclick="removeFile('@tech.id')">Odebrat</span>
+        </div>
+    }
+    <label for="photos">Soubory: </label>
+    <input name="photos" type="file" multiple="multiple" />
+    <label for="photos">Současné soubory: </label>
+    @foreach(var file in Model.CurrentProject.files)
+    {
+        <div class="@file.generatedFileName" style="display: flex;">
+        <input class="@file.generatedFileName" name="oldFile" type="hidden" value="@file.generatedFileName" readonly />
+        <span class="@file.generatedFileName">@file.originalFileName</span>
+        <span class="@file.generatedFileName" onclick="removeFile('@file.generatedFileName')">Odebrat</span>
+        </div>
+    }
+    <label for="achievements" >Úspěchy: </label>
+    <input name="achievements" type="text" id="achievements" value="@UniversalHelper.GetAchievements(Model?.CurrentProject?.projectAchievements)" />
+    <label for="slack">Slack: </label>
+    <input name="slack" type="text" id="slack" value="@Model.CurrentProject.slack" />
+    <label for="github">Github: </label>
+    <input name="github" type="text" id="github" value="@Model.CurrentProject.github" />
+    <input type="submit"/>
+    @if (Model == null) return;
+    <datalist id="stavy">
+        @{
+            if (Model.DialInfos == null) return;
+            foreach(var dialInfo in Model.DialInfos){
+                        <option id="@dialInfo.name">@dialInfo.name</option>
+            }
+        }
+    </datalist>
+
+    <datalist id="dialCodes">
+        @{
+            if (Model.DialCodes == null) return;
+            foreach (var dialcode in Model.DialCodes)
+            {
+                        <option class="@dialcode.dialInfo?.name">@dialcode.name</option>
+            }
+        }
+    </datalist>
+    <datalist id="users">
+        @{
+            if (Model.Users == null) return;
+            foreach (var user in Model.Users)
+            {
+                        <option>@user.fullName</option>
+            }
+        }
+    </datalist>
+</form>
+
+
+

@@ -12,17 +12,33 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EvidenceProject.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20221023155717_StringLimitation")]
-    partial class StringLimitation
+    [Migration("20221208151400_dbFileEdit")]
+    partial class dbFileEdit
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DialCodeProject", b =>
+                {
+                    b.Property<int>("Technology")
+                        .HasColumnType("int");
+
+                    b.Property<int>("projectTechnologyid")
+                        .HasColumnType("int");
+
+                    b.HasKey("Technology", "projectTechnologyid");
+
+                    b.HasIndex("projectTechnologyid");
+
+                    b.ToTable("DialCodeProject");
+                });
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Achievement", b =>
                 {
@@ -45,15 +61,28 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("Projectid")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("fileData")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("fileName")
+                    b.Property<string>("generatedFileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("mimeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("originalFileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("Projectid");
 
                     b.ToTable("files");
                 });
@@ -64,22 +93,23 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("Technology")
+                        .HasColumnType("int");
 
                     b.Property<int>("_color")
                         .HasColumnType("int");
 
                     b.Property<string>("description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("dialInfoid")
                         .HasColumnType("int");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
 
@@ -97,16 +127,14 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("desc")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
 
@@ -122,35 +150,35 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("State")
+                    b.Property<int?>("AuthUser")
                         .HasColumnType("int");
 
-                    b.Property<int>("Technology")
+                    b.Property<int>("State")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<string>("github")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("projectDescription")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("slack")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
-                    b.HasIndex("State");
+                    b.HasIndex("AuthUser");
 
-                    b.HasIndex("Technology");
+                    b.HasIndex("State");
 
                     b.HasIndex("Type");
 
@@ -163,45 +191,68 @@ namespace EvidenceProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("Applicants")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Assigness")
+                        .HasColumnType("int");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("contactDetails")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("fullName")
                         .IsRequired()
-                        .HasMaxLength(35)
-                        .HasColumnType("nvarchar(35)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte?>("schoolYear")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("studyField")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
                     b.ToTable("User");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("ProjectUser", b =>
                 {
-                    b.Property<int>("Projectsid")
+                    b.Property<int>("Assigness")
                         .HasColumnType("int");
 
                     b.Property<int>("assigneesid")
                         .HasColumnType("int");
 
-                    b.HasKey("Projectsid", "assigneesid");
+                    b.HasKey("Assigness", "assigneesid");
 
                     b.HasIndex("assigneesid");
 
                     b.ToTable("ProjectUser");
+                });
+
+            modelBuilder.Entity("ProjectUser1", b =>
+                {
+                    b.Property<int>("Applicants")
+                        .HasColumnType("int");
+
+                    b.Property<int>("applicantsid")
+                        .HasColumnType("int");
+
+                    b.HasKey("Applicants", "applicantsid");
+
+                    b.HasIndex("applicantsid");
+
+                    b.ToTable("ProjectUser1");
                 });
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.AuthUser", b =>
@@ -211,19 +262,42 @@ namespace EvidenceProject.Migrations
                     b.Property<bool?>("globalAdmin")
                         .HasColumnType("bit");
 
+                    b.Property<string>("id_key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("username")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("id_key")
+                        .IsUnique()
+                        .HasFilter("[id_key] IS NOT NULL");
 
                     b.HasIndex("username")
                         .IsUnique()
                         .HasFilter("[username] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("AuthUser");
+                });
+
+            modelBuilder.Entity("DialCodeProject", b =>
+                {
+                    b.HasOne("EvidenceProject.Data.DataModels.Project", null)
+                        .WithMany()
+                        .HasForeignKey("Technology")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EvidenceProject.Data.DataModels.DialCode", null)
+                        .WithMany()
+                        .HasForeignKey("projectTechnologyid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Achievement", b =>
@@ -235,6 +309,13 @@ namespace EvidenceProject.Migrations
                         .IsRequired();
 
                     b.Navigation("project");
+                });
+
+            modelBuilder.Entity("EvidenceProject.Data.DataModels.DbFile", b =>
+                {
+                    b.HasOne("EvidenceProject.Data.DataModels.Project", null)
+                        .WithMany("files")
+                        .HasForeignKey("Projectid");
                 });
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.DialCode", b =>
@@ -250,15 +331,13 @@ namespace EvidenceProject.Migrations
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Project", b =>
                 {
+                    b.HasOne("EvidenceProject.Data.DataModels.AuthUser", "projectManager")
+                        .WithMany()
+                        .HasForeignKey("AuthUser");
+
                     b.HasOne("EvidenceProject.Data.DataModels.DialCode", "projectState")
                         .WithMany()
                         .HasForeignKey("State")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("EvidenceProject.Data.DataModels.DialCode", "projectTechnology")
-                        .WithMany()
-                        .HasForeignKey("Technology")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -268,9 +347,9 @@ namespace EvidenceProject.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("projectState");
+                    b.Navigation("projectManager");
 
-                    b.Navigation("projectTechnology");
+                    b.Navigation("projectState");
 
                     b.Navigation("projectType");
                 });
@@ -279,13 +358,28 @@ namespace EvidenceProject.Migrations
                 {
                     b.HasOne("EvidenceProject.Data.DataModels.Project", null)
                         .WithMany()
-                        .HasForeignKey("Projectsid")
+                        .HasForeignKey("Assigness")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EvidenceProject.Data.DataModels.User", null)
                         .WithMany()
                         .HasForeignKey("assigneesid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectUser1", b =>
+                {
+                    b.HasOne("EvidenceProject.Data.DataModels.Project", null)
+                        .WithMany()
+                        .HasForeignKey("Applicants")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EvidenceProject.Data.DataModels.User", null)
+                        .WithMany()
+                        .HasForeignKey("applicantsid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -297,6 +391,8 @@ namespace EvidenceProject.Migrations
 
             modelBuilder.Entity("EvidenceProject.Data.DataModels.Project", b =>
                 {
+                    b.Navigation("files");
+
                     b.Navigation("projectAchievements");
                 });
 #pragma warning restore 612, 618

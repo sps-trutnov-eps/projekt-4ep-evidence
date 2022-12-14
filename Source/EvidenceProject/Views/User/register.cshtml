@@ -4,13 +4,8 @@
     ViewData["Page"] = "register";
 }
 
-@model CustomMessageResponse
+@model RegisterData
 
 <form action="/users/register" method="post">
-    <label for="username">Username:</label>
-    <input type="text" name="username">
-    <label for="password">Heslo:</label>
-    <input type="password" name="password">
-    <input type="submit" value="Register">
+    @await Html.PartialAsync("../Shared/RegisterInputsPV", model: Model)
 </form>
-<p  style="color: red">@Model.Response</p>

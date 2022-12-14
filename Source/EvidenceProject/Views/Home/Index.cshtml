@@ -1,18 +1,40 @@
-﻿@model List<Project>
+﻿@using System.Drawing
+@model List<Project>
 @{
     ViewData["Title"] = "Home Page";
     ViewData["Page"] = "home page";
 }
 
-@if (Model != null)
+@if (Model == null) return;
+
+<div class="projects">
+
+@foreach (var project in Model)
 {
-    @foreach (var project in Model)
+    <div class="project"> 
+    <p><b>@project.name</b></p>
+    <p>Popis: @project.projectDescription</p>
+    <p>technologie:
+    @foreach (var item in project?.projectTechnology)
+        {   
+            <span style="color:@UniversalHelper.GetHtmlColor(item.color)">@item.name</span>
+        }
+    </p>
+
+    <p>Stav: @project?.projectState?.name</p>
+    <p>Úspěchy: @foreach(var achievement in project.projectAchievements){<span>@achievement.name</span>}</p>
+    <p>Github: @project?.github</p>
+    <p>Slack: @project?.slack</p>
+    <p>Typ: @project?.projectType?.name</p>
+    <p>Obrázky</p>
+
+    @foreach (var item in project.files)
     {
-        <p>
-            <b>@project.name</b>
-        </p>
-        <l>fotka</l>
-        <p>Stav: @project.projectState</p>
-        <a asp-area="" asp-controller="Projects" asp-action="ProjectInfo">Více</a>
-    }
+        //var memoryStreamBytes = item.ReadFile().ToArray();
+        //var output = Convert.ToBase64String(memoryStreamBytes);
+        <!--TODO-->
+    }    
+    <a href="/project/@project.id">Detail</a>
+    </div>
 }
+</div>

@@ -4,9 +4,7 @@ namespace EvidenceProject.Data;
 
 public class ProjectContext : DbContext
 {
-    public ProjectContext(DbContextOptions<ProjectContext> options) : base(options)
-    {
-    }
+    public ProjectContext(DbContextOptions<ProjectContext> options) : base(options){}
 
     public DbSet<Project>? projects { get; set; }
     public DbSet<AuthUser>? globalUsers { get; set; }
@@ -16,7 +14,6 @@ public class ProjectContext : DbContext
 
     public DbSet<DbFile>? files { get; set; }
 
-    // co je dialinfo a dialcode??
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -24,9 +21,11 @@ public class ProjectContext : DbContext
 
         builder.Entity<Project>().HasMany(p => p.assignees).WithMany(a => a.Projects);
 
+        builder.Entity<Project>().HasMany(p => p.applicants).WithMany();
+
         builder.Entity<Project>().HasMany(p => p.files).WithOne();
 
-        builder.Entity<Project>().HasMany(p => p.projectAchievements).WithOne(a => a.project);
+        //builder.Entity<Project>().HasMany(p => p.projectAchievements).WithOne(a => a.project);
 
         builder.Entity<DialCode>().HasOne(d => d.dialInfo).WithMany(d => d.dialCodes);
 
@@ -42,7 +41,7 @@ public class ProjectContext : DbContext
 
         // Cascades
         builder.Entity<Project>().HasOne(p => p.projectState).WithMany().OnDelete(DeleteBehavior.Restrict);
-        builder.Entity<Project>().HasOne(p => p.projectTechnology).WithMany().OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<Project>().HasMany(p => p.projectTechnology).WithMany();
         builder.Entity<Project>().HasOne(p => p.projectType).WithMany().OnDelete(DeleteBehavior.Restrict);
     }
 

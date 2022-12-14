@@ -1,2 +1,25 @@
-﻿@model List<EvidenceProject.Data.DataModels.DialCode>
-<p>@Model.Count</p>
+﻿@model List<EvidenceProject.Data.DataModels.DialInfo>
+
+<div class="projectCreateItem">
+    <h3>Přidání položky do kategorie</h3>
+    <form method="POST" action="/dialcode/add">
+        <label for="name">Název:</label>
+        <input name="name" type="text" placeholder="..." id="name" />
+        <label for="description">Popis:</label>
+        <input name="description" type="text" placeholder="..." id="description" />
+        <label>Barva</label>
+        <input type="color" name="color" />
+        <label>Kategorie</label>
+        <input name="dialInfoName" list="stavy" />
+        <datalist id="stavy">
+            @{
+                if (Model == null) return;
+                foreach (var dialInfo in Model)
+                {
+                    <option value="@dialInfo.name">@dialInfo.name</option>
+                }
+            }
+        </datalist>
+        <input type="submit" value="Přidat do kategorie" />
+    </form>
+</div>
