@@ -1,9 +1,13 @@
 ﻿@using EvidenceProject.Controllers.ActionData
 @model EvidenceProject.Controllers.ActionData.ProfileData
-
+@{
+    ViewData["Title"] = "profile";
+    ViewData["Page"] = "profile";
+}
 @if(Model == null) return;
 @{var splittedName = Model.AuthUser.fullName?.Split(" ");}
 @if(Model.AuthUser != null){
+    <div>
     <h2>Profil</h2>
     <form method="post" action="/user/edit/@Model.AuthUser.id">
         <label for="firstname">Jméno:</label>
@@ -27,6 +31,7 @@
         <input type="password" name="password" required>
         <input type="submit" value="Změnit">
     </form>
+    </div>
 }
 
 @if(Model.Projects != null && Model.Projects?.Count > 0)
@@ -156,6 +161,7 @@
 }
 
 @if(Model.AuthUser.globalAdmin.Value){
+    <div>
     <p>Editace CSS</p>
     <form method="post" action="/file/edit/css/override.css">
     <textarea name="fileData">
@@ -163,4 +169,5 @@
     </textarea>
     <input type="submit" value="Editovat override.css">
     </form>
+    </div>
 }
