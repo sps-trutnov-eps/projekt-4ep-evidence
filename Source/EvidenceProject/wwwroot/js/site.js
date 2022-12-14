@@ -66,14 +66,18 @@ function spustitScript(){
 }
 
 function nazvySouboru(){
-    const fileSelector = document.getElementById('photo');
+    const fileSelector = document.getElementById('photos');
     fileSelector.addEventListener('change', (event) => {
         const fileList = event.target.files;
-        document.getElementById("nazvy").innerHTML = "";
+        $("#nazvy").remove();
+        $("#photos").after('<div id="nazvy"></div>');
         for (let i = 0; i < fileList.length; i++) {
             ted = document.getElementById("nazvy").innerText;
-            document.getElementById("nazvy").innerHTML = ted + ", " + fileList[i].name;
-
+            if (i == 0){
+                document.getElementById("nazvy").innerHTML = fileList[i].name;
+            } else {
+                document.getElementById("nazvy").innerHTML = ted + ", " + fileList[i].name;
+            }
         }
     });
 }
