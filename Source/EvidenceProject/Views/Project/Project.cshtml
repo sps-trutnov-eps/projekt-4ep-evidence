@@ -20,8 +20,8 @@
     }
     </p>
 }
-<p>Stav: @Model?.projectState?.name</p>
-<p>Typ: @Model?.projectType?.name</p>
+<p>Stav: <span style="color: @Model.projectState.GetHtmlColor()">@Model?.projectState?.name</span></p>
+<p>Typ: <span style="color: @Model.projectType.GetHtmlColor()">@Model?.projectType?.name</span></p>
 @if (achievements?.Count > 0)
 {
     <p>Úspěchy: @UniversalHelper.GetAchievements(achievements)</p>

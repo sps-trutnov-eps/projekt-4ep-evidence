@@ -14,6 +14,24 @@
     <textarea name="description">@Model.CurrentProject.projectDescription</textarea>
     <label for="users">Vedoucí: </label>
     <input name="projectManager" type="text" placeholder="..." id="assignees" list="users" value="@Model.CurrentProject.projectManager?.fullName" />
+
+
+    @if(!Model.CurrentProject.assignees.IsNull())
+    {
+        <label>Součastní lidé:</label>
+        <div id="oldAssignees">
+            @foreach (var user in Model.CurrentProject.assignees)
+            {
+                <input class="@user.fullName" name="oldAssignees" value="@user.fullName" type="text"/>
+                <span class="@user.fullName" onclick="removeFile('@user.fullName')">Odebrat</span>
+            }
+        </div>
+    }
+
+    <label>Lidé: </label>
+    <div id="assignees">
+        <input name="assignees" class="1" type="text" placeholder="..." onchange="addNewAssignee(event,1)" list="users" />
+    </div>
     <label for="state">Stav: </label>
     <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" value="@Model.CurrentProject.projectState?.name" />
     <label for="type">Typ: </label>
@@ -23,9 +41,9 @@
     <label for="photos">Současné technologie: </label>
     @foreach(var tech in Model.CurrentProject.projectTechnology)
     {
-        <div class="@tech.id" style="display: flex;">
-            <input class="@tech.id" name="oldTech" type="text" value="@tech.name" readonly />
-            <span class="@tech.id" onclick="removeFile('@tech.id')">Odebrat</span>
+        <div class="@tech.id+T" style="display: flex;">
+            <input class="@tech.id+T" name="oldTech" type="text" value="@tech.name" readonly />
+            <span class="@tech.id+T" onclick="removeFile('@tech.id+T')">Odebrat</span>
         </div>
     }
     <label for="photos">Soubory: </label>

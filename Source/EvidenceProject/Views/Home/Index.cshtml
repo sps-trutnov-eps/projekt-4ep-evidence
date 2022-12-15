@@ -23,8 +23,8 @@
         @{
             List<Achievement> achievements = project.projectAchievements?.ToList();
         }
-        <p>Stav: @project?.projectState?.name</p>
-        <p>Typ: @project?.projectType?.name</p>
+        <p>Stav:  <span style="color: @project.projectState.GetHtmlColor()">@project?.projectState?.name</span></p>
+        <p>Typ:  <span style="color: @project.projectType.GetHtmlColor()">@project?.projectType?.name</span></p>
             @if (achievements.Count > 0)
             {
                 <p>Úspěchy: @UniversalHelper.GetAchievements(achievements)</p>

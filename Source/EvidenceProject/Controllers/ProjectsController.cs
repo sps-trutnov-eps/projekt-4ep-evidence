@@ -196,9 +196,8 @@ public class ProjectController : Controller
         if (project == null) return View(GETProject.SetError("Takový projekt neexistuje"));
 
 
-        if(projectData.oldFile == null && projectData.photos == null) return View(GETProject.SetError("Nebyl nahrán žádný soubor"));
-        if (projectData.oldTech == null && projectData.tech == null) return View(GETProject.SetError("Pro editaci je potřeba min. 1 kategorie"));
-
+        if(projectData.oldFile.IsNull() && projectData.photos.IsNull()) return View(GETProject.SetError("Nebyl nahrán žádný soubor"));
+        if(projectData.oldTech.IsNull() && projectData.tech.IsNull()) return View(GETProject.SetError("Pro editaci je potřeba min. 1 kategorie"));
 
         if (projectData.oldFile != null) foreach (var item in project?.files?.ToList()) if (!projectData.oldFile.Contains(item.generatedFileName)) project.files.Remove(item);
         
@@ -226,13 +225,17 @@ public class ProjectController : Controller
             }
         }
 
+        HashSet<User> users = new();
+        var contextUsers = _context.users;
+        GetAssignees(users, projectData.assignees, contextUsers);
+        GetAssignees(users, projectData.assignees, contextUsers);
         List<Achievement> achivements = new();
 
         var splittedAchievements = projectData?.achievements?.Split(";");
 
         project.name = projectData.projectName;
         project.projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.typy);
-        project.assignees = new List<User>();
+        project.assignees = users.ToList();
         project.github = projectData.github;
         project.slack = projectData.slack;
         project.projectState = _context.dialCodes.FirstOrDefault(x => x.name == projectData.stavit);
@@ -341,5 +344,17 @@ public class ProjectController : Controller
         GETProject.DialCodes = _context.dialCodes.Include(x => x.dialInfo).ToList();
         GETProject.Users = _context.users.ToList();
         return GETProject;
+    }
+
+    private void GetAssignees(HashSet<User> users, string[] data, DbSet<User> contextUsers)
+    {
+        if (data.IsNull()) return;
+
+        foreach (var assignee in data)
+        {
+            var user = contextUsers?.FirstOrDefault(u => u.fullName == assignee);
+            if (user.IsNull()) continue;
+            users.Add(user);
+        }
     }
 }
