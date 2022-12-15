@@ -237,3 +237,13 @@ function removeFile(fileInput) {
         elements[0].parentNode.removeChild(elements[0]);
     }
 }
+
+function addNewAssignee(e, attr) {
+    var closeWithNewInput = `<span class="${attr}" onclick="removeAssignee(${attr})">Odebrat</span>`;
+    closeWithNewInput += `<input name="assignees" class="${attr + 1}" type="text" placeholder="..." onchange="addNewAssignee(event,${attr + 1})" list="users" />`;
+    $(e.target).after(closeWithNewInput);
+}
+
+function removeAssignee(attr) {
+    removeFile(attr);
+}

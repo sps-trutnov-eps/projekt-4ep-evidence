@@ -6,6 +6,6 @@ public class GETProjectCreate : ModelBase
 {
     public List<DialCode>? DialCodes { get; set; }
     public List<DialInfo>? DialInfos { get; set; }
-    public List<AuthUser>? Users { get; set; }
+    public List<User>? Users { get; set; }
     public Project? CurrentProject { get; set; }
 }
