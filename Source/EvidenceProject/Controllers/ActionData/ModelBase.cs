@@ -1,4 +1,4 @@
-﻿namespace EvidenceProject.Controllers.ActionData;
+namespace EvidenceProject.Controllers.ActionData;
 public class ModelBase    
 {
     public string? Response { get; set; }

@@ -154,11 +154,6 @@ public static class UniversalHelper
     }
 
     /// <summary>
-    /// Vrací hex barvu 
-    /// </summary>
-    public static string GetHtmlColor(Color? c) => ColorTranslator.ToHtml(c.Value);
-
-    /// <summary>
     /// Získáme data z cache
     /// </summary>
     public static List<T>? GetData<T>(ProjectContext context, IMemoryCache cache, string cacheKey, string propertyName, bool project = false)
@@ -207,4 +202,10 @@ public static class UniversalHelper
         return text;
     }
     public static bool IsNull(this object? obj) => obj == null;
+
+    public static void UpdateProjectsInCache(IMemoryCache cache, ProjectContext context)
+    {
+        var projects = GetProjectsWithIncludes(context);
+        cache.Set("AllProjects", projects);
+    }
 }

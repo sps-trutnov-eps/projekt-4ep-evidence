@@ -57,16 +57,27 @@ public class ProjectController : Controller
             tech.Add(dialCode);
         }
 
-        List<Achievement> achivements = new();
+        List<User> users = new();
 
-        var splittedAchievements = projectData?.achievements?.Split(";");
+        var contextUsers = _context.users;
+        if(!projectData.assignees.IsNull())
+        {
+            foreach (var item in projectData.assignees)
+            {
+                var user = contextUsers?.FirstOrDefault(u => u.fullName == item);
+                if (user.IsNull()) continue;
+                users.Add(user);
+            }
+        }
+
+        List<Achievement> achivements = new();
 
         Project project = new()
         {
             name = projectData.projectName,
             projectTechnology = tech,
             projectType = _context.dialCodes.FirstOrDefault(x => x.name == projectData.typy),
-            assignees = null,
+            assignees = users,
             github = projectData.github,
             slack = projectData.slack,
             projectAchievements = null,
@@ -76,7 +87,9 @@ public class ProjectController : Controller
             projectManager = _context.globalUsers.FirstOrDefault(x => x.fullName == projectData.projectManager)
         };
 
-        if(splittedAchievements != null)
+        if (!projectData.achievements.IsNull())
+        {
+            var splittedAchievements = projectData?.achievements?.Split(";");
             foreach (var item in splittedAchievements)
             {
                 achivements.Add(new Achievement()
@@ -85,12 +98,14 @@ public class ProjectController : Controller
                     project = project,
                 });
             }
+
+        }
         project.projectAchievements = achivements;
 
         _logger.LogInformation("User with the id <{}> created a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Add(project);
         _context?.SaveChanges();
-        UpdateProjectsInCache();
+        UniversalHelper.UpdateProjectsInCache(_cache, _context);
         return Redirect("Index");
     }
 
@@ -118,7 +133,7 @@ public class ProjectController : Controller
         _logger.LogInformation("User with the id <{}> deleted a project", userID);
 
         _context?.projects?.Remove(project);
-        UpdateProjectsInCache();
+        UniversalHelper.UpdateProjectsInCache(_cache, _context);
         _context?.SaveChanges();
         return Json("ok");
     }
@@ -161,7 +176,6 @@ public class ProjectController : Controller
         data.Users = GETProjectData.Users;
         data.DialInfos = GETProjectData.DialInfos;
         data.DialCodes = GETProjectData.DialCodes;
-
        
         return View(data);
     }
@@ -240,7 +254,7 @@ public class ProjectController : Controller
         _logger.LogInformation("User with the id <{}> edited a project called \"{}\"", userID, projectData.projectName);
         _context?.projects?.Update(project);
         _context?.SaveChanges();
-        UpdateProjectsInCache();
+        UniversalHelper.UpdateProjectsInCache(_cache, _context);
         return Redirect("Index");
     }
 
@@ -271,7 +285,7 @@ public class ProjectController : Controller
 
         _context.projects?.Update(project);
         _context.SaveChanges();
-        UpdateProjectsInCache();
+        UniversalHelper.UpdateProjectsInCache(_cache, _context);
         return Redirect($"/project/{id}");
     }
 
@@ -314,14 +328,9 @@ public class ProjectController : Controller
         else _context.users.Remove(user);
         project.applicants?.Remove(applicant);
         _context.SaveChanges();
-        UpdateProjectsInCache();
+        UniversalHelper.UpdateProjectsInCache(_cache, _context);
     }
 
-    private void UpdateProjectsInCache()
-    {
-        var projects = UniversalHelper.GetProjectsWithIncludes(_context);
-        _cache.Set("AllProjects", projects);
-    }
 
     private GETProjectCreate GetProjectCreateData()
     {
@@ -330,7 +339,7 @@ public class ProjectController : Controller
         GETProject.DialInfos = UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos");
         // toto nemůžeme brát z cache, je zde include!
         GETProject.DialCodes = _context.dialCodes.Include(x => x.dialInfo).ToList();
-        GETProject.Users = UniversalHelper.GetData<AuthUser>(_context, _cache, UniversalHelper.GlobalUsersCacheKey, "globalUsers");
+        GETProject.Users = _context.users.ToList();
         return GETProject;
     }
 }

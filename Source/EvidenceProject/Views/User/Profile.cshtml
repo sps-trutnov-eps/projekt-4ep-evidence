@@ -8,8 +8,13 @@
 
 @model EvidenceProject.Controllers.ActionData.ProfileData
 
-
 @if(Model.IsNull()) return;
+
+
+@if(!Model.Response.IsNull()) 
+{
+    <p style="color:red;">@Model.Response</p>
+}
 
 @{
     List<User>? usersWithProject = Model.NonAuthUsers?.Where(x => x.Projects?.Count > 0).ToList();
@@ -26,10 +31,10 @@
         @{
             if (splittedName.Length >= 2)
             {
-                        <input type="text" name="lastname" value="@splittedName[1]" required>
+                <input type="text" name="lastname" value="@splittedName[1]" required>
             }
             else{
-                            <input type="text" name="lastname" required>
+                <input type="text" name="lastname" required>
             }
         }
         <label for="contact">Kontakt(email, github,..):</label>
@@ -72,10 +77,10 @@
             @{
                 if (splittedName.Length >= 2)
                 {
-                    <input type="text" name="lastname" value="@splittedName[1]" required>
+                        <input type="text" name="lastname" value="@splittedName[1]" required>
                 }
                 else{
-                    <input type="text" name="lastname" required>
+                        <input type="text" name="lastname" required>
                 }
             }
             <label for="contact">Kontakt(email, github,..):</label>
@@ -167,7 +172,7 @@
                 <label for="description">Popis:</label>
                 <input name="description" type="text" placeholder="..." id="description" value="@categoryItem.description" />
                 <label>Barva</label>
-                <input type="color" name="color" value="@UniversalHelper.GetHtmlColor(categoryItem.color)" />
+                <input type="color" name="color" value="@categoryItem.GetHtmlColor()" />
                 <label>Kategorie</label>
                 <input name="dialInfoName" list="stavy" value="@categoryItem.dialInfo.name"/>
                 <input type="submit" placeholder="Změnit" />

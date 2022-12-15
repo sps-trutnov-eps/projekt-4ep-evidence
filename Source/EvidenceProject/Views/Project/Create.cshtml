@@ -13,8 +13,10 @@
       <textarea name="description" value="@Model.CurrentProject?.projectDescription"></textarea>
       <label for="users">Vedoucí: </label>
       <input name="projectManager" type="text" placeholder="..." list="users" required/>
-      <label for="assignees">Lidi: </label>
-      <input name="assignees" type="text" placeholder="..." id="assignees" />
+      <label>Lidi: </label>
+      <div id="assignees">
+            <input name="assignees" class="1" type="text" placeholder="..."  onchange="addNewAssignee(event,1)" list="users"/>
+      </div>
       <label for="state">Stav: </label>
       <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" required />
       <label for="type">Typ: </label>
@@ -47,7 +49,7 @@
               if (Model.Users == null) return;
               foreach (var user in Model.Users)
               {
-                          <option>@user.fullName</option>
+                    <option>@user.fullName</option>
               }
           }
       </datalist>

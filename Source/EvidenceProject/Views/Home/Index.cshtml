@@ -16,7 +16,7 @@
         <p>technologie:
         @foreach (var item in project?.projectTechnology)
             {   
-                <span style="color:@UniversalHelper.GetHtmlColor(item.color)">@item.name</span>
+                <span style="color:@item.GetHtmlColor()">@item.name</span>
             }
         </p>
 

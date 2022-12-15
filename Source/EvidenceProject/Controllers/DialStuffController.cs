@@ -8,13 +8,11 @@ public class DialStuffController : Controller
 {
     private readonly IMemoryCache _cache;
     private readonly ProjectContext _context;
-    private readonly ILogger<ProjectController> _logger;
 
-    public DialStuffController(ProjectContext context, IMemoryCache cache, ILogger<ProjectController> logger)
+    public DialStuffController(ProjectContext context, IMemoryCache cache)
     {
         _context = context;
         _cache = cache;
-        _logger = logger;
     }
 
     [HttpPost("dialcode/add")]
@@ -69,20 +67,23 @@ public class DialStuffController : Controller
         _context.dialInfos.Update(dialInfo);
         _context.SaveChanges();
         _cache.Set(UniversalHelper.DialInfoCacheKey, _context.dialInfos.ToList());
+        UniversalHelper.UpdateProjectsInCache(_cache, _context);
         return Redirect("/user/profile/");
     }
 
     [HttpPost("dialcode/edit/{id}")]
     public ActionResult UpdateDialCode(int id, [FromForm] DialCodeData? data)
     {
-        if (!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
 
+        if (!UniversalHelper.CheckAllParams(data))  return Redirect("/user/profile");
+        
         var dialCode = UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes")?.FirstOrDefault(x => x.id == id);
 
         var color = ColorTranslator.FromHtml(data?.Color);
 
         var dialInfo = _context.dialInfos.FirstOrDefault(x => x.name == data.DialInfoName);
-        if (dialInfo == null) return Json("Není taková kategorie");
+
+        if (dialInfo == null) return Redirect("/user/profile");
 
         dialCode.description = data.Description;
         dialCode.color = color;
@@ -93,6 +94,7 @@ public class DialStuffController : Controller
         _context.SaveChanges();
 
         _cache.Set(UniversalHelper.DialCodeCacheKey, _context.dialCodes.ToList());
+        UniversalHelper.UpdateProjectsInCache(_cache, _context);
         return Redirect("/user/profile/");
     }
 }
