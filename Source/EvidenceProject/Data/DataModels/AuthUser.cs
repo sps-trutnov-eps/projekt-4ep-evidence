@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using bcrypt = BCrypt.Net.BCrypt;
 
 namespace EvidenceProject.Data.DataModels;

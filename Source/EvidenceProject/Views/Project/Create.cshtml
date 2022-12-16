@@ -1,67 +1,60 @@
-﻿@using EvidenceProject.Controllers.ActionData
+@using EvidenceProject.Controllers.ActionData
 @{
-    ViewData["Title"] = "Create Project";
+    ViewData["Title"] = "Vytvoření projektu";
     ViewData["Page"] = "create";
 }
 @model GETProjectCreate
-<h2>Vytvoření projektu</h2>
-<form action="/project/create" method="post" enctype="multipart/form-data">
-    <label for="projectName">Název projektu: </label>
-    <input name="projectName" type="text" placeholder="..." id="name" required/>
-    <label for="description">Popis projektu</label>
-    <textarea name="description"></textarea>
-    <label for="users">Vedoucí: </label>
-    <input name="projectManager" type="text" placeholder="..." list="users" required/>
-    <label for="assignees">Lidi: </label>
-    <input name="assignees" type="text" placeholder="..." id="assignees" />
-    <label for="state">Stav: </label>
-    <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" required />
-    <label for="type">Typ: </label>
-    <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" required/>
-    <label for="technology">Technologie: </label>
-    <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
-    <label for="photos">Fotografie: </label>
-    <input name="photos" type="file" multiple="multiple" required/>
-    <label for="achievements">Úspěchy: </label>
-    <input name="achievements" type="text" id="achievements" />
-    <label for="slack">Slack: </label>
-    <input name="slack" type="text" id="slack"  />
-    <label for="github">Github: </label>
-    <input name="github" type="text" id="github" />
-    <input type="submit"/>
-    @if (Model == null) return;
-    <datalist id="stavy">
-        @{
-            if (Model.DialInfos == null) return;
-            foreach(var dialInfo in Model.DialInfos){
-                <option id="@dialInfo.name">@dialInfo.name</option>
-            }
-        }
-    </datalist>
+<div class="projectCreateItem">
+  <h2>Vytvoření projektu</h2>
+  <form action="/project/create" method="post" enctype="multipart/form-data">
+      <label for="projectName">Název projektu: </label>
+      <input name="projectName" type="text" placeholder="..." id="name" value="@Model.CurrentProject?.name" required/>
+      <label for="description">Popis projektu</label>
+      <textarea name="description" value="@Model.CurrentProject?.projectDescription"></textarea>
+      <label for="users">Vedoucí: </label>
+      <input name="projectManager" type="text" placeholder="..." list="users" required/>
+      <label>Lidé: </label>
+      <div id="assignees">
+            <input name="assignees" class="1" type="text" placeholder="..."  onchange="addNewAssignee(event,1)" list="users"/>
+      </div>
+      <label for="state">Stav: </label>
+      <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" required />
+      <label for="type">Typ: </label>
+      <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" required/>
+      <label for="technology">Technologie: </label>
+      <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
+      <label for="photos">Fotografie: </label>
+      <input name="photos" type="file" multiple="multiple" required/>
+      <label for="achievements">Úspěchy: </label>
+      <input name="achievements" type="text" id="achievements" placeholder="Úspěchy se dělí středníkem (;)" />
+      <label for="slack">Slack: </label>
+      <input name="slack" type="text" id="slack"  value="@Model.CurrentProject?.slack" />
+      <label for="github">Github: </label>
+      <input name="github" type="text" id="github" value="@Model.CurrentProject?.github" />
+      <input type="submit"/>
+      @if (Model == null) return;
+          @await Html.PartialAsync("../Shared/CategoriesPV", model: Model.DialInfos)
 
-    <datalist id="dialCodes">
-        @{
-            if (Model.DialCodes == null) return;
-            foreach (var dialcode in Model.DialCodes)
-            {
-                <option class="@dialcode.dialInfo.name">@dialcode.name</option>
-            }
-        }
-    </datalist>
-    <datalist id="users">
-        @{
-            if (Model.Users == null) return;
-            foreach (var user in Model.Users)
-            {
-                <option>@user.fullName</option>
-            }
-        }
-    </datalist>
-</form>
-
-
-@await Html.PartialAsync("../Shared/DialCodesPV", Model.DialInfos)
-@await Html.PartialAsync("../Shared/DialInfosPV", Model.DialInfos)
-
-
-
+      <datalist id="dialCodes">
+          @{
+              if (Model.DialCodes == null) return;
+              foreach (var dialcode in Model.DialCodes)
+              {
+                          <option class="@dialcode.dialInfo.name">@dialcode.name</option>
+              }
+          }
+      </datalist>
+      <datalist id="users">
+          @{
+              if (Model.Users == null) return;
+              foreach (var user in Model.Users)
+              {
+                    <option>@user.fullName</option>
+              }
+          }
+      </datalist>
+      <p style="color: red;">@Model.Response</p>
+  </form>
+</div>
+  @await Html.PartialAsync("../Shared/DialCodesPV", Model.DialInfos)
+  @await Html.PartialAsync("../Shared/DialInfosPV")

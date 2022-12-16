@@ -21,4 +21,6 @@ public class ProjectCreateData
     public string? github { get; set; }
 
     public string? slack { get; set; }
+
+    public string[]? assignees { get; set; }
 }

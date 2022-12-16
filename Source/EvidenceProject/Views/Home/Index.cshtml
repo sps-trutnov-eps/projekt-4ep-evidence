@@ -1,5 +1,4 @@
-﻿@using System.Drawing
-@model List<Project>
+﻿@model List<Project>
 @{
     ViewData["Title"] = "Home Page";
     ViewData["Page"] = "home page";
@@ -12,29 +11,28 @@
 @foreach (var project in Model)
 {
     <div class="project"> 
-    <p><b>@project.name</b></p>
-    <p>Popis: @project.projectDescription</p>
-    <p>technologie:
-    @foreach (var item in project?.projectTechnology)
-        {   
-            <span style="color:@UniversalHelper.GetHtmlColor(item.color)">@item.name</span>
+        <p><b>@project.name</b></p>
+        <p>Popis: @project.projectDescription</p>
+        <p>technologie:
+        @foreach (var item in project?.projectTechnology)
+            {   
+                <span style="color:@item.GetHtmlColor()">@item.name</span>
+            }
+        </p>
+
+        @{
+            List<Achievement> achievements = project.projectAchievements?.ToList();
         }
-    </p>
-
-    <p>Stav: @project?.projectState?.name</p>
-    <p>Úspěchy: @foreach(var achievement in project.projectAchievements){<span>@achievement.name</span>}</p>
-    <p>Github: @project?.github</p>
-    <p>Slack: @project?.slack</p>
-    <p>Typ: @project?.projectType?.name</p>
-    <p>Obrázky</p>
-
-    @foreach (var item in project.files)
-    {
-        //var memoryStreamBytes = item.ReadFile().ToArray();
-        //var output = Convert.ToBase64String(memoryStreamBytes);
-        <!--TODO-->
-    }    
-    <a href="/project/@project.id">Detail</a>
+        <p>Stav:  <span style="color: @project.projectState.GetHtmlColor()">@project?.projectState?.name</span></p>
+        <p>Typ:  <span style="color: @project.projectType.GetHtmlColor()">@project?.projectType?.name</span></p>
+            @if (achievements.Count > 0)
+            {
+                <p>Úspěchy: @UniversalHelper.GetAchievements(achievements)</p>
+            }
+        @if (!project.github.IsNull()){ <p>Github: @project?.github</p>}
+        @if (!project.slack.IsNull()){<p>Slack: @project?.slack</p>}
+        <a href="/project/@project.id">Detail</a>
     </div>
 }
+
 </div>
