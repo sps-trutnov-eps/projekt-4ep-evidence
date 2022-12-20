@@ -158,7 +158,7 @@ public class UserController : Controller
 
         var loggedId = Uid.Value;
 
-        var user = _context.globalUsers.FirstOrDefault(x => x.id == loggedId);
+        var user = _context.globalUsers.FirstOrDefault(x => x.id == id);
         var admin = _context.globalUsers.FirstOrDefault(x => x.globalAdmin.Value);
 
         // toto je špatně!
