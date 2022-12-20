@@ -88,8 +88,11 @@
             <label for="password">Heslo:</label>
             <input type="password" name="password" required>
             <input type="submit" value="Změnit">
+                <div id="delete">
+                    <a href="/user/delete/@user.id" style="color: red;">Odstranit</a>
+                </div>
         </form>
-        <a href="/user/delete/@user.id" style="color: red;">Odstranit</a>
+        
     }
     </div>
 }
@@ -117,8 +120,6 @@
         </form>
     }
 }
-
-<br />
 
 @if(!usersWithoutProject.IsNull() && usersWithoutProject.Count > 0) 
 {
