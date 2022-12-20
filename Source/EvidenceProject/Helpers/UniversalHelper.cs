@@ -17,6 +17,11 @@ public static class UniversalHelper
     public static string LoggedInKey => "loggedin";
 
     /// <summary>
+    ///     Jméno cookie pro uživatele
+    /// </summary>
+    public static string LoggedNameKey => "loggedinName";
+
+    /// <summary>
     ///     Jméno cookie
     /// </summary>
     public static string IsAdmin => "_IsAdmin_";
@@ -40,21 +45,6 @@ public static class UniversalHelper
     ///     Klíč k listu zacachovaných globalUsers
     /// </summary>
     public static string GlobalUsersCacheKey => "globalUsers";
-
-    /// <summary>
-    ///     Tyto parametry nebudeme kontrolovat u projektu
-    /// </summary>
-    public readonly static string[] NoCheckParamsProject = { "slack", "github", "assignees", "achievements", "Response" };
-
-    /// <summary>
-    ///     Tyto parametry nebudeme kontrolovat u editace projektu
-    /// </summary>
-    public readonly static string[] NoCheckParamsProjectUpdate = { "slack", "github", "assignees", "achievements", "Response" , "oldFile", "oldTech", "photos" , "oldAssignees" };
-
-    /// <summary>
-    ///     Tyto parametry nebudeme kontrolovat
-    /// </summary>
-    public readonly static string[] NoCheckUserDataParams = { "Response" };
 
     /// <summary>
     ///     Zjistíme, zda je přihlášen uživatel
@@ -136,17 +126,17 @@ public static class UniversalHelper
     /// <param name="obj">Object</param>
     /// <param name="toDontCheck">Které params nemáme kontrolovat</param>
 
-    public static bool CheckAllParams(object obj, string[]? toDontCheck = null)
+    public static bool CheckAllParams(object obj)
     {
         var type = obj.GetType();
-        var props = type.GetProperties(BindingFlags.Instance|System.Reflection.BindingFlags.Public)
+        var props = type.GetProperties(BindingFlags.Instance | System.Reflection.BindingFlags.Public)
         .Where(w => w.CanRead && w.CanWrite)
         .Where(w => w.GetGetMethod(true).IsPublic)
         .Where(w => w.GetSetMethod(true).IsPublic);
         foreach (var prop in props)
         {
-            if(toDontCheck != null) if ((bool)toDontCheck?.Any(x => x.Equals(prop.Name))) continue;
-            
+            var attrs = prop.GetCustomAttributes().ToList();
+            if (attrs.Any(x => x.GetType().Name == "NotRequired")) continue;
             var propValue = (type.GetProperty(prop.Name).GetValue(obj, null) ?? string.Empty).ToString();
             if (string.IsNullOrEmpty(propValue)) return false;
         }

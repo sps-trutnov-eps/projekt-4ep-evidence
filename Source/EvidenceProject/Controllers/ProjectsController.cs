@@ -38,7 +38,7 @@ public class ProjectController : Controller
         if (!test) if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Json("ERR");
 
         var GETProject = GetProjectCreateData();
-        if (!UniversalHelper.CheckAllParams(projectData, UniversalHelper.NoCheckParamsProject)) return View(GETProject.SetError("Něco nebylo vyplněno"));
+        if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject.SetError("Něco nebylo vyplněno"));
 
 
         List<DbFile> files = new();
@@ -190,7 +190,7 @@ public class ProjectController : Controller
         Project? project = UniversalHelper.GetProject(_context, id);
         var GETProject = GetProjectCreateData();
         GETProject.CurrentProject = project;
-        if (!UniversalHelper.CheckAllParams(projectData, UniversalHelper.NoCheckParamsProjectUpdate)) return View(GETProject.SetError("Něco nebylo vyplněno"));
+        if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject.SetError("Něco nebylo vyplněno"));
 
 
         if (project == null) return View(GETProject.SetError("Takový projekt neexistuje"));
