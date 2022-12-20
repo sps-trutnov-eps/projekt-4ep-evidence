@@ -1,4 +1,4 @@
-﻿@using EvidenceProject.Controllers.ActionData
+@using EvidenceProject.Controllers.ActionData
 
 @{
     ViewData["Title"] = "Profil";
@@ -7,10 +7,7 @@
 
 
 @model EvidenceProject.Controllers.ActionData.ProfileData
-
 @if(Model.IsNull()) return;
-
-
 @if(!Model.Response.IsNull()) 
 {
     <p style="color:red;">@Model.Response</p>
@@ -46,6 +43,7 @@
         <input type="password" name="password" required>
         <input type="submit" value="Změnit">
     </form>
+    </div>
 }
 
 @if(!Model.Projects.IsNull() && Model.Projects?.Count > 0)
@@ -183,6 +181,7 @@
 }
 
 @if(Model.AuthUser.globalAdmin.Value){
+    <div>
     <p>Editace CSS</p>
     <form method="post" action="/file/edit/css/override.css">
     <textarea name="fileData">
@@ -190,6 +189,8 @@
     </textarea>
     <input type="submit" value="Editovat override.css">
     </form>
+    </div>
 }
 
 @await Html.PartialAsync("../Shared/CategoriesPV", model: Model.Categories)
+
