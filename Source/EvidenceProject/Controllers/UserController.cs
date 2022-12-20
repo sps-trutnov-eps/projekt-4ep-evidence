@@ -207,7 +207,7 @@ public class UserController : Controller
             contactDetails = data.Contact,
             fullName = $"{data.Firstname} {data.Lastname}",
             Projects = user.Projects,
-            password = data.Password,
+            password = BCrypt.Net.BCrypt.HashPassword(data.Password),
             schoolYear = byte.Parse(data.SchoolYear),
             username = data.Username,
             studyField = data.StudyField
