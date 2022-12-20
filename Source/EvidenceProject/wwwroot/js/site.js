@@ -221,9 +221,11 @@ function veci(e, data) {
         more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>';
     }
     more += '</select>';
-    $( e.target ).after( more );
-    array[iii] = value;
-    iii++;
+    $(e.target).after(more);
+    if (data == "tech") {
+        array[iii] = value;
+        iii++;
+    }
     
     document.getElementById("technology").value = "";
 }
@@ -234,4 +236,14 @@ function removeFile(fileInput) {
     while (elements.length > 0) {
         elements[0].parentNode.removeChild(elements[0]);
     }
+}
+
+function addNewAssignee(e, attr) {
+    var closeWithNewInput = `<span class="${attr}" onclick="removeAssignee(${attr})">Odebrat</span>`;
+    closeWithNewInput += `<input name="assignees" class="${attr + 1}" type="text" placeholder="..." onchange="addNewAssignee(event,${attr + 1})" list="users" />`;
+    $(e.target).after(closeWithNewInput);
+}
+
+function removeAssignee(attr) {
+    removeFile(attr);
 }

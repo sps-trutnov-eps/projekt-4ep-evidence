@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace EvidenceProject.Data.DataModels;
 // item v Kategorii
@@ -67,4 +69,10 @@ public class DialCode
     /// </summary>
     [Required]
     public virtual DialInfo? dialInfo { get; set; }
+
+
+    /// <summary>
+    /// HEX Barva
+    /// </summary>    
+    public string GetHtmlColor() => ColorTranslator.ToHtml(this.color.GetValueOrDefault());
 }

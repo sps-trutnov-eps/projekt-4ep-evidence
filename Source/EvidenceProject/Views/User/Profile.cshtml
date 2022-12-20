@@ -1,9 +1,25 @@
-﻿@using EvidenceProject.Controllers.ActionData
-@model EvidenceProject.Controllers.ActionData.ProfileData
+@using EvidenceProject.Controllers.ActionData
 
-@if(Model == null) return;
-@{var splittedName = Model.AuthUser.fullName?.Split(" ");}
-@if(Model.AuthUser != null){
+@{
+    ViewData["Title"] = "Profil";
+    ViewData["Page"] = "profile";
+}
+
+
+@model EvidenceProject.Controllers.ActionData.ProfileData
+@if(Model.IsNull()) return;
+@if(!Model.Response.IsNull()) 
+{
+    <p style="color:red;">@Model.Response</p>
+}
+
+@{
+    List<User>? usersWithProject = Model.NonAuthUsers?.Where(x => x.Projects?.Count > 0).ToList();
+    List<User>? usersWithoutProject  = Model.NonAuthUsers?.Where(x => x.Projects == null || x.Projects.Count ==0 ).ToList();
+    var splittedName = Model.AuthUser.fullName?.Split(" ");
+}
+
+@if(!Model.AuthUser.IsNull()) {
     <h2>Profil</h2>
     <form method="post" action="/user/edit/@Model.AuthUser.id">
         <label for="firstname">Jméno:</label>
@@ -12,10 +28,10 @@
         @{
             if (splittedName.Length >= 2)
             {
-                        <input type="text" name="lastname" value="@splittedName[1]" required>
+                <input type="text" name="lastname" value="@splittedName[1]" required>
             }
             else{
-                            <input type="text" name="lastname" required>
+                <input type="text" name="lastname" required>
             }
         }
         <label for="contact">Kontakt(email, github,..):</label>
@@ -29,7 +45,7 @@
     </form>
 }
 
-@if(Model.Projects != null && Model.Projects?.Count > 0)
+@if(!Model.Projects.IsNull() && Model.Projects?.Count > 0)
 {
     <div id="projects">
     <h2>Projekty</h2>
@@ -43,7 +59,7 @@
     }
     </div>
 }
-@if (Model.Users != null && Model.Users.Count > 0)
+@if (!Model.Users.IsNull() && Model.Users.Count > 0)
 {
     <div id="user">
     <h2>Všichni ověření uživatelé</h2>
@@ -58,10 +74,10 @@
             @{
                 if (splittedName.Length >= 2)
                 {
-                    <input type="text" name="lastname" value="@splittedName[1]" required>
+                        <input type="text" name="lastname" value="@splittedName[1]" required>
                 }
                 else{
-                    <input type="text" name="lastname" required>
+                        <input type="text" name="lastname" required>
                 }
             }
             <label for="contact">Kontakt(email, github,..):</label>
@@ -78,18 +94,15 @@
     </div>
 }
 
-@if(Model.NonAuthUsers != null && Model.NonAuthUsers.Count > 0)
+
+
+@if(usersWithProject?.Count > 0)
 {
-    <br />
-    <div id="nonuser">
-    <h2>Žádosti o přiřazení k projektu</h2>
-    @foreach (var item in Model.NonAuthUsers)
+    <h2>Povýšit uživatele na ověřeného uživatele</h2>
+    @foreach (var item in usersWithProject)
     {
-        if (item.GetType().Name != "User") continue;
-        if(item.Projects?.Count > 0)
-        {
-                var splittedFullname = item.fullName?.Split(" ");
-                var Data = new RegisterData()
+        var splittedFullname = item.fullName?.Split(" ");
+        var Data = new RegisterData()
                     {
                         Firstname = splittedFullname[0],
                         Lastname = splittedFullname[1],
@@ -97,33 +110,44 @@
                         StudyField = item.studyField,
                         Contact = item.contactDetails
                     };
-                <p>@item.fullName</p>
-                <form method="post" action="/user/promote/@item.id">
-                    @await Html.PartialAsync("../Shared/RegisterInputsPV", model: Data)
-                    <input type="hidden" name="projectId" value="@item.Projects[0].id"/>
-                </form>
-                continue;
-        }
-        var projects = @Model.Projects?.Where(x => x.applicants.Any(x => x.id == item.id)).ToList();
-        if (projects == null) continue;
-
-        foreach(var project in projects)
-        {
-            <p>@item.fullName žádá o přiřazení k projektu: @project.name </p> 
-            <form method="post" action="/project/addUser/@item.id">
-                <input type="hidden" value="@project.id" name="projectId">
-                <input type="submit" value="Přijmout">
-            </form>
-            <form method="post" action="/project/deleteUser/@item.id">
-                <input type="hidden" value="@project.id" name="projectId">
-                <input type="submit" value="Odmítnout">
-            </form>
-        }
+        <p>@item.fullName</p>
+        <form method="post" action="/user/promote/@item.id">
+            @await Html.PartialAsync("../Shared/RegisterInputsPV", model: Data)
+            <input type="hidden" name="projectId" value="@item.Projects[0].id" />
+        </form>
     }
+}
+
+<br />
+
+@if(!usersWithoutProject.IsNull() && usersWithoutProject.Count > 0) 
+{
+    <h2>Žádosti o přiřazení k projektu</h2>
+    <div id="nonuser">
+        @foreach (var item in usersWithoutProject)
+        {
+            var projects = @Model.Projects?.Where(x => x.applicants.Any(x => x.id == item.id)).ToList();
+            if (projects == null) continue;
+
+            foreach (var project in projects)
+            {
+                <p>@item.fullName žádá o přiřazení k projektu: @project.name </p>
+                <form method="post" action="/project/addUser/@item.id">
+                    <input type="hidden" value="@project.id" name="projectId">
+                    <input type="submit" value="Přijmout">
+                </form>
+                <form method="post" action="/project/deleteUser/@item.id">
+                    <input type="hidden" value="@project.id" name="projectId">
+                    <input type="submit" value="Odmítnout">
+                </form>
+            }
+        }
     </div>
 }
 
-@if(Model.Categories != null && Model.Categories.Count > 0){
+
+@if(!Model.Categories.IsNull() && Model.Categories.Count > 0)
+{
     <div id="categories">
     <h2>Úprava kategorií</h2>
     @foreach (var category in Model.Categories)
@@ -145,7 +169,7 @@
                 <label for="description">Popis:</label>
                 <input name="description" type="text" placeholder="..." id="description" value="@categoryItem.description" />
                 <label>Barva</label>
-                <input type="color" name="color" value="@UniversalHelper.GetHtmlColor(categoryItem.color)" />
+                <input type="color" name="color" value="@categoryItem.GetHtmlColor()" />
                 <label>Kategorie</label>
                 <input name="dialInfoName" list="stavy" value="@categoryItem.dialInfo.name"/>
                 <input type="submit" placeholder="Změnit" />
@@ -156,6 +180,7 @@
 }
 
 @if(Model.AuthUser.globalAdmin.Value){
+    <div>
     <p>Editace CSS</p>
     <form method="post" action="/file/edit/css/override.css">
     <textarea name="fileData">
@@ -163,4 +188,8 @@
     </textarea>
     <input type="submit" value="Editovat override.css">
     </form>
+    </div>
 }
+
+@await Html.PartialAsync("../Shared/CategoriesPV", model: Model.Categories)
+

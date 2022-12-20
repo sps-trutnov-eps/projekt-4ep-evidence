@@ -1,9 +1,10 @@
-﻿using EvidenceProject.Controllers.ActionData;
-using EvidenceProject.Controllers.RequestClasses;
+using EvidenceProject.Controllers.ActionData;
+using EvidenceProject.Data.DataModels;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
-using bcrypt = BCrypt.Net.BCrypt;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
+using bcrypt = BCrypt.Net.BCrypt;
 
 namespace EvidenceProject.Controllers;
 
@@ -131,11 +132,11 @@ public class UserController : Controller
         var userProjectsData = userProjects == null ? null : userProjects.ToList();
 
         bool isAdmin = profileData.AuthUser.globalAdmin.Value;
-        profileData.NonAuthUsers = isAdmin ? _context.users.Include(x => x.Projects).ToList() : null;
-        profileData.Users = isAdmin ? _context.globalUsers.Include(x => x.Projects).ToList() : null;
-        profileData.Categories = isAdmin ? _context.dialInfos.Include(x => x.dialCodes).ToList() : null;
+        profileData.NonAuthUsers = isAdmin ? _context?.users.Include(x => x.Projects).ToList().Where(x => x.GetType().Name == "User").ToList(): null;
+        profileData.Users = isAdmin ? _context?.globalUsers.Include(x => x.Projects).ToList() : null;
+        profileData.Categories = isAdmin ? _context?.dialInfos.Include(x => x.dialCodes).ToList() : null;
         profileData.Projects = isAdmin ? projectsWithIncludes : userProjectsData;
-        profileData.AuthUser = _context.globalUsers.FirstOrDefault(x => x.id == userId);
+        profileData.AuthUser = _context?.globalUsers.FirstOrDefault(x => x.id == userId);
         return View(profileData);
     }
 
@@ -157,10 +158,10 @@ public class UserController : Controller
 
         var loggedId = Uid.Value;
 
-        var user = _context.globalUsers.FirstOrDefault(x => x.id == loggedId);
+        var user = _context.globalUsers.FirstOrDefault(x => x.id == id);
         var admin = _context.globalUsers.FirstOrDefault(x => x.globalAdmin.Value);
 
-        // toto je špatně?
+        // toto je špatně!
         if (loggedId != user.id && admin.id != loggedId) return Redirect("/user/profile");
 
         var hashedPassword = bcrypt.HashPassword(data.Password);
@@ -206,7 +207,7 @@ public class UserController : Controller
             contactDetails = data.Contact,
             fullName = $"{data.Firstname} {data.Lastname}",
             Projects = user.Projects,
-            password = data.Password,
+            password = BCrypt.Net.BCrypt.HashPassword(data.Password),
             schoolYear = byte.Parse(data.SchoolYear),
             username = data.Username,
             studyField = data.StudyField
@@ -220,7 +221,7 @@ public class UserController : Controller
                 project.assignees.Add(authUser);
                 project.assignees.Remove(user);
             }
-            _context.projects.Update(project);
+            _context?.projects?.Update(project);
 
         }
 

@@ -1,6 +1,6 @@
 @using EvidenceProject.Controllers.ActionData
 @{
-    ViewData["Title"] = "Create Project";
+    ViewData["Title"] = "Vytvoření projektu";
     ViewData["Page"] = "create";
 }
 @model GETProjectCreate
@@ -13,8 +13,10 @@
       <textarea name="description" value="@Model.CurrentProject?.projectDescription"></textarea>
       <label for="users">Vedoucí: </label>
       <input name="projectManager" type="text" placeholder="..." list="users" required/>
-      <label for="assignees">Lidi: </label>
-      <input name="assignees" type="text" placeholder="..." id="assignees" />
+      <label>Lidé: </label>
+      <div id="assignees">
+            <input name="assignees" class="1" type="text" placeholder="..."  onchange="addNewAssignee(event,1)" list="users"/>
+      </div>
       <label for="state">Stav: </label>
       <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" required />
       <label for="type">Typ: </label>
@@ -31,14 +33,7 @@
       <input name="github" type="text" id="github" value="@Model.CurrentProject?.github" />
       <input type="submit"/>
       @if (Model == null) return;
-      <datalist id="stavy">
-          @{
-              if (Model.DialInfos == null) return;
-              foreach(var dialInfo in Model.DialInfos){
-                          <option id="@dialInfo.name">@dialInfo.name</option>
-              }
-          }
-      </datalist>
+          @await Html.PartialAsync("../Shared/CategoriesPV", model: Model.DialInfos)
 
       <datalist id="dialCodes">
           @{
@@ -54,7 +49,7 @@
               if (Model.Users == null) return;
               foreach (var user in Model.Users)
               {
-                          <option>@user.fullName</option>
+                    <option>@user.fullName</option>
               }
           }
       </datalist>

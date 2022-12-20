@@ -18,7 +18,7 @@ public class ProjectContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        // M:N DB enitity connections
+        // M:N DB entity connections
 
         builder.Entity<Project>().HasMany(p => p.assignees).WithMany(a => a.Projects);
 
@@ -50,7 +50,9 @@ public class ProjectContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
+        {
             optionsBuilder.UseSqlServer(
                 "Server=(localdb)\\mssqllocaldb;Database=EvidenceContext;Trusted_Connection=True;MultipleActiveResultSets=True");
+        }
     }
 }
