@@ -42,19 +42,25 @@ public class ProjectController : Controller
 
 
         List<DbFile> files = new();
-        foreach (var file in projectData?.photos)
+        if(!projectData.photos.IsNull())
         {
-            var dbFile = new DbFile();
-            dbFile.WriteFile(file);
-            files.Add(dbFile);
+            foreach (var file in projectData?.photos)
+            {
+                var dbFile = new DbFile();
+                dbFile.WriteFile(file);
+                files.Add(dbFile);
+            }
         }
         List<DialCode> tech = new();
 
-        foreach (var item in projectData.tech)
+        if(!projectData.tech.IsNull())
         {
-            var dialCode = _context?.dialCodes?.FirstOrDefault(x => x.name == item);
-            if (dialCode == null) continue;
-            tech.Add(dialCode);
+            foreach (var item in projectData.tech)
+            {
+                var dialCode = _context?.dialCodes?.FirstOrDefault(x => x.name == item);
+                if (dialCode == null) continue;
+                tech.Add(dialCode);
+            }
         }
 
         List<User> users = new();

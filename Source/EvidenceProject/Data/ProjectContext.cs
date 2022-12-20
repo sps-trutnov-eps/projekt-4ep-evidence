@@ -19,25 +19,17 @@ public class ProjectContext : DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         // M:N DB entity connections
-
         builder.Entity<Project>().HasMany(p => p.assignees).WithMany(a => a.Projects);
-
         builder.Entity<Project>().HasMany(p => p.applicants).WithMany();
-
         builder.Entity<Project>().HasMany(p => p.files).WithOne();
 
         //builder.Entity<Project>().HasMany(p => p.projectAchievements).WithOne(a => a.project);
-
         builder.Entity<DialCode>().HasOne(d => d.dialInfo).WithMany(d => d.dialCodes);
 
         // Duplicates
-
         builder.Entity<AuthUser>().HasIndex(u => u.id_key).IsUnique();
-
         builder.Entity<AuthUser>().HasIndex(u => u.username).IsUnique();
-
         builder.Entity<DialInfo>().HasIndex(d => d.name).IsUnique();
-
         builder.Entity<DialCode>().HasIndex(d => d.name).IsUnique();
 
         // Cascades
