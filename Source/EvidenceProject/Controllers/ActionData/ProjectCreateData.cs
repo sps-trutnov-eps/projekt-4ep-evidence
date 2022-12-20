@@ -8,10 +8,12 @@ public class ProjectCreateData
 
     public string? stavit { get; set; }
 
+    [NotRequired]
     public string? typy { get; set; }
 
     public string? projectManager { get; set; }
 
+    [NotRequired]
     public string[]? tech { get; set; }
 
     [NotRequired]
