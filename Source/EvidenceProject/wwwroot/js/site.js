@@ -25,7 +25,18 @@ function plynulyPrechodMeziStrankami(){
 
                 document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
                 document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
-
+                try {
+                let el = document.createElement("script");
+                el.src = document.querySelector("#module-script").src;
+                let mod_name = new RegExp("\/js\/(.*?)\\?v=").exec(el.src)[1];
+                console.log(`Loading ${mod_name} module.`);
+                el.remove();
+                document.body.appendChild(el);
+                }
+                catch {
+                    // mo module to load
+                }
+            
                 history.pushState({"html": text }, "", xhr.responseURL);
 
                 spustitScript();
@@ -52,63 +63,13 @@ window.onpopstate = function(e){
 }
 
 function spustitScript(){
-    let lokace = $(location).attr("pathname");
 
     search();
-
-    if (lokace == "/project/create") {
-        nazvySouboru();
-    } else if (lokace == "/users/login") {
-        prihlaseniRegistraceFormular("#login form",'Přihlašování ...');
-    } else if (lokace == "/users/register") {
-        prihlaseniRegistraceFormular("#register form", 'Registrování ...');
-    }
 }
 
-function nazvySouboru(){
-    const fileSelector = document.getElementById('photo');
-    fileSelector.addEventListener('change', (event) => {
-        const fileList = event.target.files;
-        document.getElementById("nazvy").innerHTML = "";
-        for (let i = 0; i < fileList.length; i++) {
-            ted = document.getElementById("nazvy").innerText;
-            document.getElementById("nazvy").innerHTML = ted + ", " + fileList[i].name;
 
-        }
-    });
-}
 
-function prihlaseniRegistraceFormular(selektor, text) {
-    $(selektor).submit(function(event) {
-        event.preventDefault();
 
-        let formular = $(this);
-
-        $("main").html(`<div>${text}</div>`);
-
-        xhr.open("POST", formular.attr("action"), true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.responseType = "text";
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                const text = xhr.responseText
-                const doc = domp.parseFromString(text, "text/html")
-
-                document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
-                document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
-
-                if (xhr.responseURL != location.href){
-                    history.pushState({"html": text }, "", xhr.responseURL);
-                }
-                spustitScript();
-            } else {
-                // errror
-                $("main").html(`<div>Chyba: ${xhr.status} ${xhr.statusText}</div>`);
-            }
-        };
-        xhr.send(formular.serialize());
-    });
-}
 
 $(document).on("click", ".mode", function(event){
     let style = event.target.id
