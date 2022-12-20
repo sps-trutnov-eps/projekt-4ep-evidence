@@ -1,0 +1,65 @@
+﻿@model Project
+@{
+    ViewData["Title"] = $"{Model.name}";
+    List<Achievement>? achievements = Model.projectAchievements?.ToList();
+    List<DbFile>? images = Model.files?.Where(f => f.mimeType.Contains("image")).ToList();
+    List<DbFile>? otherFiles = Model.files?.Where(f => !f.mimeType.Contains("image")).ToList();
+}
+
+
+<a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
+
+@if (Model == null) return;
+
+<p><b>@Model.name</b></p>
+@if (Model.projectTechnology != null){
+    <p>Technologie: 
+    @foreach (var item in Model?.projectTechnology)
+    {
+        <span style="color:@item.GetHtmlColor()">@item.name</span>
+    }
+    </p>
+}
+<p>Stav: <span style="color: @Model.projectState.GetHtmlColor()">@Model?.projectState?.name</span></p>
+<p>Typ: <span style="color: @Model.projectType.GetHtmlColor()">@Model?.projectType?.name</span></p>
+@if (achievements?.Count > 0)
+{
+    <p>Úspěchy: @UniversalHelper.GetAchievements(achievements)</p>
+}
+@if (!Model.github.IsNull()){<p>Github: @Model?.github</p>}
+@if (!Model.slack.IsNull()){<p>Slack: @Model?.slack</p>}
+@if (Model.assignees != null)
+{
+    <p>Zapojení lidé: </p>
+    @foreach (var assignee in Model.assignees?.ToList())
+    {
+        <p> @assignee.fullName</p>
+    }           
+}
+
+@if(images?.Count > 0){
+    <p>Obrázky</p>
+    @foreach (var item in images)
+    {
+        <img src="/file/@item.generatedFileName" />
+    }
+}
+
+
+@if (otherFiles?.Count > 0)
+{
+    <p>Ostatní soubory</p>
+    @foreach (var item in otherFiles)
+    {
+        <a href="/file/@item.generatedFileName">@item.originalFileName</a>
+    }
+}
+
+<p>Projevit zájem</p>
+<form method="post" action="/project/apply/@Model.id">
+    <input type="text" name="firstname" placeholder="Jméno..." required />
+    <input type="text" name="lastname" placeholder="Příjmení..." required />
+    @await Html.PartialAsync("../Shared/DatalistsPV", model: null)
+    <input type="text" name="contact" placeholder="Kontakt..." required />
+    <input type="submit" value="Mám zájem"/>
+</form>

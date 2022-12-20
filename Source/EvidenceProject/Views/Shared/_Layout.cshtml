@@ -1,49 +1,74 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out var userId);
+}
+
+<!DOCTYPE html>
+<html lang="cs" style="height: 100%;">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EvidenceProject</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/EvidenceProject.styles.css" asp-append-version="true" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/override.css" /> 
+    <link rel="stylesheet" href="~/EvidenceProject.styles.css" asp-append-version="true"/>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EvidenceProject</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+<header>
+    <div>
+        <a asp-area="" class="mode" id="site">Default</a>
+        <a asp-area="" class="mode" id="darkMode">Dark Mode</a>
+        <a asp-area="" class="mode" id="mode3">Vlasak Mode</a>
+    </div>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand odkaz" asp-area="" asp-controller="Home" asp-action="Index">EvidenceProject</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1)
+                        {
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
+                        }
+                        @if(userId == null)
+                        {
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                        }
+                        <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
+                        @if(userId != null)
+                        {
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Profile">Profil</a>
+                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Logout">Odhlásit se</a>
+                        }
+                    </li>
+                </ul>
+                <div class="searchDiv">
+                    <label style="color: white" for="search">Vyhledat:</label>
+                    <form id="searchform" action="/search" method="post">
+                        <input id="search" name="text" type="search" placeholder="..." />
+                    </form>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - EvidenceProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    </nav>
+</header>
+<main class="mainPart">
+    <div id="@ViewData["Page"]">
+        @RenderBody()
+    </div>
+</main>
+
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; @DateTime.Now.Year - EvidenceProject
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", false)
 </body>
 </html>

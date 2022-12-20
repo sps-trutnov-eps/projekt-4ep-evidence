@@ -1,0 +1,11 @@
+@using EvidenceProject.Controllers.ActionData
+@{
+    ViewData["Title"] = "Registrace";
+    ViewData["Page"] = "register";
+}
+
+@model RegisterData
+
+<form action="/users/register" method="post">
+    @await Html.PartialAsync("../Shared/RegisterInputsPV", model: Model)
+</form>
