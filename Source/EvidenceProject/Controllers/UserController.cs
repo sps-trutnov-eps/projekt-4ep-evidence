@@ -158,7 +158,7 @@ public class UserController : Controller
 
         var loggedId = Uid.Value;
 
-        var user = _context.globalUsers.FirstOrDefault(x => x.id == loggedId);
+        var user = _context.globalUsers.FirstOrDefault(x => x.id == id);
         var admin = _context.globalUsers.FirstOrDefault(x => x.globalAdmin.Value);
 
         // toto je špatně!
@@ -207,7 +207,7 @@ public class UserController : Controller
             contactDetails = data.Contact,
             fullName = $"{data.Firstname} {data.Lastname}",
             Projects = user.Projects,
-            password = data.Password,
+            password = BCrypt.Net.BCrypt.HashPassword(data.Password),
             schoolYear = byte.Parse(data.SchoolYear),
             username = data.Username,
             studyField = data.StudyField
