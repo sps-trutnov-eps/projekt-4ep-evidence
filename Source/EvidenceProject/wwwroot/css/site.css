@@ -549,7 +549,7 @@ body {
 @media all and (min-width: 1024px) {
     div#create {
         height: auto;
-        width: auto;
+        width: 1000px;
         margin: 0 auto;
         background-color: var(--sps-cyan);
         border: 10px solid var(--secondary);
@@ -638,6 +638,8 @@ body {
         margin: 0 auto;
     }
 }
+
+
 
 
 

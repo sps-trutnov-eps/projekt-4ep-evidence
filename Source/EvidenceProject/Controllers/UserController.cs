@@ -1,8 +1,11 @@
-﻿using EvidenceProject.Controllers.ActionData;
-using EvidenceProject.Controllers.RequestClasses;
+using EvidenceProject.Controllers.ActionData;
+using EvidenceProject.Data.DataModels;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
-using bcrypt = BCrypt.Net.BCrypt;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
+using bcrypt = BCrypt.Net.BCrypt;
+
 namespace EvidenceProject.Controllers;
 
 public class UserController : Controller
@@ -123,22 +126,17 @@ public class UserController : Controller
         var userId = id.Value;
 
         var projectsWithIncludes = UniversalHelper.GetData<Project>(_context, _cache, "AllProjects", "projects", true);
-        List<User> users = new();
-        foreach (var project in projectsWithIncludes)
-        {
-            if(project.assignees != null) foreach (var assignee in project?.assignees) users.Add(assignee);
-            if(project.applicants != null) foreach (var applicant in project?.applicants) users.Add(applicant);
-        }
+      
         profileData.AuthUser = _context.globalUsers.FirstOrDefault(x => x.id == userId);
         var userProjects = projectsWithIncludes.Where(x => x.assignees?.ToList().Any(x => x.id == userId) == true || x.projectManager.id == userId);
         var userProjectsData = userProjects == null ? null : userProjects.ToList();
 
         bool isAdmin = profileData.AuthUser.globalAdmin.Value;
-        profileData.NonAuthUsers = isAdmin ? users : null;
-        profileData.Users = isAdmin ? _context.globalUsers.ToList() : null;
-        profileData.Categories = isAdmin ? _context.dialInfos.Include(x => x.dialCodes).ToList() : null;
+        profileData.NonAuthUsers = isAdmin ? _context?.users.Include(x => x.Projects).ToList().Where(x => x.GetType().Name == "User").ToList(): null;
+        profileData.Users = isAdmin ? _context?.globalUsers.Include(x => x.Projects).ToList() : null;
+        profileData.Categories = isAdmin ? _context?.dialInfos.Include(x => x.dialCodes).ToList() : null;
         profileData.Projects = isAdmin ? projectsWithIncludes : userProjectsData;
-        profileData.AuthUser = _context.globalUsers.FirstOrDefault(x => x.id == userId);
+        profileData.AuthUser = _context?.globalUsers.FirstOrDefault(x => x.id == userId);
         return View(profileData);
     }
 
@@ -160,9 +158,10 @@ public class UserController : Controller
 
         var loggedId = Uid.Value;
 
-        var user = _context.globalUsers.FirstOrDefault(x => x.id == loggedId);
+        var user = _context.globalUsers.FirstOrDefault(x => x.id == id);
         var admin = _context.globalUsers.FirstOrDefault(x => x.globalAdmin.Value);
 
+        // toto je špatně!
         if (loggedId != user.id && admin.id != loggedId) return Redirect("/user/profile");
 
         var hashedPassword = bcrypt.HashPassword(data.Password);
@@ -185,7 +184,7 @@ public class UserController : Controller
     {
         // Todo dodělat kontrolu admina
         var user = _context.globalUsers.FirstOrDefault(u => u.id == id);
-        if(user == null) Redirect("/user/profile");
+        if(user.IsNull()) Redirect("/user/profile");
 
         _context.globalUsers.Remove(user);
         _context.SaveChanges();
@@ -194,12 +193,13 @@ public class UserController : Controller
 
 
     [HttpPost("/user/promote/{id}")]
-    public ActionResult PromoteUser(int id, [FromForm] RegisterData data, [FromForm] string projectId)
+    public ActionResult PromoteUser(int id, [FromForm] RegisterData data)
     {
         if(!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return Redirect("/user/profile");
 
-        var user = UniversalHelper.GetProject(_context, int.Parse(projectId))?.assignees?.FirstOrDefault(a => a.id == id);
-        if (user == null) return Redirect("/user/profile");
+        var user = _context.users.Include(x => x.Projects).FirstOrDefault(u => u.id == id);
+
+        if (user.IsNull()) return Redirect("/user/profile");
 
         AuthUser authUser = new()
         {
@@ -207,7 +207,7 @@ public class UserController : Controller
             contactDetails = data.Contact,
             fullName = $"{data.Firstname} {data.Lastname}",
             Projects = user.Projects,
-            password = data.Password,
+            password = BCrypt.Net.BCrypt.HashPassword(data.Password),
             schoolYear = byte.Parse(data.SchoolYear),
             username = data.Username,
             studyField = data.StudyField
@@ -215,15 +215,17 @@ public class UserController : Controller
 
         foreach (var project in UniversalHelper.GetProjectsWithIncludes(_context))
         {
-            if (project.assignees == null) continue;
+            if (project.assignees.IsNullOrEmpty()) continue;
             if (project.assignees.Contains(user))
             {
                 project.assignees.Add(authUser);
                 project.assignees.Remove(user);
             }
+            _context?.projects?.Update(project);
 
         }
 
+        _context.users.Remove(user);
         _context.globalUsers?.Add(authUser);
         _context.SaveChanges();
         return Redirect("/user/profile");
