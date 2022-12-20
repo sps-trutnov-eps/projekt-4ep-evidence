@@ -1,7 +1,7 @@
 $(document).ready(function () {
     plynulyPrechodMeziStrankami();
     nastaveniStylu();
-    spustitScript();
+    search();
 })
 
 const xhr = new XMLHttpRequest();
@@ -36,10 +36,8 @@ function plynulyPrechodMeziStrankami(){
                 catch {
                     // mo module to load
                 }
-            
                 history.pushState({"html": text }, "", xhr.responseURL);
-
-                spustitScript();
+                search();
             } else {
                 // errror
                 $("main").html(`<div>Chyba: ${xhr.status} ${xhr.statusText}</div>`);
@@ -59,14 +57,8 @@ window.onpopstate = function(e){
     document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
     document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
 
-    spustitScript();
-}
-
-function spustitScript(){
-
     search();
 }
-
 
 
 
@@ -129,6 +121,8 @@ function search() {
     });
 }
 
+
+// Unused
 async function login() {
     let username = Document.getElementById("username")
     let password = Document.getElementById("password")
@@ -145,6 +139,8 @@ async function login() {
     })
     let data = await res.json();
 }
+
+//////
 let jedna = 0;
 let array = [];
 let iii = 0;
