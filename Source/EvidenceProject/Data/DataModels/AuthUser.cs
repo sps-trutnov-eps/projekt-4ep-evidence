@@ -147,19 +147,7 @@ public class AuthUser : User
     /// <returns>Vrátí náhodně vygenerovaný řetězec znaků.</returns>
     private string ReturnIdKey(int keyLength, ProjectContext? context = null)
     {
-        var key = "";
-
-        do
-        {
-            key = "";
-            var rand = new Random();
-            for (var i = 0; i < keyLength; i++)
-            {
-                var cislo = rand.Next(48, 122);
-                key += Convert.ToChar(cislo).ToString();
-            }
-        } while (context?.globalUsers?.Where(a => a.id_key == key).FirstOrDefault() != null);
-
+        var key = Guid.NewGuid().ToString();
         return key;
     }
 }

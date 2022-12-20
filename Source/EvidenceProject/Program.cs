@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace EvidenceProject;
 public class Program
@@ -10,7 +12,7 @@ public class Program
         builder.Logging.AddConsole();
         // Add services to the container.
         builder.Services.AddControllersWithViews();
-
+        var provider = builder.Configuration.GetValue("Provider", "SqlServer");
         // Session
         builder.Services.AddSession(options =>
         {
@@ -21,12 +23,17 @@ public class Program
             options.Cookie.MaxAge = TimeSpan.FromDays(8);
         });
         // Stavitel
-        builder.Services.AddDbContext<ProjectContext>(opt => {
+        builder.Services.AddDbContext<ProjectContext>(opt => _ = provider switch
+        {
+            "Postgres" => opt.UseNpgsql(
+                builder.Configuration["DatabaseConnection"],
+                x => x.MigrationsAssembly("Migrations.Postgres")),
 
-        if (builder.Configuration.GetValue<bool>("UsePostgres"))
-            opt.UseNpgsql(builder.Configuration["DatabaseConnection"]);
-        else
-            opt.UseSqlServer(builder.Configuration["DatabaseConnection"]);
+            "SqlServer" => opt.UseSqlServer(
+                builder.Configuration["DatabaseConnection"],
+                x => x.MigrationsAssembly("Migrations.SqlServer")),
+
+            _ => throw new Exception($"Unsupported provider: {provider}")
         });
 
         builder.Services.AddControllersWithViews();

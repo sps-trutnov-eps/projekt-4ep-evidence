@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Vytvoření projektu";
     ViewData["Page"] = "create";
+    ViewData["Script"] = new[]{"project/create.js", "project/common.js"};
 }
 @model GETProjectCreate
 <div class="projectCreateItem">
@@ -25,6 +26,7 @@
       <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
       <label for="photos">Fotografie: </label>
       <input name="photos" type="file" multiple="multiple" />
+      <p id="nazvy"></p>
       <label for="achievements">Úspěchy: </label>
       <input name="achievements" type="text" id="achievements" placeholder="Úspěchy se dělí středníkem (;)" />
       <label for="slack">Slack: </label>

@@ -1,7 +1,7 @@
 $(document).ready(function () {
     plynulyPrechodMeziStrankami();
     nastaveniStylu();
-    spustitScript();
+    search();
 })
 
 const xhr = new XMLHttpRequest();
@@ -25,10 +25,16 @@ function plynulyPrechodMeziStrankami(){
 
                 document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
                 document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
-
+                for (const script of document.querySelectorAll(".module-script")) {
+                    let el = document.createElement("script");
+                    el.src = script.src;
+                    let mod_name = new RegExp("\/js\/(.*?)\\?v=").exec(el.src)[1];
+                    console.log(`Loading ${mod_name} module.`);
+                    el.remove();
+                    document.body.appendChild(el);
+                }
                 history.pushState({"html": text }, "", xhr.responseURL);
-
-                spustitScript();
+                search();
             } else {
                 // errror
                 $("main").html(`<div>Chyba: ${xhr.status} ${xhr.statusText}</div>`);
@@ -48,67 +54,11 @@ window.onpopstate = function(e){
     document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
     document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
 
-    spustitScript();
-}
-
-function spustitScript(){
-    let lokace = $(location).attr("pathname");
-
     search();
-
-    if (lokace == "/project/create") {
-        nazvySouboru();
-    } else if (lokace == "/users/login") {
-        prihlaseniRegistraceFormular("#login form",'Přihlašování ...');
-    } else if (lokace == "/users/register") {
-        prihlaseniRegistraceFormular("#register form", 'Registrování ...');
-    }
 }
 
-function nazvySouboru(){
-    const fileSelector = document.getElementById('photo');
-    fileSelector.addEventListener('change', (event) => {
-        const fileList = event.target.files;
-        document.getElementById("nazvy").innerHTML = "";
-        for (let i = 0; i < fileList.length; i++) {
-            ted = document.getElementById("nazvy").innerText;
-            document.getElementById("nazvy").innerHTML = ted + ", " + fileList[i].name;
 
-        }
-    });
-}
 
-function prihlaseniRegistraceFormular(selektor, text) {
-    $(selektor).submit(function(event) {
-        event.preventDefault();
-
-        let formular = $(this);
-
-        $("main").html(`<div>${text}</div>`);
-
-        xhr.open("POST", formular.attr("action"), true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.responseType = "text";
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                const text = xhr.responseText
-                const doc = domp.parseFromString(text, "text/html")
-
-                document.querySelector('body').innerHTML = doc.querySelector('body').innerHTML;
-                document.querySelector('title').innerHTML = doc.querySelector('title').innerHTML;
-
-                if (xhr.responseURL != location.href){
-                    history.pushState({"html": text }, "", xhr.responseURL);
-                }
-                spustitScript();
-            } else {
-                // errror
-                $("main").html(`<div>Chyba: ${xhr.status} ${xhr.statusText}</div>`);
-            }
-        };
-        xhr.send(formular.serialize());
-    });
-}
 
 $(document).on("click", ".mode", function(event){
     let style = event.target.id
@@ -168,6 +118,8 @@ function search() {
     });
 }
 
+
+// Unused
 async function login() {
     let username = Document.getElementById("username")
     let password = Document.getElementById("password")
@@ -184,66 +136,4 @@ async function login() {
     })
     let data = await res.json();
 }
-let jedna = 0;
-let array = [];
-let iii = 0;
-
-function veci(e, data) {
-    let value = e.target.value;
-    let tech = document.getElementsByClassName(value);
-    let more = "";
-    let vole = "";
-    if (data == "tech" && array.includes(value)) {
-    document.getElementById("technology").value = "";
-    return;
-    }
-    try {
-        vole = Array.from(document.getElementById(data).getElementsByTagName("option")).map(e=> e.innerText);
-    }
-    catch {}
-    try {
-        document.getElementById(data).remove();
-    }
-    catch {}
-    if (data == "tech") {
-        more += '<select name = "' + data + '"' + 'id = "' + data +  '" multiple size = ' + tech.length + ">";
-        if (jedna != 0) {
-            for (let i = 0; i < vole.length; i ++) {    
-                more += '<option value = "' + vole[i] + '">' + vole[i] +'</option>'
-            }
-        }
-        jedna += 1;
-    }
-    else {
-        more += '<select name = "' + data + '"' + 'id = "' + data + '">';
-    }
-    for(let i = 0; i < tech.length; i++ ) {
-        more += '<option value = "' + tech[i].innerHTML + '">' + tech[i].innerHTML +'</option>';
-    }
-    more += '</select>';
-    $(e.target).after(more);
-    if (data == "tech") {
-        array[iii] = value;
-        iii++;
-    }
-    
-    document.getElementById("technology").value = "";
-}
-
-
-function removeFile(fileInput) {
-    const elements = document.getElementsByClassName(fileInput);
-    while (elements.length > 0) {
-        elements[0].parentNode.removeChild(elements[0]);
-    }
-}
-
-function addNewAssignee(e, attr) {
-    var closeWithNewInput = `<span class="${attr}" onclick="removeAssignee(${attr})">Odebrat</span>`;
-    closeWithNewInput += `<input name="assignees" class="${attr + 1}" type="text" placeholder="..." onchange="addNewAssignee(event,${attr + 1})" list="users" />`;
-    $(e.target).after(closeWithNewInput);
-}
-
-function removeAssignee(attr) {
-    removeFile(attr);
-}
+//////
