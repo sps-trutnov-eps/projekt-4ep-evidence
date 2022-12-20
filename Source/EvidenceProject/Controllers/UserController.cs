@@ -35,16 +35,19 @@ public class UserController : Controller
         if (_context.globalUsers?.Count() == 0) { _context.globalUsers.Add(new AuthUser("admin", "heslo", _context)); _context.SaveChanges();}
 
         AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.Username);
-        if (user == null) return View("Login", data.SetError());
+        if (user.IsNull()) return View("Login", data.SetError());
 
-        if (!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return View("Login", data.SetError());
+        if (!UniversalHelper.CheckAllParams(data)) return View("Login", data.SetError());
 
         if(!bcrypt.Verify(data.Password, user.password)) return View("Login", data.SetError());
 
         _logger.LogInformation("{0} logged in.", data.Username);
         if (testing) return Redirect("/");
+        
         HttpContext.Session.SetInt32(UniversalHelper.LoggedInKey, user.id);
+        HttpContext.Session.SetString(UniversalHelper.LoggedNameKey, user.username);
         HttpContext.Session.SetInt32(UniversalHelper.IsAdmin, ((bool)user.globalAdmin ? 1 : 0));
+
         return Redirect("/");
     }
 
@@ -71,7 +74,7 @@ public class UserController : Controller
     [HttpPost("users/register")]
     public ActionResult RegisterPost([FromForm] RegisterData data)
     {
-        if (!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return View("Register", data.SetError());
+        if (!UniversalHelper.CheckAllParams(data)) return View("Register", data.SetError());
         var contextList = _context?.globalUsers?.ToList();
 
         var doesUserExist = contextList.Any(u => u.username == data.Username);
@@ -104,7 +107,7 @@ public class UserController : Controller
     [HttpPost("user/password/update")] 
     public ActionResult UpdatePasswordPost([FromForm] LoginDataUpdate data)
     {
-        if(!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return View("PasswordUpdate", data.SetError());
+        if(!UniversalHelper.CheckAllParams(data)) return View("PasswordUpdate", data.SetError());
         if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context, out var userID)) return View("PasswordUpdate", data.SetError());
 
         AuthUser? user = AuthUser.FindUser(_context, (int)userID);
@@ -145,6 +148,7 @@ public class UserController : Controller
     {
         HttpContext.Session.Remove(UniversalHelper.LoggedInKey);
         HttpContext.Session.Remove(UniversalHelper.IsAdmin);
+        HttpContext.Session.Remove(UniversalHelper.LoggedNameKey);
         return RedirectToAction("Index", controllerName: "Home");
     }
 
@@ -152,7 +156,7 @@ public class UserController : Controller
     [HttpPost("user/edit/{id}")]
     public ActionResult ChangeUser(int id, RegisterData data)
     {
-        if (!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return Redirect("/user/profile");
+        if (!UniversalHelper.CheckAllParams(data)) return Redirect("/user/profile");
 
         if (!UniversalHelper.GetLoggedUser(HttpContext, out int? Uid)) return Redirect("/");
 
@@ -195,7 +199,7 @@ public class UserController : Controller
     [HttpPost("/user/promote/{id}")]
     public ActionResult PromoteUser(int id, [FromForm] RegisterData data)
     {
-        if(!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return Redirect("/user/profile");
+        if(!UniversalHelper.CheckAllParams(data)) return Redirect("/user/profile");
 
         var user = _context.users.Include(x => x.Projects).FirstOrDefault(u => u.id == id);
 

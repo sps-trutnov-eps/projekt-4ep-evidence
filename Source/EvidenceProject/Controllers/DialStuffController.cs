@@ -57,7 +57,7 @@ public class DialStuffController : Controller
     [HttpPost("dialinfo/edit/{id}")]
     public ActionResult UpdateDialInfo(int id, [FromForm] DialInfoData? data)
     {
-        if (!UniversalHelper.CheckAllParams(data, UniversalHelper.NoCheckUserDataParams)) return Json("ERR");
+        if (!UniversalHelper.CheckAllParams(data)) return Json("ERR");
 
         var dialInfo = UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos").FirstOrDefault(x => x.id == id);
 

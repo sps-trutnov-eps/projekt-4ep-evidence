@@ -1,5 +1,7 @@
 ﻿@{
     UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out var userId);
+
+    var userName = @ViewContext.HttpContext.Session.GetString(UniversalHelper.LoggedNameKey);
 }
 
 <!DOCTYPE html>
@@ -25,7 +27,7 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
                         @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1)
@@ -42,7 +44,11 @@
                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Profile">Profil</a>
                              <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Logout">Odhlásit se</a>
                         }
-                    </li>
+                        @if (!userName.IsNull())
+                        {
+                           <a class="username nav-link text-dark odkaz">@userName</a>
+                        }
+                        </li>
                 </ul>
                 <div class="searchDiv">
                     <label style="color: white" for="search">Vyhledat:</label>
