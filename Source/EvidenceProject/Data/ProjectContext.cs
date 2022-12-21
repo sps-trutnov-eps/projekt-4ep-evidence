@@ -36,6 +36,7 @@ public class ProjectContext : DbContext
         builder.Entity<Project>().HasOne(p => p.projectState).WithMany().OnDelete(DeleteBehavior.Restrict);
         builder.Entity<Project>().HasMany(p => p.projectTechnology).WithMany();
         builder.Entity<Project>().HasOne(p => p.projectType).WithMany().OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<Project>().HasOne(p => p.projectManager).WithMany().OnDelete(DeleteBehavior.Restrict);
     }
 
 
