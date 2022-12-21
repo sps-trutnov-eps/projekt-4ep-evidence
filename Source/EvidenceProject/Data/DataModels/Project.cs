@@ -8,6 +8,7 @@ public class Project
     /// <summary>
     ///     Ověřený uživatel spravující projekt.
     /// </summary>
+    [Required]
     [ForeignKey("AuthUser")] public AuthUser? projectManager { get; set; }
 
     /// <summary>
@@ -38,27 +39,23 @@ public class Project
     /// <summary>
     ///     Typ projektu - položka z předdefinovaného výběru.
     /// </summary>
-    [Required]
     [ForeignKey("Type")]
     virtual public DialCode? projectType { get; set; }
 
     /// <summary>
     ///     Technologie projektu - položka z předdefinovaného výběru.
     /// </summary>
-    [Required]
     [ForeignKey("Technology")]
     virtual public List<DialCode>? projectTechnology { get; set; }
 
     /// <summary>
     ///     Úspechy projektu.
     /// </summary>
-    [Required]
     virtual public List<Achievement>? projectAchievements { get; set; }
 
     /// <summary>
     ///     Žáci přiřazení k projektu.
     /// </summary>
-    [Required]
     [ForeignKey("Assigness")]
     virtual public List<User>? assignees { get; set; }
 
@@ -71,7 +68,6 @@ public class Project
     /// <summary>
     ///     Subory projektu.
     /// </summary>
-    [Required]
     virtual public List<DbFile>? files { get; set; }
 
     /// <summary>
