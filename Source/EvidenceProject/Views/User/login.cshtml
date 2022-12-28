@@ -12,7 +12,7 @@
     <label for="password">Heslo:</label>
     <input type="password" name="password" value="@Model.Password" required>
     <input type="submit" value="Přihlásit se">
-    <p style="color: red">@Model.Response</p>
     <br />
     <a asp-controller="User" asp-action="Register" class="odkaz">Registrovat se</a>
 </form>
+@await Html.PartialAsync("../Shared/ToxicPopupPV", Model.Response)

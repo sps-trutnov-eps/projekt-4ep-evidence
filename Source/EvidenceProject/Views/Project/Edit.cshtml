@@ -8,7 +8,6 @@
 }
 @model GETProjectCreate
 <h2>Editace projektu</h2>
-<span style="color: red;">@Model.Response</span>
 <form action="/project/edit/@Model.CurrentProject.id" method="post" enctype="multipart/form-data">
     <label for="projectName">Název projektu: </label>
     <input name="projectName" type="text" placeholder="..." id="name" value="@Model.CurrentProject.name" />
@@ -96,5 +95,4 @@
     </datalist>
 </form>
 
-
-
+@await Html.PartialAsync("../Shared/ToxicPopupPV", Model.Response)

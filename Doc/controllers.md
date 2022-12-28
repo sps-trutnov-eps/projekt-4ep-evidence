@@ -10,3 +10,4 @@
 	- Index
 	- Search 
 
+Co tohle je?! Pls tym dokumentace, podívejte se do kódu, díky D:

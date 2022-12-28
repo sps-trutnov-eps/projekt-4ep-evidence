@@ -35,7 +35,7 @@ public class ProjectController : Controller
     {
         int? userID = 0;
 
-        if (!test) if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Json("ERR");
+        if (!test) if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/404");
 
         var GETProject = GetProjectCreateData();
         if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject.SetError("Něco nebylo vyplněno"));
@@ -123,8 +123,8 @@ public class ProjectController : Controller
     {
         if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/");
         var data = GetProjectCreateData();
-        return View(data);
-
+        if (!TryGetErrorMessage(out var message)) return View(data);
+        return View(data.SetError(message));
     }
 
     /// <summary>
@@ -362,5 +362,13 @@ public class ProjectController : Controller
             if (user.IsNull()) continue;
             users.Add(user);
         }
+    }
+
+    private bool TryGetErrorMessage(out string? message)
+    {
+        message = HttpContext.Session.GetString(UniversalHelper.RedirectError);
+        if (message.IsNull()) return false;
+        HttpContext.Session.Remove(UniversalHelper.RedirectError);
+        return true;
     }
 }
