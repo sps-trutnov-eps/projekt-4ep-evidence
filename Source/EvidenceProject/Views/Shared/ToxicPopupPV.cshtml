@@ -1,0 +1,15 @@
+﻿@model string
+
+@if(!Model.IsNull())
+{
+    var m = ToxicPopup.RenderError(Model, out var css);
+    @Html.Raw(m);
+    <style>
+        @Html.Raw(css)
+    </style>
+    <script>
+        document.querySelector(".popup #close").addEventListener("click", function(){ 
+            document.querySelector(".popup").style.display = "none";
+        });
+    </script>
+}

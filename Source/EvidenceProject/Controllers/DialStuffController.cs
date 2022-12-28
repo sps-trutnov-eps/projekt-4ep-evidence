@@ -18,13 +18,25 @@ public class DialStuffController : Controller
     [HttpPost("dialcode/add")]
     public ActionResult AddDialCode([FromForm] DialCodeData? data)
     {
-        if(!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
+        // Experimental httpcontext 
+        if (!UniversalHelper.CheckAllParams(data))
+        {
+            HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
+            return Redirect("/project/create");
+        }
         // Todo error message
-        if (UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes").Any(x => x.name == data.Name)) return Json("ERROR");
-
+        if (UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes").Any(x => x.name == data.Name))
+        {
+            HttpContext.Session.SetString(UniversalHelper.RedirectError, "Taková položka již existuje");
+            return Redirect("/project/create");
+        }
         var color = ColorTranslator.FromHtml(data?.Color);
         var dialInfo = _context.dialInfos.FirstOrDefault(x => x.name == data.DialInfoName);
-        if (dialInfo == null) return Json("Není taková kategorie");
+        if (dialInfo == null)
+        {
+            HttpContext.Session.SetString(UniversalHelper.RedirectError, "Taková kategorie není");
+            return Redirect("/project/create");
+        }
         DialCode dialCode = new(data?.Name, dialInfo, color, data.Description);
 
         _context.dialCodes.Add(dialCode);
@@ -37,9 +49,18 @@ public class DialStuffController : Controller
     public ActionResult AddDialInfo([FromForm] DialInfoData? data)
     {
         // Todo error message
-        if (UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos").Any(x => x.name == data.name)) return Json("ERROR");
+        if (UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos").Any(x => x.name == data.name))
+        {
+            HttpContext.Session.SetString(UniversalHelper.RedirectError, "Taková kategorie existuje");
+            return Redirect("/project/create");
+        }
+
         // Todo error message
-        if(!UniversalHelper.CheckAllParams(data)) return Json("ERROR");
+        if (!UniversalHelper.CheckAllParams(data))
+        {
+            HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
+            return Redirect("/project/create");
+        }
 
         // Vytvoření kategorie
         DialInfo dialInfo = new()
@@ -74,7 +95,6 @@ public class DialStuffController : Controller
     [HttpPost("dialcode/edit/{id}")]
     public ActionResult UpdateDialCode(int id, [FromForm] DialCodeData? data)
     {
-
         if (!UniversalHelper.CheckAllParams(data))  return Redirect("/user/profile");
         
         var dialCode = UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes")?.FirstOrDefault(x => x.id == id);

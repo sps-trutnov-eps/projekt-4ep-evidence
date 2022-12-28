@@ -674,6 +674,27 @@ body {
 }
 
 
+.popup #close {
+    background-image: url(../icons/close.png);
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#error404 {
+    text-align: center;
+    font-size: 8rem;
+    color: var(--primary);
+}
+
+#message404 {
+    text-align: center;
+    color: var(--primary);
+    font-size: 25px;
+    font-weight: bold;
+}
 
 
-
+.spErr {
+    color: var(--sps-cyan);
+}

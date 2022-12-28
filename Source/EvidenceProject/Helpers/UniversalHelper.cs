@@ -46,6 +46,13 @@ public static class UniversalHelper
     /// </summary>
     public static string GlobalUsersCacheKey => "globalUsers";
 
+
+    /// <summary>
+    /// Chybová hláška, která se nastaví v HttpContextu
+    /// Fuj ViewData,..
+    /// </summary>
+    public static string RedirectError => "RedirectError";
+
     /// <summary>
     ///     Zjistíme, zda je přihlášen uživatel
     /// </summary>

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 
 namespace EvidenceProject.Controllers;
 
@@ -14,9 +13,13 @@ public class HomeController : Controller
         _cache = cache;
     }
 
-    public IActionResult Index()
+    public ActionResult Index()
     {
         var projects = UniversalHelper.GetData<Project>(_context, _cache, "AllProjects", "project", true);
         return View(projects);
     }
+
+
+    [Route("{*url}", Order = 999)]
+    public IActionResult Error404() => View();
 }

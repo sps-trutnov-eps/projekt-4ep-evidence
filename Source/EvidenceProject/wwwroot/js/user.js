@@ -1,3 +1,5 @@
+
+/*
 function prihlaseniRegistraceFormular(selektor, text) {
     $(selektor).submit(function(event) {
         event.preventDefault();
@@ -36,3 +38,5 @@ if (lokace == "/users/login") {
 } else if (lokace == "/users/register") {
     prihlaseniRegistraceFormular("#register form", 'Registrování ...');
 }
+
+*/

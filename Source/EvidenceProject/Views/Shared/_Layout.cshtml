@@ -1,6 +1,5 @@
 ﻿@{
     UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out var userId);
-
     var userName = @ViewContext.HttpContext.Session.GetString(UniversalHelper.LoggedNameKey);
 }
 
