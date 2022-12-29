@@ -47,7 +47,43 @@ header > div {
         text-transform: uppercase;
     }
 
-
+    /* EDIT PROJECT*/
+#editProject input[type=submit]{
+    grid-column: 1/span 2;
+    width: 75% !important;
+    margin-left: 12.5%
+}
+#editProject #assignees{
+    display: grid;
+    grid-template-columns: 100% 30%;
+}
+#editProject #assignees span{
+    margin-left: inherit;
+    text-align: center;
+}
+#editProject #assignees input{
+    width: 100%;
+    margin-left: inherit;
+}
+#editProject{
+    grid-column: 1/span2;
+}
+#editProject h2{
+    text-align: center;
+}
+#editProject textarea{
+    width: auto;
+}
+#editProject form {
+    justify-content: center;
+    display: grid;
+    grid-template-columns: auto auto;
+}
+#editProject form label{
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+}
     /*PROFILE CATEGORIES*/
 #categories h2{
     text-align: center;
