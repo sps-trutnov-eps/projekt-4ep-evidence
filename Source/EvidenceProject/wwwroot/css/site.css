@@ -47,6 +47,19 @@ header > div {
         text-transform: uppercase;
     }
 
+
+    /*PROFILE CATEGORIES*/
+#categories h2{
+    text-align: center;
+}
+#cssOverride {
+    color:black;
+    grid-column: 1/span 3;
+}
+#categories form{
+    display: grid;
+    grid-template-columns: 15% 85%;
+}
 .container-fluid {
     flex-shrink: 1;
     flex-direction: column;
@@ -264,6 +277,19 @@ div.projectCreateItem {
     width: 170px;
 }
 
+#assignees{
+    width: 100%;
+    display:grid;
+    grid-template-columns: 80% 20%;   
+}
+#assignees input{
+    width: 95%;
+    margin-left: 15%;
+}
+#assignees span{
+    margin-left: 50%;
+    color: red;
+}
 div#create input[type=submit] {
     grid-column: 1/span 2 !important;
     background: #2ecc71;

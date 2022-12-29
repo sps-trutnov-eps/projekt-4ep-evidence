@@ -181,7 +181,7 @@
 }
 
 @if(Model.AuthUser.globalAdmin.Value){
-    <div>
+    <div id="cssOverride">
     <p>Editace CSS</p>
     <form method="post" action="/file/edit/css/override.css">
     <textarea name="fileData">
