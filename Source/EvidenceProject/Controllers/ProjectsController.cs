@@ -203,16 +203,10 @@ public class ProjectController : Controller
         GETProject.CurrentProject = project;
         if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject.SetError("Něco nebylo vyplněno"));
 
-
         if (project == null) return View(GETProject.SetError("Takový projekt neexistuje"));
-
-
-        if(projectData.oldFile.IsNull() && projectData.photos.IsNull()) return View(GETProject.SetError("Nebyl nahrán žádný soubor"));
-        if(projectData.oldTech.IsNull() && projectData.tech.IsNull()) return View(GETProject.SetError("Pro editaci je potřeba min. 1 kategorie"));
 
         if (projectData.oldFile != null) foreach (var item in project?.files?.ToList()) if (!projectData.oldFile.Contains(item.generatedFileName)) project.files.Remove(item);
         
-
         if(projectData?.photos != null)
         {
             foreach (var file in projectData?.photos)
