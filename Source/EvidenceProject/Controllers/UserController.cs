@@ -1,6 +1,4 @@
 using EvidenceProject.Controllers.ActionData;
-using EvidenceProject.Data.DataModels;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
@@ -140,7 +138,9 @@ public class UserController : Controller
         profileData.Categories = isAdmin ? _context?.dialInfos.Include(x => x.dialCodes).ToList() : null;
         profileData.Projects = isAdmin ? projectsWithIncludes : userProjectsData;
         profileData.AuthUser = _context?.globalUsers.FirstOrDefault(x => x.id == userId);
-        return View(profileData);
+
+        if (!UniversalHelper.TryGetErrorMessage(HttpContext, out var message)) return View(profileData);
+        return View(profileData.SetError(message));
     }
 
     [HttpGet("user/logout")]
@@ -156,17 +156,20 @@ public class UserController : Controller
     [HttpPost("user/edit/{id}")]
     public ActionResult ChangeUser(int id, RegisterData data)
     {
-        if (!UniversalHelper.CheckAllParams(data)) return Redirect("/user/profile");
+        if (!UniversalHelper.CheckAllParams(data)){
+            HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
+            return Redirect("/user/profile");
+        }
+
+        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/");
 
         if (!UniversalHelper.GetLoggedUser(HttpContext, out int? Uid)) return Redirect("/");
-
         var loggedId = Uid.Value;
 
         var user = _context.globalUsers.FirstOrDefault(x => x.id == id);
-        var admin = _context.globalUsers.FirstOrDefault(x => x.globalAdmin.Value);
+        var admins = _context.globalUsers.Where(x => x.globalAdmin.Value);
 
-        // toto je špatně!
-        if (loggedId != user.id && admin.id != loggedId) return Redirect("/user/profile");
+        if (loggedId != user.id && !admins.Any(x => x.id == loggedId)) return Redirect("/user/profile");
 
         var hashedPassword = bcrypt.HashPassword(data.Password);
 
@@ -199,7 +202,10 @@ public class UserController : Controller
     [HttpPost("/user/promote/{id}")]
     public ActionResult PromoteUser(int id, [FromForm] RegisterData data)
     {
-        if(!UniversalHelper.CheckAllParams(data)) return Redirect("/user/profile");
+        if(!UniversalHelper.CheckAllParams(data)) {
+            HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
+            return Redirect("/user/profile");
+        }
 
         var user = _context.users.Include(x => x.Projects).FirstOrDefault(u => u.id == id);
 

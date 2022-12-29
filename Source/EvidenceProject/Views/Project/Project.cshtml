@@ -1,10 +1,9 @@
-﻿@model Project
-@using EvidenceProject.Helpers
+﻿@model EvidenceProject.Controllers.ActionData.ProjectData
 @{
-    ViewData["Title"] = $"{Model.name}";
-    List<Achievement>? achievements = Model.projectAchievements?.ToList();
-    List<DbFile>? images = Model.files?.Where(f => f.mimeType.Contains("image")).ToList();
-    List<DbFile>? otherFiles = Model.files?.Where(f => !f.mimeType.Contains("image")).ToList();
+    ViewData["Title"] = $"{Model.Project.name}";
+    List<Achievement>? achievements = Model.Project.projectAchievements?.ToList();
+    List<DbFile>? images = Model.Project.files?.Where(f => f.mimeType.Contains("image")).ToList();
+    List<DbFile>? otherFiles = Model.Project.files?.Where(f => !f.mimeType.Contains("image")).ToList();
 }
 
 
@@ -12,31 +11,37 @@
 
 @if (Model == null) return;
 
-<p><b>@Model.name</b></p>
-@if (Model.projectTechnology != null){
+<p><b>@Model.Project.name</b></p>
+@if (Model.Project.projectTechnology?.Count > 0){
     <p>Technologie: 
-    @foreach (var item in Model?.projectTechnology)
+    @foreach (var item in Model.Project?.projectTechnology)
     {
         <span style="color:@item.GetHtmlColor()">@item.name</span>
     }
     </p>
 }
-@if(!Model.projectState.IsNull()){
-    <p>Stav: <span style="color: @Model.projectState.GetHtmlColor()">@Model?.projectState?.name</span></p>
+@if(!Model.Project.projectState.IsNull()){
+    <p>Stav: <span style="color: @Model.Project.projectState.GetHtmlColor()">@Model.Project?.projectState?.name</span></p>
 }
-@if(!Model.projectType.IsNull()){
-    <p>Typ: <span style="color: @Model.projectType.GetHtmlColor()">@Model?.projectType?.name</span></p>
+@if(!Model.Project.projectType.IsNull()){
+    <p>Typ: <span style="color: @Model.Project.projectType.GetHtmlColor()">@Model.Project?.projectType?.name</span></p>
 }
 @if (achievements?.Count > 0)
 {
     <p>Úspěchy: @UniversalHelper.GetAchievements(achievements)</p>
 }
-@if (!Model.github.IsNull()){<p>Github: @Model?.github</p>}
-@if (!Model.slack.IsNull()){<p>Slack: @Model?.slack</p>}
-@if (Model.assignees != null)
+@if (!Model.Project.github.IsNull())
+{
+    <p>Github: @Model.Project?.github</p>
+}
+@if (!Model.Project.slack.IsNull())
+{
+    <p>Slack: @Model.Project?.slack</p>
+}
+@if (Model.Project.assignees?.Count > 0)
 {
     <p>Zapojení lidé: </p>
-    @foreach (var assignee in Model.assignees?.ToList())
+    @foreach (var assignee in Model.Project.assignees?.ToList())
     {
         <p> @assignee.fullName</p>
     }           
@@ -61,10 +66,11 @@
 }
 
 <p>Projevit zájem</p>
-<form method="post" action="/project/apply/@Model.id">
+<form method="post" action="/project/apply/@Model.Project.id">
     <input type="text" name="firstname" placeholder="Jméno..." required />
     <input type="text" name="lastname" placeholder="Příjmení..." required />
     @await Html.PartialAsync("../Shared/DatalistsPV", model: null)
     <input type="text" name="contact" placeholder="Kontakt..." required />
     <input type="submit" value="Mám zájem"/>
 </form>
+@await Html.PartialAsync("../Shared/ToxicPopupPV", Model.Response)
