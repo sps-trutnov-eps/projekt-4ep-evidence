@@ -34,16 +34,23 @@
             List<Achievement> achievements = project.projectAchievements?.ToList();
         }
 
-        @if(!project.projectState.IsNull()){
-            <p><span class="desc">Stav:</span>  <span style="color: @project.projectState.GetHtmlColor()">@project?.projectState?.name</span></p>
-        }
-        @if(!project.projectType.IsNull()){
-            <p><span class="desc">Typ:</span>  <span style="color: @project.projectType.GetHtmlColor()">@project?.projectType?.name</span></p>
-        }
-        @if (achievements.Count > 0)
-        {
-            <p><span class="desc">Úspěchy:</span> @UniversalHelper.GetAchievements(achievements)</p>
-        }
+
+        <p>
+            <span class="desc">Stav:</span> @if (!project.projectState.IsNull())
+            {
+                <span style="color: @project.projectState.GetHtmlColor()">@project?.projectState?.name</span>
+            }
+        </p>
+        
+        
+         <p>
+             <span class="desc">Typ:</span> @if (!project.projectType.IsNull())
+            {
+                <span style="color: @project.projectType.GetHtmlColor()">@project?.projectType?.name</span>
+            }
+        </p>
+
+        <p><span class="desc">Úspěchy:</span> @UniversalHelper.GetAchievements(achievements)</p>
         <a href="/project/@project.id"><span class="desc">Detail</span><img class="detail-icon" src="./icons/detail.png" alt="Detail"></a>
     </div>
 }
