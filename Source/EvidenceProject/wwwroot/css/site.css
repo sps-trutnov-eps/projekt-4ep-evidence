@@ -58,6 +58,47 @@ form {
     margin-left: 0.55rem;
 }
 
+/* INDEX */
+
+.project:first-child {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+
+    font-weight: bold;
+}
+
+.project {
+    display: grid;
+    /*grid-template-columns: 10% 14% 18% 9% 9% 10% 12% 12% 5%;*/
+    grid-template-columns: 10% 25% 22% 9% 9% 20% 5%;
+    align-items: center;
+
+    margin: 0 8px;
+    min-height: 50px;
+    border-bottom: 2px solid gray;
+}
+.project p {
+    margin: 0;
+}
+
+.detail-icon {
+    filter: invert(60%);
+    height: 40px;
+}
+
+.project .desc {
+    display: none;
+}
+
+.project .tech {
+    border: gray 1px solid;
+    border-radius: 9px;
+    padding: 2px 4px;
+    background-color: whitesmoke;
+}
+
 /* PROFILE */
 #delete{
     border: none !important;
@@ -67,6 +108,7 @@ form {
     object-fit: contain;
     background-repeat: no-repeat;
     background-size: contain;
+    cursor: pointer;
     
 }
 #delete a {
@@ -673,6 +715,24 @@ body {
     }
 }
 
+@media screen and (max-width: 1024px) {
+    .project:first-child {
+        display: none;
+    }
+
+    .project {
+        display: block;
+        height: auto;
+    }
+
+    .project .desc {
+        display: inline;
+    }
+
+    .detail-icon {
+        display: none;
+    }
+}
 
 .popup #close {
     background-image: url(../icons/close.png);

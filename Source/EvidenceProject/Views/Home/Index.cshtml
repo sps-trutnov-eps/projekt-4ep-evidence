@@ -8,30 +8,43 @@
 
 <div class="projects">
 
+@if (Model.Count() > 0) {
+        <div class="project"> 
+            <p>Název</p>
+            <p>Popis</p>
+            <p>Technologie</p>
+            <p>Stav</p>
+            <p>Typ</p>
+            <p>Úspěchy</p>
+            @*<p>Github</p>*@
+            @*<p>Slack</p>*@
+            <p>Detail</p>
+        </div>
+}
 @foreach (var project in Model)
 {
     <div class="project"> 
         <p><b>@project.name</b></p>
-        <p>Popis: @project.projectDescription</p>
-        <p>technologie:
+        <p><span class="desc">Popis:</span> @project.projectDescription</p>
+        <p><span class="desc">technologie:</span>
         @foreach (var item in project?.projectTechnology)
             {   
-                <span style="color:@item.GetHtmlColor()">@item.name</span>
+                <span class="tech" style="color:@item.GetHtmlColor()">@item.name</span> @*@((project.projectTechnology.IndexOf(item) != project.projectTechnology.Count - 1) ? "," : "")*@
             }
         </p>
 
         @{
             List<Achievement> achievements = project.projectAchievements?.ToList();
         }
-        <p>Stav:  <span style="color: @project.projectState.GetHtmlColor()">@project?.projectState?.name</span></p>
-        <p>Typ:  <span style="color: @project.projectType.GetHtmlColor()">@project?.projectType?.name</span></p>
+        <p><span class="desc">Stav:</span>  <span style="color: @project.projectState.GetHtmlColor()">@project?.projectState?.name</span></p>
+        <p><span class="desc">Typ:</span>  <span style="color: @project.projectType.GetHtmlColor()">@project?.projectType?.name</span></p>
             @if (achievements.Count > 0)
             {
-                <p>Úspěchy: @UniversalHelper.GetAchievements(achievements)</p>
+                <p><span class="desc">Úspěchy:</span> @UniversalHelper.GetAchievements(achievements)</p>
             }
-        @if (!project.github.IsNull()){ <p>Github: @project?.github</p>}
-        @if (!project.slack.IsNull()){<p>Slack: @project?.slack</p>}
-        <a href="/project/@project.id">Detail</a>
+        @*@if (!project.github.IsNull()){ <p><span class="desc">Github:</span> @project?.github</p>}
+        @if (!project.slack.IsNull()){<p><span class="desc">Slack:</span> @project?.slack</p>}*@
+        <a href="/project/@project.id"><span class="desc">Detail</span><img class="detail-icon" src="./icons/detail.png" alt="Detail"></a>
     </div>
 }
 
