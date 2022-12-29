@@ -16,8 +16,6 @@
             <p>Stav</p>
             <p>Typ</p>
             <p>Úspěchy</p>
-            @*<p>Github</p>*@
-            @*<p>Slack</p>*@
             <p>Detail</p>
         </div>
 }
@@ -27,23 +25,25 @@
         <p><b>@project.name</b></p>
         <p><span class="desc">Popis:</span> @project.projectDescription</p>
         <p><span class="desc">technologie:</span>
-        @foreach (var item in project?.projectTechnology)
+            @foreach (var item in project?.projectTechnology)
             {   
-                <span class="tech" style="color:@item.GetHtmlColor()">@item.name</span> @*@((project.projectTechnology.IndexOf(item) != project.projectTechnology.Count - 1) ? "," : "")*@
+                <span class="tech" style="color:@item.GetHtmlColor()">@item.name</span> 
             }
         </p>
-
         @{
             List<Achievement> achievements = project.projectAchievements?.ToList();
         }
-        <p><span class="desc">Stav:</span>  <span style="color: @project.projectState.GetHtmlColor()">@project?.projectState?.name</span></p>
-        <p><span class="desc">Typ:</span>  <span style="color: @project.projectType.GetHtmlColor()">@project?.projectType?.name</span></p>
-            @if (achievements.Count > 0)
-            {
-                <p><span class="desc">Úspěchy:</span> @UniversalHelper.GetAchievements(achievements)</p>
-            }
-        @*@if (!project.github.IsNull()){ <p><span class="desc">Github:</span> @project?.github</p>}
-        @if (!project.slack.IsNull()){<p><span class="desc">Slack:</span> @project?.slack</p>}*@
+
+        @if(!project.projectState.IsNull()){
+            <p><span class="desc">Stav:</span>  <span style="color: @project.projectState.GetHtmlColor()">@project?.projectState?.name</span></p>
+        }
+        @if(!project.projectType.IsNull()){
+            <p><span class="desc">Typ:</span>  <span style="color: @project.projectType.GetHtmlColor()">@project?.projectType?.name</span></p>
+        }
+        @if (achievements.Count > 0)
+        {
+            <p><span class="desc">Úspěchy:</span> @UniversalHelper.GetAchievements(achievements)</p>
+        }
         <a href="/project/@project.id"><span class="desc">Detail</span><img class="detail-icon" src="./icons/detail.png" alt="Detail"></a>
     </div>
 }
