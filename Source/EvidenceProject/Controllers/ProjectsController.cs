@@ -123,14 +123,14 @@ public class ProjectController : Controller
     {
         if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/");
         var data = GetProjectCreateData();
-        if (!TryGetErrorMessage(out var message)) return View(data);
+        if (!UniversalHelper.TryGetErrorMessage(HttpContext ,out var message)) return View(data);
         return View(data.SetError(message));
     }
 
     /// <summary>
     ///     Odstranění projektu
     /// </summary>
-    [HttpPost("project/{id}")]
+    [HttpPost("project/delete/{id}")]
     public JsonResult Delete(int id)
     {
         if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context, out var userID)) return Json("Nejsi admin/přihlášen");
@@ -150,9 +150,14 @@ public class ProjectController : Controller
     [HttpGet("project/{id}")]
     public ActionResult Project(int id)
     {
+        ProjectData projectData = new();
         var project = UniversalHelper.GetProject(_context, id);
+
+        projectData.Project = project;
         if (project == null) return Redirect("/");
-        return View(project);
+
+        if (!UniversalHelper.TryGetErrorMessage(HttpContext, out var message)) return View(projectData);
+        return View(projectData.SetError(message));
     }
 
     /// <summary>
@@ -161,7 +166,7 @@ public class ProjectController : Controller
     [HttpPost("search")]
     public ActionResult Search([FromForm] SearchData data)
     {
-        if (data.text == string.Empty) return Ok();
+        if (data.text == string.Empty) return Json("Něco se pokazilo");
         var projects = UniversalHelper.GetProjectsWithIncludes(_context)?.Where(project => project.name.Contains(data.text)).ToList();
         if (projects == null) return Json("Nic nenalezeno");
         return Json(projects);
@@ -270,7 +275,11 @@ public class ProjectController : Controller
     [HttpPost("/project/apply/{id}")]
     public ActionResult Apply(int id,[FromForm] ProjectApplyData data)
     {
-        if (!UniversalHelper.CheckAllParams(data)) return Redirect($"/project/{id}");
+        if (!UniversalHelper.CheckAllParams(data))
+        {
+            HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
+            return Redirect($"/project/{id}");
+        }
 
         var project = UniversalHelper.GetProject(_context, id);
         if(project.IsNull()) return Redirect($"/project/{id}");
@@ -362,13 +371,5 @@ public class ProjectController : Controller
             if (user.IsNull()) continue;
             users.Add(user);
         }
-    }
-
-    private bool TryGetErrorMessage(out string? message)
-    {
-        message = HttpContext.Session.GetString(UniversalHelper.RedirectError);
-        if (message.IsNull()) return false;
-        HttpContext.Session.Remove(UniversalHelper.RedirectError);
-        return true;
     }
 }

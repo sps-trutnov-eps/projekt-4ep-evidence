@@ -8,10 +8,6 @@
 
 @model EvidenceProject.Controllers.ActionData.ProfileData
 @if(Model.IsNull()) return;
-@if(!Model.Response.IsNull()) 
-{
-    <p style="color:red;">@Model.Response</p>
-}
 
 @{
     List<User>? usersWithProject = Model.NonAuthUsers?.Where(x => x.Projects?.Count > 0).ToList();
@@ -193,4 +189,5 @@
 }
 
 @await Html.PartialAsync("../Shared/CategoriesPV", model: Model.Categories)
+@await Html.PartialAsync("../Shared/ToxicPopupPV", Model.Response)
 

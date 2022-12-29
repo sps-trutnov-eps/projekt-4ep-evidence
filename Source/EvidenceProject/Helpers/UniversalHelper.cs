@@ -205,4 +205,15 @@ public static class UniversalHelper
         var projects = GetProjectsWithIncludes(context);
         cache.Set("AllProjects", projects);
     }
+
+    /// <summary>
+    /// Získání chybové hlášky z httcontextu
+    /// </summary>
+    public static bool TryGetErrorMessage(HttpContext httpContext, out string? message)
+    {
+        message = httpContext.Session.GetString(UniversalHelper.RedirectError);
+        if (message.IsNull()) return false;
+        httpContext.Session.Remove(UniversalHelper.RedirectError);
+        return true;
+    }
 }
