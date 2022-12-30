@@ -82,29 +82,51 @@ function search() {
         event.preventDefault();
         let formular = $(this);
         let hledanyVyraz = formular.serializeArray()[0].value.trim();
-        if (hledanyVyraz){
+        if (hledanyVyraz) {
             $.ajax({
                 type: formular.attr("method"),
                 url: formular.attr("action"),
                 data: formular.serialize(),
                 success : function(data){
                     let projektyHtml = "";
-                    if(typeof(data) == Array & data.length > 1){
-                        for(let projekt of data)  {
-                            let obrazek= projekt.files.find(s => s.mimeType.includes("image"))
-                            let nahled = `<img style="height: 100%;object-fit: cover;width: 100%;" src="/file/${obrazek.generatedFileName}"/>`;
-                            let nadpis = `<a href="/project/${projekt.id}" class="odkaz"><h4>${projekt.name}</h4></a>`;
-                            let spravce = `<div>Správce: ${projekt.projectManager}</div>`;
-                            let popis = `<div>Popis: ${projekt.projectDescription}</div>`;
-                            let stav = `<div style="margin-right:5px">${projekt.projectState.name}</div>`;
-                            let typ = `<div style="margin-right:5px">${projekt.projectType.name}</div>`;
-                            let technologie = "";
-                            for(let tech of projekt.projectTechnology){
-                                technologie += `<div style="margin-right:5px">${tech.name}</div>`;
+                    if (typeof (data) == "object" & data.length >= 1) {
+                        projektyHtml += `<div class="projects">`;
+
+                        projektyHtml += `<div class="project"><p>Název</p ><p>Popis</p><p>Technologie</p><p>Stav</p><p>Typ</p><p>Úspěchy</p><p>Detail</p></div >`;
+
+                        for (let i = 0; i < data.length; i++) {
+                            let _project = data[i];
+
+                            let _tech = "";
+                            let _achiv = "";
+
+                            for (let y = 0; y < _project.achiv.length; y++) {
+                                _achiv += _project.achiv[y] + (y == _project.achiv.length - 1 ? "" : ", ");
                             }
-                            let projektHtml = `<div style="display:flex"><div style="height:100px;width:100px;margin:10px">${nahled}</div><div><div>${nadpis}${spravce}${popis}</div><div style="display:flex">${stav}${typ}${technologie}</div></div></div>`;
-                            projektyHtml += projektHtml;
+                            for (let y = 0; y < _project.tech.name.length; y++) {
+                                _tech += `<span class="tech" style="color: ${_project.tech.color[y]}">${_project.tech.name[y]}</span>`;
+                            }
+
+                            projektyHtml += `<div class="project">
+                                 <p><b>${_project.name}</b></p>
+                                    <p><span class="desc">Popis:</span> ${_project.desc}</p>
+                                    <p><span class="desc">technologie:</span>
+                                            ${_tech}
+                                    </p>
+                                    <p>
+                                        <span class="desc">Stav:</span>                
+                                        <span style="color: ${_project.state.color}">${_project.state.name}</span>
+                                    </p>
+                                     <p>
+                                         <span class="desc">Typ:</span> 
+                                         <span style="color: ${_project.type.color}">${_project.type.name}</span>
+                                    </p>
+
+                                    <p><span class="desc">Úspěchy:</span> ${_achiv}</p>
+                                    <a href="/project/${_project.id}"><span class="desc">Detail</span><img class="detail-icon" src="${window.location.origin}/icons/detail.png" alt="Detail"></a>
+                            </div>`;
                         }
+                        projektyHtml += "</div>";
                     } else {
                         projektyHtml = `<p>Nebyly nalezeny žádné výsledky :(</p>`;
                     }

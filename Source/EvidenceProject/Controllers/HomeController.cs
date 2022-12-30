@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using EvidenceProject.Controllers.ActionData;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EvidenceProject.Controllers;
 
@@ -19,6 +20,11 @@ public class HomeController : Controller
         return View(projects);
     }
 
+    [HttpPost]
+    public ActionResult Index(List<Project> projects)
+    {
+        return View(projects);
+    }
 
     [Route("{*url}", Order = 999)]
     public IActionResult Error404() => View();
