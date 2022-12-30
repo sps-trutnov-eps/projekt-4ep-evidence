@@ -169,7 +169,9 @@ public class ProjectController : Controller
         if (data.text == string.Empty) return Json("Něco se pokazilo");
         var projects = UniversalHelper.GetProjectsWithIncludes(_context)?.Where(project => project.name.Contains(data.text)).ToList();
         if (projects == null) return Json("Nic nenalezeno");
-        return Json(projects);
+        return Json(projects.Select(p => new { p.id, p.name, desc = p.projectDescription, state = new { p.projectState?.name, color = p.projectState?.GetHtmlColor() }, 
+            type = new { p.projectType?.name, color = p.projectType?.GetHtmlColor() }, achiv = p.projectAchievements?.Select(a => a.name), 
+            tech = new { name = p.projectTechnology?.Select(t => t.name), color = p.projectTechnology?.Select(t => t.GetHtmlColor()) } }));
     }
 
     [HttpGet("project/edit/{id}")]
