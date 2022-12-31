@@ -121,14 +121,89 @@ form {
     margin-left: 0.55rem;
 }
 
-/* INDEX */
+/* PROJECT DETAIL */
 
+#project-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    padding: 0px 10px;
+}
+
+#project-detail a:first-child {
+    margin-bottom: 20px;
+    font-size: 19px;
+    font-weight: bold;
+}
+#project-detail a:first-child::before {
+    content: "<< ";
+}
+
+#project-detail .files {
+    grid-column: 2 span;
+}
+
+#project-detail img {
+    max-width: 100%;
+}
+
+#interest-form {
+    position: fixed;
+    top: 20%;
+    left: calc(50% - (150px + 1rem));
+    width: calc(300px + 2rem);
+    max-width: 100%;
+    display: none;
+    margin: 0;
+
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: var(--secondary)
+}
+
+#interest-form * {
+    color: black;
+    margin: 2px 5px;
+
+    max-width: 100%;
+    width: 290px;
+}
+
+#interest-form input[type="submit"] {
+    background: #2ecc71;
+    outline: none;
+    border: none;
+    margin-top: 10px;
+}
+
+#interest-form #close_ {
+    text-align: center;
+    margin-top: -1rem;
+    margin-left: 96%;
+
+    width: 30px;
+    font-weight: bold;
+    font-size: 1.4em;
+
+    cursor: pointer;
+}
+
+#show-interest {
+    padding: 5px 8px;
+    background-color: #2ecc71;
+    width: max-content;
+    border-radius: 6px;
+
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+/* INDEX */
 .project:first-child {
     position: sticky;
     top: 0;
     background-color: white;
     z-index: 10;
-
     font-weight: bold;
 }
 
@@ -155,7 +230,7 @@ form {
     display: none;
 }
 
-.project .tech {
+.tech {
     border: gray 1px solid;
     border-radius: 9px;
     padding: 2px 4px;
@@ -536,6 +611,10 @@ body {
     top: 140px;
 }
 
+.red {
+    color: darkred;
+}
+
 @media (min-width: 480px) {
     header > div a{
         font-size: 16px;
@@ -807,6 +886,21 @@ body {
 
     .detail-icon {
         display: none;
+    }
+
+    #project-detail {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    #interest-form {
+        left: calc(50% - (120px + 1rem));
+        width: calc(240px + 2rem);
+    }
+
+    #interest-form * {
+        width: 230px;
     }
 }
 

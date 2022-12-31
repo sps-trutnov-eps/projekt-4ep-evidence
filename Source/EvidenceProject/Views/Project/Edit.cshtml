@@ -25,7 +25,7 @@
             @foreach (var user in Model.CurrentProject.assignees)
             {
                 <input class="@user.fullName" name="oldAssignees" value="@user.fullName" type="text"/>
-                <span class="@user.fullName" onclick="removeFile('@user.fullName')">Odebrat</span>
+                <span class="@user.fullName red" onclick="removeFile('@user.fullName')">Odebrat</span>
             }
         </div>
     }
@@ -35,9 +35,39 @@
         <input name="assignees" class="1" type="text" placeholder="..." onchange="addNewAssignee(event,1)" list="users" />
     </div>
     <label for="state">Stav: </label>
-    <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" value="@Model.CurrentProject.projectState?.name" />
+    <div>
+        <input name="projectState" onchange="veci(event, 'stavit')" list="stavy" id="state" value="@Model.CurrentProject.projectState?.dialInfo?.name" />
+        @if (Model.CurrentProject.projectState != null)
+        {
+            <select name="stavit" id="stavit">
+                    @foreach (var dial in Model.DialCodes?.Where(d => d?.dialInfo?.name == Model.CurrentProject.projectState.dialInfo?.name)) {
+                        if (dial.name == Model.CurrentProject.projectState.name) {
+                            <option value="@dial.name" selected>@dial.name</option>
+                        }
+                        else {
+                            <option value="@dial.name">@dial.name</option>
+                        }
+                    }
+            </select>
+        }
+    </div>
     <label for="type">Typ: </label>
-    <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" value="@Model.CurrentProject.projectType?.name" />
+    <div>
+        <input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" value="@Model.CurrentProject.projectType?.dialInfo?.name" />
+        @if (@Model.CurrentProject.projectType != null)
+        {
+            <select name="typy" id="typy">
+                    @foreach (var dial in Model.DialCodes?.Where(d => d?.dialInfo?.name == Model.CurrentProject.projectType.dialInfo?.name)) {
+                        if (dial.name == Model.CurrentProject.projectType.name) {
+                            <option value="@dial.name" selected>@dial.name</option>
+                        }
+                        else {
+                            <option value="@dial.name">@dial.name</option>
+                        }
+                    }
+            </select>
+        }
+    </div>
     <label for="technology">Technologie: </label>
     <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
     <label for="photos">Současné technologie: </label>
@@ -46,7 +76,7 @@
     {
         <div class="@tech.id+T" style="display: flex;">
             <input class="@tech.id+T" name="oldTech" type="text" value="@tech.name" readonly />
-            <span class="@tech.id+T" onclick="removeFile('@tech.id+T')">Odebrat</span>
+            <span class="@tech.id+T red" onclick="removeFile('@tech.id+T')">Odebrat</span>
         </div>
     }
         </div>
@@ -59,7 +89,7 @@
         <div class="@file.generatedFileName" style="display: flex;">
         <input class="@file.generatedFileName" name="oldFile" type="hidden" value="@file.generatedFileName" readonly />
         <span class="@file.generatedFileName">@file.originalFileName</span>
-        <span class="@file.generatedFileName" onclick="removeFile('@file.generatedFileName')">Odebrat</span>
+        <span class="@file.generatedFileName red" onclick="removeFile('@file.generatedFileName')">Odebrat</span>
         </div>
     }
         </div>
