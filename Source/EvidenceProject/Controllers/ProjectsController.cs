@@ -220,7 +220,8 @@ public class ProjectController : Controller
             }
         }
 
-        if (projectData.oldTech != null) foreach (var item in project?.projectTechnology?.ToList()) if (projectData.oldFile.Contains(item.name)) project.projectTechnology.Remove(item);
+        if (projectData.oldTech != null) foreach (var item in project?.projectTechnology?.ToList()) if (!projectData.oldTech.Contains(item.name)) project.projectTechnology.Remove(item);
+        if (projectData.oldTech == null) project.projectTechnology.RemoveAll(m => !m.IsNull());
 
         if(projectData.tech != null)
         {

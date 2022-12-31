@@ -198,7 +198,6 @@ form {
     font-size: 1.2em;
 }
 
-
 /* INDEX */
 .project:first-child {
     position: sticky;
@@ -610,6 +609,10 @@ body {
     font-weight: bold;
     position: relative;
     top: 140px;
+}
+
+.red {
+    color: darkred;
 }
 
 @media (min-width: 480px) {
