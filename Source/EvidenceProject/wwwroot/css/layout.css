@@ -1,0 +1,32 @@
+﻿.menu-icon {
+    height: 20px;
+    margin-left: -10px;
+    margin-top: -8px;
+}
+
+.navbar-toggler {
+    top: 48px !important;
+}
+
+@media screen and (max-width: 1024px) {
+    .navbar {
+        padding: 0;
+    }
+}
+@media screen and (max-width: 500px) {
+    html {
+        font-size: 20px !important;
+    }
+
+    .navbar-collapse{
+        padding-left: 0 !important;
+    }
+
+    .navbar-brand {
+        margin-left: 20px;
+    }
+
+    .navbar-toggler {
+        top: 28px !important;
+    }
+}

@@ -102,11 +102,11 @@ body {
     margin: 0;
     padding: 1rem;
     border-radius: 4px;
-    background-color: var(--secondary)
+    background-color: var(--primary);
 }
 
     #interest-form * {
-        color: black;
+        color: white;
         margin: 2px 5px;
         max-width: 100%;
         width: 290px;
@@ -207,8 +207,8 @@ div.projectCreateItem {
   text-align:left;
 }
 
-.mainPart{
-  height: 1180px;
+.mainPart {
+    min-height: calc(100vh - 136px);
 }
 .projectCreateItem input, textarea {
   width: 170px;
