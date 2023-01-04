@@ -55,12 +55,13 @@
     }
     </div>
 }
-@if (!Model.Users.IsNull() && Model.Users.Count > 0)
+@if (!Model.Users.IsNull() && Model.Users.Count > 1)
 {
     <div id="user">
     <h2>Všichni ověření uživatelé</h2>
     @foreach (var user in Model.Users)
     {
+        if (user.id == Model.AuthUser.id) continue;
         splittedName = user.fullName?.Split(" ");
         <p>Uživatel: @user.fullName</p>
         <form method="post" action="/user/edit/@user.id">
@@ -84,11 +85,12 @@
             <label for="password">Heslo:</label>
             <input type="password" name="password" required>
             <input type="submit" value="Změnit">
-                <div id="delete">
-                    <a href="/user/delete/@user.id" style="color: red;">Odstranit</a>
-                </div>
         </form>
-        
+            <form method="post" action="/user/delete/@user.id">
+            <div id="delete">
+                <input type="submit" style="color: transparent; background: transparent;">
+            </div>
+        </form>
     }
     </div>
 }
