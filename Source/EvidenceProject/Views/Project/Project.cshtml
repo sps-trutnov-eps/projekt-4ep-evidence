@@ -13,6 +13,7 @@
     @if (Model == null) return;
 
     <p><h2>@Model.Project.name</h2></p>
+    <p>@Model.Project.projectDescription</p>
     @if (Model.Project.projectTechnology?.Count > 0){
         <p><b>Technologie:</b> 
         @foreach (var item in Model.Project?.projectTechnology)

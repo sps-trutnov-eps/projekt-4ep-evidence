@@ -186,15 +186,23 @@ public class UserController : Controller
         return Redirect("/user/profile");
     }
 
-    [HttpGet("user/delete/{id}")]
+    [HttpPost("user/delete/{id}")]
     public ActionResult DeleteUser(int id)
     {
-        // Todo dodělat kontrolu admina
+        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/user/profile");
         var user = _context.globalUsers.FirstOrDefault(u => u.id == id);
         if(user.IsNull()) Redirect("/user/profile");
 
-        _context.globalUsers.Remove(user);
-        _context.SaveChanges();
+        try
+        {
+            _context.globalUsers.Remove(user);
+            _context.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            HttpContext.Session.SetString(UniversalHelper.RedirectError, "K uživateli jsou přiřazeny projekty, není možné jej odstranit.");
+            _logger.Log(LogLevel.Warning, ex.Message);
+        }
         return Redirect("/user/profile");
     }
 
@@ -202,7 +210,9 @@ public class UserController : Controller
     [HttpPost("/user/promote/{id}")]
     public ActionResult PromoteUser(int id, [FromForm] RegisterData data)
     {
-        if(!UniversalHelper.CheckAllParams(data)) {
+        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/user/profile");
+
+        if (!UniversalHelper.CheckAllParams(data)) {
             HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
             return Redirect("/user/profile");
         }

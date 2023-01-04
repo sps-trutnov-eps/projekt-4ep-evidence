@@ -23,7 +23,7 @@ public class ProjectController : Controller
     [HttpGet("project")]
     public ActionResult Index()
     {
-        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/");
+        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/404");
         return Redirect("project/create");
     }
 
@@ -154,7 +154,7 @@ public class ProjectController : Controller
         var project = UniversalHelper.GetProject(_context, id);
 
         projectData.Project = project;
-        if (project == null) return Redirect("/");
+        if (project == null) return Redirect("/404");
 
         if (!UniversalHelper.TryGetErrorMessage(HttpContext, out var message)) return View(projectData);
         return View(projectData.SetError(message));
@@ -177,11 +177,10 @@ public class ProjectController : Controller
     [HttpGet("project/edit/{id}")]
     public ActionResult Edit(int id)
     {
-        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID)) 
-            return Redirect("/user/profile/");
+        if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID))  return Redirect("/404");
         var project = UniversalHelper.GetProject(_context, id);
         if (project == null) return Redirect("/user/profile/");
-        if(project.projectManager?.id != userID && _context.globalUsers?.FirstOrDefault(u=>u.id == userID)?.globalAdmin.Value != true) return Redirect("/user/profile/");
+        if(project.projectManager?.id != userID && _context.globalUsers?.FirstOrDefault(u=>u.id == userID)?.globalAdmin.Value != true) return Redirect("/404");
 
         GETProjectCreate data = new();
         var GETProjectData = GetProjectCreateData();
@@ -197,15 +196,16 @@ public class ProjectController : Controller
     public ActionResult Edit(int id, [FromForm] ProjectEditData projectData, bool test = false)
     {
         int? userID = 0;
-
-        if (!test) if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context, out userID)) return Json("ERR");
-
+        UniversalHelper.GetLoggedUser(HttpContext, out userID);
         Project? project = UniversalHelper.GetProject(_context, id);
+
         var GETProject = GetProjectCreateData();
         GETProject.CurrentProject = project;
         if (!UniversalHelper.CheckAllParams(projectData)) return View(GETProject.SetError("Něco nebylo vyplněno"));
 
         if (project == null) return View(GETProject.SetError("Takový projekt neexistuje"));
+
+        if (project.projectManager?.id != userID && _context.globalUsers?.FirstOrDefault(u => u.id == userID)?.globalAdmin.Value != true) return Redirect("/user/profile/");
 
         if (projectData.oldFile != null) foreach (var item in project?.files?.ToList()) if (!projectData.oldFile.Contains(item.generatedFileName)) project.files.Remove(item);
         
@@ -308,6 +308,7 @@ public class ProjectController : Controller
     [HttpPost("/project/addUser/{id}")]
     public ActionResult AddUser(int projectId, int id)
     {
+        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/404");
         DoSometingWithUser(projectId, id);
         return Redirect("/user/profile");
     }
@@ -315,6 +316,7 @@ public class ProjectController : Controller
     [HttpPost("/project/deleteUser/{id}")]
     public ActionResult DeleteUserAction(int projectId, int id)
     {
+        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/404");
         DoSometingWithUser(projectId, id, false);
         return Redirect("/user/profile");
     }
