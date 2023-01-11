@@ -1,6 +1,8 @@
 ﻿@{
+    var session = ViewContext.HttpContext.Session;
     UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out var userId);
-    var userName = @ViewContext.HttpContext.Session.GetString(UniversalHelper.LoggedNameKey);
+    var userName = session.GetString(UniversalHelper.LoggedNameKey);
+    var isAdmin = session.GetInt32(UniversalHelper.IsAdmin) == 1;
 }
 
 <!DOCTYPE html>
@@ -23,7 +25,14 @@
     </div>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand odkaz" asp-area="" asp-controller="Home" asp-action="Index">EvidenceProject</a>
+            @if (!userName.IsNull())
+            {
+                <a class="navbar-brand odkaz" asp-area="" asp-controller="User" asp-action="Profile">@userName</a>    
+            }
+            else
+            {
+                <a class="navbar-brand odkaz" asp-area="" asp-controller="Home" asp-action="Index">EvidenceProject</a>
+            }
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation"> <img class="menu-icon" src="~/icons/list.png" />
             </button>
@@ -42,11 +51,11 @@
                         @if(userId != null)
                         {
                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Profile">Profil</a>
-                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Logout">Odhlásit se</a>
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Logout">Odhlásit se</a>
                         }
-                        @if (!userName.IsNull())
+                        @if(isAdmin)
                         {
-                           <p class="username nav-link text-dark" style="margin:0px;">@userName</p>
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Administration" asp-action="Index">Administrace</a>
                         }
                         </li>
                 </ul>

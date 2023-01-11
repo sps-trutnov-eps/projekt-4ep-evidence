@@ -44,7 +44,7 @@ public class UserController : Controller
         
         HttpContext.Session.SetInt32(UniversalHelper.LoggedInKey, user.id);
         HttpContext.Session.SetString(UniversalHelper.LoggedNameKey, user.username);
-        HttpContext.Session.SetInt32(UniversalHelper.IsAdmin, ((bool)user.globalAdmin ? 1 : 0));
+        HttpContext.Session.SetInt32(UniversalHelper.IsAdmin, (bool)user.globalAdmin ? 1 : 0);
 
         return Redirect("/");
     }
@@ -64,7 +64,6 @@ public class UserController : Controller
         if (!UniversalHelper.GetLoggedUser(HttpContext, out var userID)) return Redirect("/");
         return View(new LoginDataUpdate());
     }
-
 
     // <summary>
     // Register (post)
@@ -130,13 +129,9 @@ public class UserController : Controller
       
         profileData.AuthUser = _context.globalUsers.FirstOrDefault(x => x.id == userId);
         var userProjects = projectsWithIncludes.Where(x => x.assignees?.ToList().Any(x => x.id == userId) == true || x.projectManager.id == userId);
-        var userProjectsData = userProjects == null ? null : userProjects.ToList();
-
         bool isAdmin = profileData.AuthUser.globalAdmin.Value;
-        profileData.NonAuthUsers = isAdmin ? _context?.users.Include(x => x.Projects).ToList().Where(x => x.GetType().Name == "User").ToList(): null;
-        profileData.Users = isAdmin ? _context?.globalUsers.Include(x => x.Projects).ToList() : null;
-        profileData.Categories = isAdmin ? _context?.dialInfos.Include(x => x.dialCodes).ToList() : null;
-        profileData.Projects = isAdmin ? projectsWithIncludes : userProjectsData;
+
+        profileData.Projects = isAdmin ? projectsWithIncludes : userProjects.ToList();
         profileData.AuthUser = _context?.globalUsers.FirstOrDefault(x => x.id == userId);
 
         if (!UniversalHelper.TryGetErrorMessage(HttpContext, out var message)) return View(profileData);
@@ -158,7 +153,8 @@ public class UserController : Controller
     {
         if (!UniversalHelper.CheckAllParams(data)){
             HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
-            return Redirect("/user/profile");
+            var uri = HttpContext.Request.Path.Value;
+            return Redirect(data.Caller);
         }
 
         if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/");
@@ -169,7 +165,7 @@ public class UserController : Controller
         var user = _context.globalUsers.FirstOrDefault(x => x.id == id);
         var admins = _context.globalUsers.Where(x => x.globalAdmin.Value);
 
-        if (loggedId != user.id && !admins.Any(x => x.id == loggedId)) return Redirect("/user/profile");
+        if (loggedId != user.id && !admins.Any(x => x.id == loggedId)) return Redirect(data.Caller);
 
         var hashedPassword = bcrypt.HashPassword(data.Password);
 
@@ -183,13 +179,13 @@ public class UserController : Controller
         _context.globalUsers.Update(user);
         _context.SaveChanges();
 
-        return Redirect("/user/profile");
+        return Redirect(data.Caller);
     }
 
     [HttpPost("user/delete/{id}")]
     public ActionResult DeleteUser(int id)
     {
-        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/user/profile");
+        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/Administration");
         var user = _context.globalUsers.FirstOrDefault(u => u.id == id);
         if(user.IsNull()) Redirect("/user/profile");
 
@@ -203,23 +199,23 @@ public class UserController : Controller
             HttpContext.Session.SetString(UniversalHelper.RedirectError, "K uživateli jsou přiřazeny projekty, není možné jej odstranit.");
             _logger.Log(LogLevel.Warning, ex.Message);
         }
-        return Redirect("/user/profile");
+        return Redirect("/Administration");
     }
 
 
     [HttpPost("/user/promote/{id}")]
     public ActionResult PromoteUser(int id, [FromForm] RegisterData data)
     {
-        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/user/profile");
+        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/Administration");
 
         if (!UniversalHelper.CheckAllParams(data)) {
             HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
-            return Redirect("/user/profile");
+            return Redirect("/Administration");
         }
 
         var user = _context.users.Include(x => x.Projects).FirstOrDefault(u => u.id == id);
 
-        if (user.IsNull()) return Redirect("/user/profile");
+        if (user.IsNull()) return Redirect("/Administration");
 
         AuthUser authUser = new()
         {
@@ -248,6 +244,6 @@ public class UserController : Controller
         _context.users.Remove(user);
         _context.globalUsers?.Add(authUser);
         _context.SaveChanges();
-        return Redirect("/user/profile");
+        return Redirect("/Administration");
     }
 }

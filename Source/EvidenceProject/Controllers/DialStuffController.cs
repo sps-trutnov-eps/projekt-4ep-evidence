@@ -81,7 +81,7 @@ public class DialStuffController : Controller
         if (!UniversalHelper.CheckAllParams(data))
         {
             HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
-            return Redirect("/user/profile");
+            return Redirect("/administration");
         }
 
         var dialInfo = UniversalHelper.GetData<DialInfo>(_context, _cache, UniversalHelper.DialInfoCacheKey, "dialInfos").FirstOrDefault(x => x.id == id);
@@ -89,7 +89,7 @@ public class DialStuffController : Controller
         if(dialInfo == null)
         {
             HttpContext.Session.SetString(UniversalHelper.RedirectError, "Takový kategorie není");
-            return Redirect("/user/profile");  
+            return Redirect("/Administration");  
         }
 
         dialInfo.desc = data.description;
@@ -99,7 +99,7 @@ public class DialStuffController : Controller
         _context.SaveChanges();
         _cache.Set(UniversalHelper.DialInfoCacheKey, _context.dialInfos.ToList());
         UniversalHelper.UpdateProjectsInCache(_cache, _context);
-        return Redirect("/user/profile/");
+        return Redirect("/Administration");
     }
 
     [HttpPost("dialcode/edit/{id}")]
@@ -108,7 +108,7 @@ public class DialStuffController : Controller
         if (!UniversalHelper.CheckAllParams(data))
         {
             HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
-            return Redirect("/user/profile");
+            return Redirect("/Administration");
         }
 
         var dialCode = UniversalHelper.GetData<DialCode>(_context, _cache, UniversalHelper.DialCodeCacheKey, "dialCodes")?.FirstOrDefault(x => x.id == id);
@@ -120,7 +120,7 @@ public class DialStuffController : Controller
         if (dialInfo == null)
         {
             HttpContext.Session.SetString(UniversalHelper.RedirectError, "Takový kategorie není");
-            return Redirect("/user/profile");
+            return Redirect("/Administration");
         }
 
         dialCode.description = data.Description;
@@ -133,6 +133,6 @@ public class DialStuffController : Controller
 
         _cache.Set(UniversalHelper.DialCodeCacheKey, _context.dialCodes.ToList());
         UniversalHelper.UpdateProjectsInCache(_cache, _context);
-        return Redirect("/user/profile/");
+        return Redirect("/Administration");
     }
 }

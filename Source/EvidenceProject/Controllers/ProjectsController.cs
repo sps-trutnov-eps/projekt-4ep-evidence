@@ -112,7 +112,7 @@ public class ProjectController : Controller
         _context?.projects?.Add(project);
         _context?.SaveChanges();
         UniversalHelper.UpdateProjectsInCache(_cache, _context);
-        return Redirect("Index");
+        return Redirect("/");
     }
 
     /// <summary>

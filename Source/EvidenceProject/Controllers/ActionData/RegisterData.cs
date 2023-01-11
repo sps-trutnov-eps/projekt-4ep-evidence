@@ -6,4 +6,6 @@ public class RegisterData: LoginData
     public string? Contact { get; set; }
     public string? SchoolYear { get; set; }
     public string? StudyField { get; set; }
+    [NotRequired]
+    public string? Caller { get; set; }
 }

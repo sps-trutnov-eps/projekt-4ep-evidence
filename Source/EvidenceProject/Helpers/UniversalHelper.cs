@@ -65,41 +65,39 @@ public static class UniversalHelper
     /// <summary>
     ///     Zjistí, zda je přihlášený uživatel Admin.
     /// </summary>
-    /// <param name="context">Cookies</param>
+    /// <param name="context">httpContext</param>
     /// <param name="db">Database</param>
     /// <returns></returns>
     public static bool AuthentifyAdmin(HttpContext context, ProjectContext db)
     {
-        var userID = context.Session.GetInt32(LoggedInKey);
+        var user = GetUser(db, context);
 
-        var user = db.globalUsers?.FirstOrDefault(u => u.id == userID);
-
-        if (user == null) //|| user.id_key != LoggedInKey)
-            return false;
-
+        if (user == null) return false;
         return user.globalAdmin == true;
     }
 
     /// <summary>
     ///     Zjistí, zda je přihlášený uživatel Admin a vrátí jeho ID.
     /// </summary>
-    /// <param name="context">Cookies</param>
+    /// <param name="context">httpContext</param>
     /// <param name="db">Database</param>
     /// <returns></returns>
     public static bool AuthentifyAdmin(HttpContext context, ProjectContext db, out int? ID)
     {
-        var userID = context.Session.GetInt32(LoggedInKey);
-
-        var user = db.globalUsers?.FirstOrDefault(u => u.id == userID);
+        var user = GetUser(db, context);
 
         ID = 0;
-
-        if (user == null) //|| user.id_key != LoggedInKey)
-            return false;
+        if (user == null) return false;
 
         ID = user.id;
-
         return user.globalAdmin == true;
+    }
+
+    private static AuthUser? GetUser(ProjectContext db, HttpContext httpContext)
+    {
+        var userID = httpContext.Session.GetInt32(LoggedInKey);
+        var user = db.globalUsers?.FirstOrDefault(u => u.id == userID);
+        return user;
     }
 
     /// <summary>
