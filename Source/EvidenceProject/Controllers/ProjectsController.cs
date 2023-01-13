@@ -310,7 +310,7 @@ public class ProjectController : Controller
     {
         if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/404");
         DoSometingWithUser(projectId, id);
-        return Redirect("/user/profile");
+        return Redirect("/Administration");
     }
 
     [HttpPost("/project/deleteUser/{id}")]
@@ -318,7 +318,7 @@ public class ProjectController : Controller
     {
         if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/404");
         DoSometingWithUser(projectId, id, false);
-        return Redirect("/user/profile");
+        return Redirect("/Administration");
     }
 
     /// <summary>

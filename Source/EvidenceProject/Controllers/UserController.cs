@@ -30,6 +30,12 @@ public class UserController : Controller
     [HttpPost("users/login")]
     public ActionResult LoginPost([FromForm] LoginData data, bool testing = false)
     {
+        /*
+        #if (DEBUG)
+            data.Username = "a";
+            data.Password = "a";
+        #endif
+        */
         if (_context.globalUsers?.Count() == 0) { _context.globalUsers.Add(new AuthUser("admin", "heslo", _context)); _context.SaveChanges();}
 
         AuthUser? user = _context.globalUsers?.ToList().FirstOrDefault(u => u.username == data.Username);
@@ -187,7 +193,7 @@ public class UserController : Controller
     {
         if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/Administration");
         var user = _context.globalUsers.FirstOrDefault(u => u.id == id);
-        if(user.IsNull()) Redirect("/user/profile");
+        if(user.IsNull()) Redirect("/Administration");
 
         try
         {

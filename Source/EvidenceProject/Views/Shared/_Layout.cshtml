@@ -39,23 +39,23 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1)
-                        {
-                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
-                        }
+                        <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
                         @if(userId == null)
                         {
                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Login">Login</a>
                         }
-                        <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
+                        @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1)
+                        {
+                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Project" asp-action="Create">Vytvořit projekt</a>
+                        }
                         @if(userId != null)
                         {
                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Profile">Profil</a>
+                             @if(isAdmin)
+                            {
+                                <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Administration" asp-action="Index">Administrace</a>
+                            }
                             <a class="nav-link text-dark odkaz" asp-area="" asp-controller="User" asp-action="Logout">Odhlásit se</a>
-                        }
-                        @if(isAdmin)
-                        {
-                            <a class="nav-link text-dark odkaz" asp-area="" asp-controller="Administration" asp-action="Index">Administrace</a>
                         }
                         </li>
                 </ul>

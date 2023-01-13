@@ -123,12 +123,14 @@ form {
 
 /* PROJECT DETAIL */
 
+/*
 #project-detail {
     display: grid;
     grid-template-columns: 1fr 1fr;
 
     padding: 0px 10px;
 }
+    */
 
 #project-detail a:first-child {
     margin-bottom: 20px;
@@ -258,7 +260,7 @@ form {
     grid-template-columns: auto 20% auto auto;
     gap: 1rem;
 }
-#profile > h2 {
+#profile > h2, .mainPart h2 {
     grid-column: 1/4 span;
     text-transform: uppercase;
     text-align: center;
@@ -416,7 +418,7 @@ div.projectCreateItem {
     margin-left: 50%;
     color: red;
 }
-div#create input[type=submit] {
+div#create input[type=submit], #Administrace input[type=submit] {
     grid-column: 1/span 2 !important;
     background: #2ecc71;
     width: 95%;
@@ -822,7 +824,7 @@ body {
         height: 2.5rem;
     }
 
-    div#create input[type=submit] {
+    div#create input[type=submit], #Administrace input[type=submit] {
         background: #2ecc71;
         width: 50%;
         height: 3rem;
@@ -935,3 +937,78 @@ body {
 .spErr {
     color: var(--sps-cyan);
 }
+
+
+
+.adminForm {
+    display: grid;
+    grid-template-columns: 30% 30% 30%;
+    justify-content: space-between;
+}
+
+.adminForm form {
+    display: flex;
+    flex-direction: column;
+    margin: 0 !important;
+}
+
+.mainPart h2 {
+    font-size: 1.5rem;
+}
+
+main > div{
+    padding: 10px 20px;
+}
+
+@media all and (max-width: 1024px) {
+    .adminForm {
+        grid-template-columns: 48% 48%;
+    }
+    main > div{
+        padding: 10px 20px;
+    }
+}
+
+@media all and (max-width: 550px) {
+    .adminForm {
+        grid-template-columns: 100%;
+    }
+    main > div {
+        padding: 10px 10px;
+    }
+}
+
+
+#Administrace {
+    background-color: var(--secondary);
+    border-radius: 10px;
+}
+
+#Administrace *{
+    color: white !important;
+}
+
+
+    * {
+        text-transform: inherit !important;
+    }
+
+#delete input{
+    border:none;
+}
+
+#Administrace [type="text" i], #Administrace select, #Administrace option, #Administrace textarea {
+    color: black !important;
+}
+label {
+    font-size: 20px;
+}
+
+#delete input[type=submit] {
+    background: transparent;
+    border: none;
+    color: transparent !important;
+}
+
+/*END DS*/
+

@@ -23,17 +23,18 @@
 {
     <div class="project"> 
         <p><b>@project.name</b></p>
-        <p><span class="desc">Popis:</span> @project.projectDescription</p>
+        @{
+            var projectDescription = UniversalHelper.GetTrimmedDescription(project);
+            var achievements = project.projectAchievements?.ToList();
+        }
+
+        <p><span class="desc">Popis:</span> @projectDescription</p>
         <p><span class="desc">technologie:</span>
             @foreach (var item in project?.projectTechnology)
             {   
                 <span class="tech" style="color:@item.GetHtmlColor()">@item.name</span> 
             }
         </p>
-        @{
-            List<Achievement> achievements = project.projectAchievements?.ToList();
-        }
-
 
         <p>
             <span class="desc">Stav:</span> @if (!project.projectState.IsNull())
