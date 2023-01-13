@@ -8,9 +8,9 @@
 
 <form action="/users/login" method="post">
     <label for="username">Uživatelské jméno:</label>
-    <input type="text" name="username" value="@Model.Username" required>
+    <input type="text" name="username" value="@Model.Username">
     <label for="password">Heslo:</label>
-    <input type="password" name="password" value="@Model.Password" required>
+    <input type="password" name="password" value="@Model.Password">
     <input type="submit" value="Přihlásit se">
     <br />
     <a asp-controller="User" asp-action="Register" class="odkaz">Registrovat se</a>

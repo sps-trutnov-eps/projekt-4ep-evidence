@@ -1,11 +1,7 @@
 ﻿using EvidenceProject.Data.DataModels;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Caching.Memory;
-using System.Drawing;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace EvidenceProject.Helpers;
 
@@ -214,4 +210,15 @@ public static class UniversalHelper
         httpContext.Session.Remove(UniversalHelper.RedirectError);
         return true;
     }
+
+    /// <summary>
+    /// Maximální délka popisu projetku na administraci/profilu
+    /// </summary>
+    public static int MaxDescSize => 30;
+
+    /// <summary>
+    /// Získáme zkrácený popis
+    /// Určeno pro výpis, profil a administraci
+    /// </summary>
+    public static string GetTrimmedDescription(Project project) => MaxDescSize >= project.projectDescription.Length ? project.projectDescription : $"{project.projectDescription.Substring(0, MaxDescSize)}...";
 }
