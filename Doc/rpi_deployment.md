@@ -2,15 +2,15 @@
 
 1. Připojíme se na raspberry pomocí ssh na defaultního uživatele `pi` nebo vytvoříme nového s přístume k sudo 
 2. Pomoci apt nainstalujeme potřebné package `sudo apt install curl postgresql git`
-3. Na raspberry nainstalujeme .net core 6.0 a následně dotnet-ef pomocí příkazů ```
-```sh
+3. Na raspberry nainstalujeme .net core 6.0 a následně dotnet-ef pomocí příkazů
+```
+sh
 curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 6.0
 echo 'export DOTNET_ROOT=$HOME/.dotnet' >> ~/.bashrc
 echo 'export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools' >> ~/.bashrc
 source ~/.bashrc
 dotnet tool install --global dotnet-ef
 ```
-   
 4. Naklonujeme projekt pomocí příkazu `git clone git@github.com:sps-trutnov/projekt-4ep-evidence.git --branch dev projekt-src` (Pro správné nastavení gitu můžete použít google :)
 5. Přepneme se na uživatele `postgres` pomocí `sudo su postgres`
 6. Vytvoříme nového uživatele pro postgres db pomocí `createuser jmeno_uzivatele -sP`, jmeno_uzivatele můžete zvolit jaké chcete, tento příkaz se vás zeptá na heslo pro tohoto nového uživatele, pro ukázku použiji heslo `password`
@@ -18,7 +18,8 @@ dotnet tool install --global dotnet-ef
 8. Z uživatele `postgres` se můžeme odhlásit
 9. `cd ~/projekt-src/Source/EvidenceProject`
 10. Upravíme `appsettings.json` aby vypadal následovně ![](https://i.kawaii.sh/rERgtMe.png)
-```json
+```
+json
 {
   "Logging": {
     "LogLevel": {
