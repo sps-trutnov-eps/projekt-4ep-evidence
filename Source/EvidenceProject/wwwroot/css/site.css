@@ -1010,5 +1010,24 @@ label {
     color: transparent !important;
 }
 
+.projects, .adminForm {
+    border-bottom: 5px solid;
+    padding-bottom: 15px;
+}
+
+.projects {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+}
+
+
+#profile #projects h2 {
+    border-bottom: none !important;
+}
+
 /*END DS*/
+
+
+
+
 
