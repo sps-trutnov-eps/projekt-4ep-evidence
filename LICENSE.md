@@ -1,7 +1,9 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2022, Střední průmyslová škola, Trutnov, Školní 101
+Copyright (c) 2022 AUTHORS
+
+Copyright (c) 2023 Střední průmyslová škola, Trutnov, Školní 101
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
