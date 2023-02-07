@@ -17,8 +17,8 @@
 
 @if (!Model.Projects.IsNull() && Model.Projects?.Count > 0)
 {
+    <h2>Projekty</h2>
     <div class="projects">
-        <h2>Projekty</h2>
         @foreach (var project in Model.Projects)
         {
             <div>
