@@ -20,8 +20,7 @@ dotnet tool install --global dotnet-ef
 8. Z uživatele `postgres` se můžeme odhlásit
 9. `cd ~/projekt-src/Source/EvidenceProject`
 10. Upravíme `appsettings.json` aby vypadal následovně ![](https://i.kawaii.sh/rERgtMe.png)
-```
-json
+```json
 {
   "Logging": {
     "LogLevel": {
