@@ -5,8 +5,7 @@
 1. Připojíme se na raspberry pomocí ssh na defaultního uživatele `pi` nebo vytvoříme nového s přístume k sudo 
 2. Pomoci apt nainstalujeme potřebné package `sudo apt install curl postgresql git`
 3. Na raspberry nainstalujeme .net core 6.0 a následně dotnet-ef pomocí příkazů
-```
-sh
+```sh
 curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 6.0
 echo 'export DOTNET_ROOT=$HOME/.dotnet' >> ~/.bashrc
 echo 'export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools' >> ~/.bashrc
