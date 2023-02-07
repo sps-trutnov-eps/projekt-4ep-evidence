@@ -1,0 +1,85 @@
+﻿@model EvidenceProject.Controllers.ActionData.ProjectData
+@{
+    ViewData["Title"] = $"{Model.Project.name}";
+    List<Achievement>? achievements = Model.Project.projectAchievements?.ToList();
+    List<DbFile>? images = Model.Project.files?.Where(f => f.mimeType.Contains("image")).ToList();
+    List<DbFile>? otherFiles = Model.Project.files?.Where(f => !f.mimeType.Contains("image")).ToList();
+}
+
+<div id="project-detail">
+
+    <a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
+
+    @if (Model == null) return;
+
+    <p><h2>@Model.Project.name</h2></p>
+    <p><span style="font-weight: bold;">Popis projektu:</span>  @Model.Project.projectDescription</p>
+    @if (Model.Project.projectTechnology?.Count > 0){
+        <p><b>Technologie:</b> 
+        @foreach (var item in Model.Project?.projectTechnology)
+        {
+            <span class="tech" style="color:@item.GetHtmlColor()">@item.name</span>
+        }
+        </p>
+    }
+    @if(!Model.Project.projectState.IsNull()){
+        <p><b>Stav:</b> <span style="color: @Model.Project.projectState.GetHtmlColor()">@Model.Project?.projectState?.name</span></p>
+    }
+    @if(!Model.Project.projectType.IsNull()){
+        <p><b>Typ:</b> <span style="color: @Model.Project.projectType.GetHtmlColor()">@Model.Project?.projectType?.name</span></p>
+    }
+    @if (achievements?.Count > 0)
+    {
+        <p><b>Úspěchy:</b> @UniversalHelper.GetAchievements(achievements)</p>
+    }
+    @if (!Model.Project.github.IsNull())
+    {
+        <p><b>Github:</b> <a href="@Model.Project?.github" target="_blak">@Model.Project?.github</a></p>
+    }
+    @if (!Model.Project.slack.IsNull())
+    {
+        <p><b>Slack:</b> <a href="@Model.Project?.slack" target="_blak">@Model.Project?.slack</a></p>
+    }
+    @if (Model.Project.assignees?.Count > 0)
+    {
+        <p><b>Zapojení lidé:</b> </p>
+        @foreach (var assignee in Model.Project.assignees?.ToList())
+        {
+            <p> @assignee.fullName</p>
+        }           
+    }
+
+    @if(images?.Count > 0){
+        <p><b>Obrázky</b></p>
+        <div class="files">
+        @foreach (var item in images)
+        {
+            <img src="/file/@item.generatedFileName" />
+        }
+        </div>
+    }
+
+
+    @if (otherFiles?.Count > 0)
+    {
+        <p><b>Ostatní soubory</b></p>
+        <div class="files">
+        @foreach (var item in otherFiles)
+        {
+            <a href="/file/@item.generatedFileName">@item.originalFileName</a>
+        }
+        </div>
+    }
+
+    <p id="show-interest" onclick="document.getElementById('interest-form').style.display = 'block'">Projevit zájem</p>
+    <form method="post" action="/project/apply/@Model.Project.id" id="interest-form">
+        <div id="close_" onclick="document.getElementById('interest-form').style.display = 'none'">×</div>
+        <input type="text" name="firstname" placeholder="Jméno..." required />
+        <input type="text" name="lastname" placeholder="Příjmení..." required />
+        @await Html.PartialAsync("../Shared/DatalistsPV", model: null)
+        <input type="text" name="contact" placeholder="Kontakt..." required />
+        <input type="submit" value="Mám zájem"/>
+    </form>
+    @await Html.PartialAsync("../Shared/ToxicPopupPV", Model.Response)
+
+</div>

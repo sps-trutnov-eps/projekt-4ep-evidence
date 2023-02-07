@@ -1,0 +1,18 @@
+@using EvidenceProject.Controllers.ActionData
+@{
+    ViewData["Title"] = "Přihlášení";
+    ViewData["Page"] = "login";
+    ViewData["Script"] = new[]{"user.js"};
+}
+@model LoginData
+
+<form action="/users/login" method="post">
+    <label for="username">Uživatelské jméno:</label>
+    <input type="text" name="username" value="@Model.Username">
+    <label for="password">Heslo:</label>
+    <input type="password" name="password" value="@Model.Password">
+    <input type="submit" value="Přihlásit se">
+    <br />
+    <a asp-controller="User" asp-action="Register" class="odkaz">Registrovat se</a>
+</form>
+@await Html.PartialAsync("../Shared/ToxicPopupPV", Model.Response)

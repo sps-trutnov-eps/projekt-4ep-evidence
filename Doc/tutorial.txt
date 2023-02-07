@@ -1,0 +1,25 @@
+Tutorial jak nastavit ASP.NET aplikaci na Raspberry pi:
+
+- Budeme předpokládát že už máme operační systém na který to budeme nasazovat.
+
+1) vypublikujeme aplikaci
+
+2) překopírujeme složku s aplikací na Raspberry pi
+
+3) vytvoříme nového uživatele s omezeným oprávněním
+
+4) vytvoříme soubor který zajistí aby se aplikace spouštěla automaticky
+
+
+
+
+
+
+
+
+
+
+
+
+video - https://www.youtube.com/watch?v=sv6hc8-YCBc
+článek - https://www.altair.blog/2021/10/dotnet-raspi-3

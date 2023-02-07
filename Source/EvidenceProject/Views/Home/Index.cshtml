@@ -1,8 +1,60 @@
-﻿@{
+﻿@model List<Project>
+@{
     ViewData["Title"] = "Home Page";
+    ViewData["Page"] = "home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@if (Model == null) return;
+
+<div class="projects">
+
+@if (Model.Count() > 0) {
+        <div class="project"> 
+            <p>Název</p>
+            <p>Popis</p>
+            <p>Technologie</p>
+            <p>Stav</p>
+            <p>Typ</p>
+            <p>Úspěchy</p>
+            <p>Detail</p>
+        </div>
+}
+@foreach (var project in Model)
+{
+    <div class="project"> 
+        <p><b>@project.name</b></p>
+        @{
+            var projectDescription = UniversalHelper.GetTrimmedDescription(project);
+            var achievements = project.projectAchievements?.ToList();
+        }
+
+        <p><span class="desc">Popis:</span> @projectDescription</p>
+        <p><span class="desc">technologie:</span>
+            @foreach (var item in project?.projectTechnology)
+            {   
+                <span class="tech" style="color:@item.GetHtmlColor()">@item.name</span> 
+            }
+        </p>
+
+        <p>
+            <span class="desc">Stav:</span> @if (!project.projectState.IsNull())
+            {
+                <span style="color: @project.projectState.GetHtmlColor()">@project?.projectState?.name</span>
+            }
+        </p>
+        
+        
+         <p>
+             <span class="desc">Typ:</span> @if (!project.projectType.IsNull())
+            {
+                <span style="color: @project.projectType.GetHtmlColor()">@project?.projectType?.name</span>
+            }
+        </p>
+
+        <p><span class="desc">Úspěchy:</span> @UniversalHelper.GetAchievements(achievements)</p>
+        <a href="/project/@project.id"><span class="desc">Detail</span><img class="detail-icon" src="./icons/detail.png" alt="Detail"></a>
+    </div>
+}
+
+
 </div>

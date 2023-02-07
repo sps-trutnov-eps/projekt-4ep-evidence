@@ -1,0 +1,10 @@
+﻿@model List<EvidenceProject.Data.DataModels.DialInfo>
+<datalist id="stavy">
+    @{
+        if (Model == null) return;
+        foreach (var dialInfo in Model)
+        {
+            <option id="@dialInfo.name">@dialInfo.name</option>
+        }
+    }
+</datalist>

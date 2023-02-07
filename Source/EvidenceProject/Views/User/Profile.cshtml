@@ -1,0 +1,53 @@
+@using EvidenceProject.Controllers.ActionData
+@model EvidenceProject.Controllers.ActionData.ProfileData
+
+@{
+    ViewData["Title"] = "Profil";
+    ViewData["Page"] = "profile";
+    var splittedName = Model.AuthUser.fullName?.Split(" ");
+}
+
+@if(!Model.AuthUser.IsNull()) {
+    <h2>Profil</h2>
+    <form method="post" action="/user/edit/@Model.AuthUser.id">
+        <label for="firstname">Jméno:</label>
+        <input type="text" name="firstname" value="@splittedName[0]" required>
+        <label for="lastname">Příjmení:</label>
+        @{
+            if (splittedName.Length >= 2)
+            {
+                <input type="text" name="lastname" value="@splittedName[1]" required>
+            }
+            else{
+                <input type="text" name="lastname" required>
+            }
+        }
+        <label for="contact">Kontakt(email, github,..):</label>
+        <input type="text" name="contact" value="@Model.AuthUser.contactDetails" required>
+        @await Html.PartialAsync("../Shared/DatalistsPV", Model.AuthUser)
+        <label for="username">Uživatelské jméno:</label>
+        <input type="text" name="username" value="@Model.AuthUser.username" required>
+        <label for="password">Heslo:</label>
+        <input type="hidden" name="caller" value="/user/profile/">
+        <input type="password" name="password" required>
+        <input type="submit" value="Změnit">
+    </form>
+}
+
+@if(!Model.Projects.IsNull() && Model.Projects?.Count > 0)
+{
+    <div id="projects">
+    <h2>Projekty</h2>
+    @foreach(var project in Model.Projects.OrderBy(x => x.projectManager?.id == Model.AuthUser.id))
+    {
+        <div>
+        <p>@project.name</p>
+        @if(project.projectManager.id == Model.AuthUser?.id || Model.AuthUser.globalAdmin.Value)
+        {
+            <a href="/project/edit/@project.id">Editovat</a>
+        }
+        </div>
+    }
+    </div>
+}
+@await Html.PartialAsync("../Shared/ToxicPopupPV", Model.Response)
