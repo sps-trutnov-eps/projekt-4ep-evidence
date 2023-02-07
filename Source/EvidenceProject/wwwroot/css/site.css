@@ -1015,15 +1015,28 @@ label {
     padding-bottom: 15px;
 }
 
-.projects {
+
+#Administrace .projects {
     display: grid;
     grid-template-columns: 33% 33% 33%;
 }
 
 
+
 #profile #projects h2 {
     border-bottom: none !important;
 }
+
+
+@media all and (min-width: 1024px){
+    .projectCreateItem {
+        border-right: 5px solid white;
+    }
+    .projectCreateItem:last-of-type{
+        border-right: none;
+    }
+}
+
 
 /*END DS*/
 
