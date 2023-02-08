@@ -26,4 +26,26 @@ public class DialInfo
     ///     Obsah kategorie -> stavy v options.
     /// </summary>
     public virtual List<DialCode>? dialCodes { get; set; } = new();
+
+}
+
+public static class DialInfoExtencion
+{
+    public static bool WasChecked = false;
+
+    public static void CreateIFNotDefaults(ProjectContext context)
+    {
+        var dials = context.dialInfos;
+
+        if (dials?.FirstOrDefault(i => i.name == "Stav") == null)
+            dials?.Add(new DialInfo() { name = "Stav", desc = "Stav projektu." });
+        if (dials?.FirstOrDefault(i => i.name == "Technologie") == null)
+            dials?.Add(new DialInfo() { name = "Technologie", desc = "Technologie projektu." });
+        if (dials?.FirstOrDefault(i => i.name == "Typ") == null)
+            dials?.Add(new DialInfo() { name = "Typ", desc = "Typ projektu." });
+
+        WasChecked = true;
+
+        context.SaveChanges();
+    }
 }

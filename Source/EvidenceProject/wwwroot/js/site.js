@@ -140,5 +140,12 @@ function search() {
     });
 }
 
+$("#Cat").bind('change', function () {
+    $(".show-hidden").css("display", "none");
+
+    let name = $(this).val();
+
+    $(`.show-${name}`).css("display", "block");
+});
 
 

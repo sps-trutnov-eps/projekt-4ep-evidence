@@ -369,6 +369,26 @@ form {
     font-size: 0.8em;
 }
 /* CREATE */
+.show-hidden {
+    display: none;
+}
+.polozky {
+    border-top: 2px solid white;
+    margin-top: 30px;
+
+    text-align: center;
+    color: white;
+}
+.polozky::before {
+    content: "Polozky";
+    color: white;
+    font-size: 18px;
+
+    position: relative;
+    top: -25px;
+    left: -70px;
+}
+
 div#create {
     height:100%;
     background-color: var(--sps-cyan);

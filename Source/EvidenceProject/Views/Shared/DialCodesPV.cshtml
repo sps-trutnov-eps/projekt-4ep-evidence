@@ -1,20 +1,20 @@
-﻿@model List<EvidenceProject.Data.DataModels.DialInfo>
+﻿@model Tuple<List<DialInfo>, List<DialCode>>
 
 <div class="projectCreateItem">
     <h3>Přidání položky do kategorie</h3>
     <form method="POST" action="/dialcode/add">
+        <label>Kategorie</label>
+        <input id="Cat" name="dialInfoName" list="stavy" />
         <label for="name">Název:</label>
         <input name="name" type="text" placeholder="..." id="name" />
         <label for="description">Popis:</label>
         <input name="description" type="text" placeholder="..." id="description" />
         <label>Barva</label>
         <input type="color" name="color" />
-        <label>Kategorie</label>
-        <input name="dialInfoName" list="stavy" />
         <datalist id="stavy">
             @{
                 if (Model == null) return;
-                foreach (var dialInfo in Model)
+                foreach (var dialInfo in Model.Item1)
                 {
                     <option value="@dialInfo.name">@dialInfo.name</option>
                 }
@@ -22,4 +22,14 @@
         </datalist>
         <input type="submit" value="Přidat do kategorie" />
     </form>
+
+    <div class="polozky" id="AddDialCodeExisting">
+        @{
+            if (Model?.Item2 == null) return;
+            foreach (var dialCode in Model.Item2)
+            {
+                <p class="show-hidden show-@dialCode.dialInfo.name">@dialCode.name</p>
+            }
+        }
+    </div>
 </div>

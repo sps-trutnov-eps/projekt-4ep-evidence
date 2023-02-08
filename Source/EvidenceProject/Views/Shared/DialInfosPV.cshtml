@@ -1,3 +1,5 @@
+@model List<EvidenceProject.Data.DataModels.DialInfo>
+
 <div class="projectCreateItem">
 <h2>Přidání kategorie</h2>
   <form method="POST" action="/dialinfo/add">
@@ -7,4 +9,13 @@
       <input name="description" type="text" placeholder="..." id="description" />
       <input  type="submit" placeholder="Přidat kategorii"/>
   </form>
+    <div class="polozky">
+        @{
+            if (Model == null) return;
+            foreach (var dialInfo in Model)
+            {
+                <p>@dialInfo.name</p>
+            }
+        }
+    </div>
 </div>

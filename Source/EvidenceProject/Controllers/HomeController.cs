@@ -12,6 +12,9 @@ public class HomeController : Controller
     {
         _context = context;
         _cache = cache;
+
+        if (!DialInfoExtencion.WasChecked)
+            DialInfoExtencion.CreateIFNotDefaults(_context);
     }
 
     public ActionResult Index()
