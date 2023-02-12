@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Vytvoření projektu";
     ViewData["Page"] = "create";
-    ViewData["Script"] = new[]{"project/create.js", "project/common.js"};
+    ViewData["Script"] = new[]{ @*"project/create.js",*@ "project/common.js"};
 }
 @model GETProjectCreate
 <div class="projectCreateItem">
@@ -36,7 +36,13 @@
           }
       </select>
       <label for="technology">Technologie: </label>
-      <input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />
+      @*<input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />*@
+      <select name="tech" id="tech" multiple size="1" onfocus="document.getElementById('tech').size = 2" onfocusout="document.getElementById('tech').size = 1">
+         @foreach (DialCode dial in Model?.DialCodes?.Where(d => d.dialInfo.name == "Technologie") ?? new List<DialCode>())
+         {
+            <option>@dial.name</option>
+         }
+      </select>
       <label for="photos">Fotografie: </label>
       <input name="photos" type="file" multiple="multiple" />
       <p id="nazvy"></p>
