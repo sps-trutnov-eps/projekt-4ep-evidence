@@ -29,7 +29,7 @@
       </select>
       <label for="type">Typ: </label>
       @*<input name="projectType" onchange="veci(event, 'typy')" list="stavy" id="type" />*@
-      <select name="typy" id="state" required>
+      <select name="typy" id="typy" required>
           @foreach(DialCode dial in Model?.DialCodes?.Where(d => d.dialInfo.name == "Typ") ?? new List<DialCode>())
           {
               <option>@dial.name</option>
@@ -37,7 +37,7 @@
       </select>
       <label for="technology">Technologie: </label>
       @*<input name="projectTechnology" onchange="veci(event, 'tech')" list="stavy" id="technology" />*@
-      <select name="tech" id="tech" multiple size="1" onfocus="document.getElementById('tech').size = 2" onfocusout="document.getElementById('tech').size = 1">
+      <select name="tech" id="tech" multiple size="1" onfocus="document.getElementById('tech').style.height = '7rem'" onfocusout="document.getElementById('tech').style.height = ''">
          @foreach (DialCode dial in Model?.DialCodes?.Where(d => d.dialInfo.name == "Technologie") ?? new List<DialCode>())
          {
             <option>@dial.name</option>
