@@ -9,3 +9,9 @@ public class RegisterData: LoginData
     [NotRequired]
     public string? Caller { get; set; }
 }
+
+public class UpdateUserData : RegisterData
+{
+    [NotRequired]
+    public new string? Password { get; set; }
+}

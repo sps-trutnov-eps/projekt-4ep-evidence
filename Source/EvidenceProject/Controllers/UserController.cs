@@ -155,7 +155,7 @@ public class UserController : Controller
 
 
     [HttpPost("user/edit/{id}")]
-    public ActionResult ChangeUser(int id, RegisterData data)
+    public ActionResult ChangeUser(int id, UpdateUserData data)
     {
         if (!UniversalHelper.CheckAllParams(data)){
             HttpContext.Session.SetString(UniversalHelper.RedirectError, "Něco nebylo vyplněno");
@@ -163,7 +163,7 @@ public class UserController : Controller
             return Redirect(data.Caller);
         }
 
-        if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/");
+        //if (!UniversalHelper.AuthentifyAdmin(HttpContext, _context)) return Redirect("/");
 
         if (!UniversalHelper.GetLoggedUser(HttpContext, out int? Uid)) return Redirect("/");
         var loggedId = Uid.Value;
@@ -173,11 +173,10 @@ public class UserController : Controller
 
         if (loggedId != user.id && !admins.Any(x => x.id == loggedId)) return Redirect(data.Caller);
 
-        var hashedPassword = bcrypt.HashPassword(data.Password);
-
         user.fullName = $"{data.Firstname} {data.Lastname}";
         user.username = data.Username;
-        user.password = hashedPassword;
+        if (data.Password != null)
+            user.password = bcrypt.HashPassword(data.Password);
         user.studyField = data.StudyField;
         user.contactDetails = data.Contact;
         user.schoolYear = byte.Parse(data.SchoolYear);
