@@ -8,9 +8,13 @@
 
 <div id="project-detail">
 
-    <a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
-
-    @if (Model == null) return;
+    <div style="display:flex; justify-content: space-between;">
+        <a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
+        @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1) {
+            <a href="/project/edit/@Model.Project.id" class="edit">Edit</a>
+        } else { <span></span> }
+        @if (Model == null) return;
+    </div>
 
     <p><h2>@Model.Project.name</h2></p>
     <p><span style="font-weight: bold;">Popis projektu:</span>  @Model.Project.projectDescription</p>

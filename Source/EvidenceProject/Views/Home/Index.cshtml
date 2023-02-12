@@ -16,6 +16,9 @@
             <p>Stav</p>
             <p>Typ</p>
             <p>Úspěchy</p>
+            @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1){
+                <p>Edit</p>
+            } else { <p></p> }
             <p>Detail</p>
         </div>
 }
@@ -52,6 +55,10 @@
         </p>
 
         <p><span class="desc">Úspěchy:</span> @UniversalHelper.GetAchievements(achievements)</p>
+
+        @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1) {
+            <a href="/project/edit/@project.id"><span class="desc">Edit</span><img class="edit-icon" src="./icons/edit.png" alt="Detail"></a>
+        } else { <span></span> }
         <a href="/project/@project.id"><span class="desc">Detail</span><img class="detail-icon" src="./icons/detail.png" alt="Detail"></a>
     </div>
 }

@@ -132,13 +132,19 @@ form {
 }
     */
 
-#project-detail a:first-child {
+#project-detail a:first-child, #project-detail a.edit {
     margin-bottom: 20px;
     font-size: 19px;
     font-weight: bold;
 }
 #project-detail a:first-child::before {
     content: "<< ";
+}
+#project-detail a.edit {
+    align-self: flex-end;
+}
+#project-detail a.edit::after {
+    content: " >>";
 }
 
 #project-detail .files {
@@ -212,7 +218,7 @@ form {
 .project {
     display: grid;
     /*grid-template-columns: 10% 14% 18% 9% 9% 10% 12% 12% 5%;*/
-    grid-template-columns: 10% 25% 22% 9% 9% 20% 5%;
+    grid-template-columns: 10% 22% 22% 9% 9% 18% 5% 5%;
     align-items: center;
 
     margin: 0 8px;
@@ -223,9 +229,12 @@ form {
     margin: 0;
 }
 
-.detail-icon {
+.detail-icon, .edit-icon {
     filter: invert(60%);
     height: 40px;
+}
+.edit-icon {
+    height: 30px;
 }
 
 .project .desc {
@@ -923,7 +932,7 @@ body {
         display: inline;
     }
 
-    .detail-icon {
+    .detail-icon, .edit-icon {
         display: none;
     }
 
