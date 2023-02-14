@@ -394,7 +394,7 @@ form {
     color: white;
 }
 .polozky::before {
-    content: "Polozky";
+    content: "Hodnoty...";
     color: white;
     font-size: 18px;
 
