@@ -44,7 +44,7 @@
         <p>@project.name</p>
         @if(project.projectManager.id == Model.AuthUser?.id || Model.AuthUser.globalAdmin.Value)
         {
-            <a href="/project/edit/@project.id">Editovat</a>
+            <a href="/project/edit/@project.id"><img src="~/icons/edit.png" alt="Edit" class="edit-icon" /> <span class="desc">Edit</span></a>
         }
         </div>
     }
