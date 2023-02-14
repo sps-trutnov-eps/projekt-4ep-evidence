@@ -9,7 +9,7 @@
 <div id="project-detail">
 
     <div style="display:flex; justify-content: space-between;">
-        <a asp-area="" asp-controller="Home" asp-action="Index">Zpátky</a>
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="back">Zpátky</a>
         @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1) {
             <a href="/project/edit/@Model.Project.id" class="edit">Edit</a>
         } else { <span></span> }

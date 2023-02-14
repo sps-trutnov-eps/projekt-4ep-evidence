@@ -61,7 +61,24 @@ header > div {
         text-transform: uppercase;
     }
 
-    /* EDIT PROJECT*/
+/* Administrace */
+.category {
+    border-bottom: 2px solid white;
+    padding-bottom: 20px;
+}
+.category > div {
+    margin-left: 50px;
+}
+.category > p {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.category > div > p {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* EDIT PROJECT*/
 #editProject input[type=submit]{
     grid-column: 1/span 2;
     width: 75% !important;
@@ -132,12 +149,12 @@ form {
 }
     */
 
-#project-detail a:first-child, #project-detail a.edit {
+#project-detail a.back, #project-detail a.edit {
     margin-bottom: 20px;
     font-size: 19px;
     font-weight: bold;
 }
-#project-detail a:first-child::before {
+#project-detail a.back::before {
     content: "<< ";
 }
 #project-detail a.edit {
@@ -266,7 +283,7 @@ form {
 }
 #profile{
     display: grid;
-    grid-template-columns: auto 20% auto auto;
+    grid-template-columns: auto 35% auto;
     gap: 1rem;
 }
 #profile > h2, .mainPart h2 {
@@ -285,20 +302,31 @@ form {
     grid-template-columns: auto auto;
     gap: 0.5rem;
 }
-    #profile form {
-        height: auto;
-        width: auto;
-        margin: 0 auto;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.75rem;
-        background-color: var(--secondary);
-        color: white !important;
-        text-transform: uppercase;
-        font-weight: bold;
-        border: 4px solid var(--sps-cyan);
-        border-radius: 4px;
-    }
+#profile form, #profile #projects {
+    height: auto;
+    width: auto;
+    margin: 0 auto;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background-color: var(--secondary);
+    color: white !important;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: 4px solid var(--sps-cyan);
+    border-radius: 4px;
+}
+#profile #projects {
+    display: block;
+    width: 100%;
+}
+#profile #projects div {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding-top: 10px;
+    border-bottom: 1px solid white;
+}
+
 #profile form select{
     height: 2rem;
 }
@@ -377,6 +405,7 @@ form {
     font-weight: 800;
     font-size: 0.8em;
 }
+
 /* CREATE */
 
 #nazvy {
@@ -1006,6 +1035,15 @@ main > div{
     main > div{
         padding: 10px 20px;
     }
+    #profile {
+        display: block;
+    }
+    #profile > form:nth-child(2) {
+        height: auto;
+    }
+    #profile #projects {
+        margin-top: 30px;
+    }
 }
 
 @media all and (max-width: 550px) {
@@ -1027,6 +1065,13 @@ main > div{
     #assignees {
         margin-left: calc(50% - 85px);
         width: 65%;
+    }
+    #profile {
+        font-size: 18px;
+    }
+    #profile inut, #profile select {
+        width: 170px !important;
+        font-size: 18px !important;
     }
 }
 
