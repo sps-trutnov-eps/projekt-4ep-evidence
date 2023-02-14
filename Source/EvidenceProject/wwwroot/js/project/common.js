@@ -20,7 +20,7 @@ function veci(e, data) {
     }
     catch {}
     if (data == "tech") {
-        more += '<select name = "' + data + '"' + 'id = "' + data +  '" multiple size = ' + tech.length + ">";
+        more += '<select name = "' + data + '"' + 'id = "' + data +  '" multiple size = ' + (tech.length) + ">";
         if (jedna != 0) {
             for (let i = 0; i < vole.length; i ++) {    
                 more += '<option value = "' + vole[i] + '">' + vole[i] +'</option>'

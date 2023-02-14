@@ -62,6 +62,10 @@ header > div {
     }
 
 /* Administrace */
+#Administrace input[type="password"] {
+    color: black !important;
+}
+
 .category {
     border-bottom: 2px solid white;
     padding-bottom: 20px;
@@ -114,6 +118,9 @@ header > div {
     font-weight: bold;
     text-transform: uppercase;
     color: white;
+}
+#tech {
+    height: auto !important;
 }
     /*PROFILE CATEGORIES*/
 #categories h2{
@@ -254,7 +261,7 @@ form {
     height: 30px;
 }
 
-.project .desc {
+.desc {
     display: none;
 }
 
@@ -265,7 +272,12 @@ form {
     background-color: whitesmoke;
 }
 
+
 /* PROFILE */
+.edit-icon {
+    filter: invert(0);
+}
+
 #delete{
     border: none !important;
     width: 32px;
@@ -281,10 +293,13 @@ form {
     color: transparent !important;
     background-repeat: no-repeat;
 }
-#profile{
+#profile {
     display: grid;
     grid-template-columns: auto 35% auto;
     gap: 1rem;
+}
+#profile select {
+    width: 100%;
 }
 #profile > h2, .mainPart h2 {
     grid-column: 1/4 span;
@@ -957,7 +972,7 @@ body {
         height: auto;
     }
 
-    .project .desc {
+    .desc {
         display: inline;
     }
 
