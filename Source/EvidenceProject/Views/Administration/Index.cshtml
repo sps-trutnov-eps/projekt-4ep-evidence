@@ -142,29 +142,34 @@
     <h2>Úprava kategorií</h2>
     @foreach (var category in Model.Categories)
     {
-        <p>Název kategorie: @category.name</p>
-            <form method="post" action="/dialinfo/edit/@category.id">
-            <label for="name">Název kategorie:</label>
-            <input name="name" type="text" placeholder="..." id="name" value="@category.name"/>
-            <label for="description">Popis:</label>
-            <input name="description" type="text" placeholder="..." id="description" value="@category.desc" />
-            <input type="submit" placeholder="Změnit" />
-        </form>
-        
-        @foreach(var categoryItem in category?.dialCodes?.ToList()){
-            <p>@category.name -> @categoryItem.name</p>
-                <form method="post" action="/dialcode/edit/@categoryItem.id">
-                <label for="name">Název:</label>
-                <input name="name" type="text" placeholder="..." id="name" value="@categoryItem.name" />
+        <div class="category">
+            <p>Název kategorie: @category.name</p>
+                <form method="post" action="/dialinfo/edit/@category.id">
+                <label for="name">Název kategorie:</label>
+                <input name="name" type="text" placeholder="..." id="name" value="@category.name"/>
                 <label for="description">Popis:</label>
-                <input name="description" type="text" placeholder="..." id="description" value="@categoryItem.description" />
-                <label>Barva</label>
-                <input type="color" name="color" value="@categoryItem.GetHtmlColor()" />
-                <label>Kategorie</label>
-                <input type="text" name="dialInfoName" list="stavy" value="@categoryItem.dialInfo.name" />
+                <input name="description" type="text" placeholder="..." id="description" value="@category.desc" />
                 <input type="submit" placeholder="Změnit" />
             </form>
-        }
+        
+            @foreach(var categoryItem in category?.dialCodes?.ToList()){
+            <div>
+
+                <p>@category.name -> @categoryItem.name</p>
+                    <form method="post" action="/dialcode/edit/@categoryItem.id">
+                    <label for="name">Název:</label>
+                    <input name="name" type="text" placeholder="..." id="name" value="@categoryItem.name" />
+                    <label for="description">Popis:</label>
+                    <input name="description" type="text" placeholder="..." id="description" value="@categoryItem.description" />
+                    <label>Barva</label>
+                    <input type="color" name="color" value="@categoryItem.GetHtmlColor()" />
+                    <label>Kategorie</label>
+                    <input type="text" name="dialInfoName" list="stavy" value="@categoryItem.dialInfo.name" />
+                    <input type="submit" placeholder="Změnit" />
+                </form>
+            </div>
+            }
+        </div>
     }
     </div>
 }
