@@ -21,16 +21,15 @@
     <div class="projects">
         @foreach (var project in Model.Projects)
         {
-            <div class="category"> <!-- nemelo class, ale nevypadalo to konzistentne -->
+            <div class="category">
+                <!-- nemelo class, ale nevypadalo to konzistentne -->
                 <p>Název projektu: @project.name</p>
                 @{
                     var projectDesc = UniversalHelper.GetTrimmedDescription(project);
                 }
-                <form> <!-- kvuli jakz-takz konzistentnimu vzhledu se zbytkem stranky -->
-                    <label for="description">Popis:</label>
-                    <input id="description" type="text" value="@projectDesc" disabled />
-                </form>
                 <form method="get" action="/project/edit/@project.id">
+                    <!-- kvuli jakz-takz konzistentnimu vzhledu se zbytkem stranky -->
+                    <label>Popis: @projectDesc</label>
                     <input type="submit" value="Editovat" />
                 </form>
             </div>
@@ -46,7 +45,8 @@
         {
             if (user.id == currentUserID) continue;
             var splittedName = user.fullName?.Split(" ");
-            <div class="category"> <!-- ma byt "user", ale nevypada to konzistentne -->
+            <div class="category">
+                <!-- ma byt "user", ale nevypada to konzistentne -->
                 <p>Uživatel: @user.fullName</p>
                 <form method="post" action="/user/edit/@user.id">
                     <label for="firstname">Jméno:</label>
@@ -188,7 +188,7 @@
         <form method="post" action="/file/edit/css/override.css">
             <textarea name="fileData">
                 @UniversalHelper.GetDataFromWWWRoot("override.css")
-                    </textarea>
+                                        </textarea>
             <input type="submit" value="Editovat override.css">
         </form>
     </div>

@@ -33,7 +33,7 @@ html {
 }
 
 .odkaz{
-    color: black;
+    color: white;
     font-weight: bold;
     text-align: center;
     grid-column: 1 / span 2;
@@ -1151,8 +1151,4 @@ label {
 
 
 /*END DS*/
-
-
-
-
 
