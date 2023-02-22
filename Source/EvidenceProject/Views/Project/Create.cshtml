@@ -52,7 +52,7 @@
       <input name="slack" type="text" id="slack"  value="@Model.CurrentProject?.slack" />
       <label for="github">Github: </label>
       <input name="github" type="text" id="github" value="@Model.CurrentProject?.github" />
-      <input type="submit"/>
+      <input type="submit" value="Vytvořit" />
       @if (Model == null) return;
           @await Html.PartialAsync("../Shared/CategoriesPV", model: Model.DialInfos)
 
