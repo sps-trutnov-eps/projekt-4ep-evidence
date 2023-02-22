@@ -2,6 +2,20 @@
 @{
     ViewData["Title"] = "Home Page";
     ViewData["Page"] = "home page";
+
+    bool editBtn = false;
+    bool admin = false;
+
+    int? id = -1;
+
+    if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1)
+    {
+        admin = true;
+        editBtn = true;
+    }
+    else if (UniversalHelper.GetLoggedUser(ViewContext.HttpContext, out id)) {
+        editBtn = true;
+    }
 }
 
 @if (Model == null) return;
@@ -16,7 +30,7 @@
             <p>Stav</p>
             <p>Typ</p>
             <p>Úspěchy</p>
-            @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1){
+            @if (editBtn){
                 <p>Edit</p>
             } else { <p></p> }
             <p>Detail</p>
@@ -56,8 +70,10 @@
 
         <p><span class="desc">Úspěchy:</span> @UniversalHelper.GetAchievements(achievements)</p>
 
-        @if (ViewContext.HttpContext.Session.GetInt32(UniversalHelper.IsAdmin) == 1) {
-            <a href="/project/edit/@project.id"><span class="desc">Edit</span><img class="edit-icon" src="./icons/edit.png" alt="Detail"></a>
+        @if (editBtn) {
+            if (admin || !admin && project.projectManager.id == id) {
+                <a href="/project/edit/@project.id"><span class="desc">Edit</span><img class="edit-icon" src="./icons/edit.png" alt="Detail"></a>
+            } else { <span></span> }
         } else { <span></span> }
         <a href="/project/@project.id"><span class="desc">Detail</span><img class="detail-icon" src="./icons/detail.png" alt="Detail"></a>
     </div>

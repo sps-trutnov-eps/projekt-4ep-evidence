@@ -274,7 +274,7 @@ form {
 
 
 /* PROFILE */
-.edit-icon {
+#profile .edit-icon {
     filter: invert(0);
 }
 
