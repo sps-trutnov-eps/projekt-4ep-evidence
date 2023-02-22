@@ -1,8 +1,8 @@
 # Systém pro evidenci rozpracovaných projektů
 
-## Jak spustit projekt na raspberry?
+## Jak spustit projekt na Raspberry Pi OS
 
-1. Připojíme se na raspberry pomocí ssh na defaultního uživatele `pi` nebo vytvoříme nového s přístume k sudo 
+1. Připojíme se na Raspberry pomocí ssh na defaultního uživatele `pi` nebo vytvoříme nového s přístume k sudo
 2. Pomoci apt nainstalujeme potřebné package `sudo apt install curl postgresql git`
 3. Na raspberry nainstalujeme .net core 6.0 a následně dotnet-ef pomocí příkazů
 ```sh
@@ -35,5 +35,5 @@ dotnet tool install --global dotnet-ef
 11. Zkompilujeme projekt `dotnet build -c Release --use-current-runtime -o ~/projekt-dist -a arm64 --os linux` (artefakty se budou nacházet ve složce `~/projekt-dist`)
 12. Nyní provedeme migraci databáze pomocí `cd ~/projekt-src/Source && dotnet-ef database update -p Migrations.Postgres --startup-project EvidenceProject`
 13. Teď se můžeme dostat do složky `cd ~/projekt-dist` a projekt spustit pomocí `dotnet EvidenceProject.dll`
-Hotovo!
+14. **Hotovo!**
 
